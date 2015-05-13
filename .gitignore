@@ -2,5 +2,3 @@
 # http://git-scm.com/docs/gitignore
 .idea
 node_modules/
-platforms/
-plugins/
