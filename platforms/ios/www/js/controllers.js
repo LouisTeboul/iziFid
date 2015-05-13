@@ -4,12 +4,11 @@ angular.module('starter.controllers', [])
         var scanCounter = 0;
         $scope.scan = function () {
             if (scanCounter === 0) {
-                alert('scan launching!');
                 var promise = appServices.scanBarcode();
                 promise.then(
                     function (result) {
                         if (result.error == false) {
-                            $log.info('Success: ' + result.text);
+                            alert("Carte n° " + result.text);
                         }
                         else {
                             $log.error('Error: ' + result);
