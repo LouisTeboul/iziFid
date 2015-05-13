@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.phonegap.plugins.barcodescanner"
-    version="2.2.0">
+    version="2.0.0">
 
     <name>BarcodeScanner</name>
     <description>You can use the BarcodeScanner plugin to scan different types of barcodes (using the device's camera) and get the metadata encoded in them for processing within your application.</description>
@@ -40,8 +40,6 @@
         <framework src="AssetsLibrary.framework" />
         <framework src="CoreVideo.framework" />
         <framework src="QuartzCore.framework" />
-        <framework src="CoreGraphics.framework" />
-        <framework src="CoreImage.framework" />
         <framework src="AudioToolbox.framework" />
     </platform>
 
@@ -75,7 +73,7 @@
                 android:windowSoftInputMode="stateAlwaysHidden"
                 android:exported="false">
                 <intent-filter>
-                    <action android:name="com.google.zxing.client.android.SCAN"/>
+                    <action android:name="com.phonegap.plugins.barcodescanner.SCAN"/>
                     <category android:name="android.intent.category.DEFAULT"/>
                 </intent-filter>
             </activity>
@@ -322,18 +320,4 @@
         <source-file src="src/wp8/BarcodeScannerUI.xaml.cs" />
 
     </platform>
-
-    <!-- browser -->
-    <platform name="browser">
-        <config-file target="config.xml" parent="/*">
-            <feature name="BarcodeScanner">
-                <param name="browser-package" value="BarcodeScanner" />
-            </feature>
-        </config-file>
-
-        <js-module src="src/browser/BarcodeScannerProxy.js" name="BarcodeScannerProxy">
-            <runs />
-        </js-module>
-    </platform>
-
 </plugin>
