@@ -1,0 +1,18 @@
+{
+  "name": "iziFid",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.0"
+  },
+  "dependencies": {
+    "waves": "~0.7.2",
+    "ionic-material": "~0.2.1",
+    "wow": "~1.1.2",
+    "jquery": "~2.1.4",
+    "jquery-easing": "*",
+    "smoothscroll": "~0.0.4",
+    "bootstrap": "~3.3.4",
+    "ng-cordova": "~0.0.3",
+    "ngCordova": "~0.1.15-alpha"
+  }
+}
