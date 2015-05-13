@@ -33,7 +33,6 @@
 <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
 
 <!-- cordova script (this will be a 404 during development) -->
-<script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
 <script src="cordova.js"></script>
 <script src="cordova_plugins.js"></script>
 
@@ -52,15 +51,14 @@
     Waves.init();
     setTimeout(function () {
         $('.expand').addClass('expanded');
-
         ionic.material.motion.pushDown({
             selector: '.push-down'
         });
-    }, 500);
+    }, 1);
 
     setTimeout(function () {
-        $('.bar-header .button-icon').css('margin-top', '12px')
-    }, 1000)
+        $('.bar-header .button-icon').css('margin-top', '12px');
+    }, 600)
 </script>
 </body>
 </html>

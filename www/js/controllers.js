@@ -1,7 +1,8 @@
 angular.module('starter.controllers', [])
 
-    .controller('HeaderCtrl', ['$scope', '$log', '$cordovaBarcodeScanner', 'appServices', function ($scope, $log, $cordovaBarcodeScanner, appServices) {
+    .controller('HeaderCtrl', ['$scope', '$log', 'appServices', function ($scope, $log, appServices) {
         $scope.scan = function() {
+            alert('scan launching!');
             var promise = appServices.scanBarcode();
             promise.then(
                 function(result) {
@@ -16,7 +17,7 @@ angular.module('starter.controllers', [])
         }
     }])
 
-    .controller('DashCtrl', ['$scope', '$window', '$log', '$cordovaBarcodeScanner', function ($scope, $window, $log, $cordovaBarcodeScanner) {
+    .controller('DashCtrl', ['$scope', '$window', '$log', function ($scope, $window, $log) {
         $log.info('DashCtrl');
     }])
 

@@ -42,7 +42,7 @@ module.exports.metadata =
     "com.ionic.keyboard": "1.0.4",
     "org.apache.cordova.device": "0.3.0",
     "org.apache.cordova.console": "0.2.13",
-    "com.phonegap.plugins.barcodescanner": "2.0.0"
+    "com.phonegap.plugins.barcodescanner": "2.2.0"
 }
 // BOTTOM OF METADATA
 });
