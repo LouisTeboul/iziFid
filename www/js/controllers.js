@@ -1,19 +1,27 @@
 angular.module('starter.controllers', [])
 
-    .controller('HeaderCtrl', ['$scope', '$log', 'appServices', function ($scope, $log, appServices) {
-        $scope.scan = function() {
-            alert('scan launching!');
-            var promise = appServices.scanBarcode();
-            promise.then(
-                function(result) {
-                    if (result.error == false) {
-                        $log.info('Success: ' + result.text);
+    .controller('HeaderCtrl', ['$scope', '$log', '$timeout', 'appServices', function ($scope, $log, $timeout, appServices) {
+        var scanCounter = 0;
+        $scope.scan = function () {
+            if (scanCounter === 0) {
+                alert('scan launching!');
+                var promise = appServices.scanBarcode();
+                promise.then(
+                    function (result) {
+                        if (result.error == false) {
+                            $log.info('Success: ' + result.text);
+                        }
+                        else {
+                            $log.error('Error: ' + result);
+                        }
                     }
-                    else {
-                        $log.error('Error: ' + result);
-                    }
-                }
-            );
+                );
+
+                $timeout(function() {
+                    scanCounter = 0;
+                }, 500)
+            }
+            scanCounter++;
         }
     }])
 

@@ -1,22 +1,31 @@
 angular.module('starter.controllers', [])
 
-    .controller('HeaderCtrl', ['$scope', '$log', '$cordovaBarcodeScanner', function ($scope, $log, $cordovaBarcodeScanner) {
-        document.addEventListener("deviceready", function () {
-            $scope.scan = function () {
-                $log.info('scan');
-                $cordovaBarcodeScanner
-                    .scan()
-                    .then(function (barcodeData) {
-                        // Success! Barcode data is here
-                    }, function (error) {
-                        // An error occurred
-                    });
-            };
+    .controller('HeaderCtrl', ['$scope', '$log', '$timeout', 'appServices', function ($scope, $log, $timeout, appServices) {
+        var scanCounter = 0;
+        $scope.scan = function () {
+            if (scanCounter === 0) {
+                alert('scan launching!');
+                var promise = appServices.scanBarcode();
+                promise.then(
+                    function (result) {
+                        if (result.error == false) {
+                            $log.info('Success: ' + result.text);
+                        }
+                        else {
+                            $log.error('Error: ' + result);
+                        }
+                    }
+                );
 
-        }, false);
+                $timeout(function() {
+                    scanCounter = 0;
+                }, 500)
+            }
+            scanCounter++;
+        }
     }])
 
-    .controller('DashCtrl', ['$scope', '$window', '$log', '$cordovaBarcodeScanner', function ($scope, $window, $log, $cordovaBarcodeScanner) {
+    .controller('DashCtrl', ['$scope', '$window', '$log', function ($scope, $window, $log) {
         $log.info('DashCtrl');
     }])
 
