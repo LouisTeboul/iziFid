@@ -2,7 +2,6 @@ angular.module('starter.controllers', [])
     .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'appServices', function ($scope, $rootScope, $log, $timeout, $location, appServices) {
         var scanCounter = 0;
         $rootScope.cardNum = "";
-        window.$location = $location;
 
         $scope.scan = function () {
             if (scanCounter === 0) {
@@ -12,12 +11,10 @@ angular.module('starter.controllers', [])
                         if (result.error == false) {
                             alert("Carte n° " + result.result.text);
                             $rootScope.cardNum = result.result.text.replace(/.+\//, '');
-                            $scope.$apply(function() {
-                                $('.ion-compose').click();
-                            })
+                            $('input[name=barcodeId]').val($rootScope.cardNum);
                         }
                         else {
-                            alert('Erreur: ' + result.error);
+                            alert('Erreur: ' + result);
                         }
                     }
                 );
@@ -32,12 +29,15 @@ angular.module('starter.controllers', [])
 
     .controller('DashCtrl', ['$scope', '$rootScope', '$window', '$log', function ($scope, $rootScope, $window, $log) {
         $log.info('DashCtrl');
-        $scope.cardNum = $rootScope.cardNum;
+        $scope.autoLogin = $rootScope.autoLogin;
     }])
 
-    .controller('ChatsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
-        $scope.cardNum = $rootScope.cardNum;
-    }])
+    .controller('ChatsCtrl', function ($scope, Chats) {
+        $scope.chats = Chats.all();
+        $scope.remove = function (chat) {
+            Chats.remove(chat);
+        }
+    })
 
     .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
         $scope.chat = Chats.get($stateParams.chatId);
