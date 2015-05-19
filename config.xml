@@ -34,5 +34,4 @@
         <gap:splash src="resources/ios/splash/Default~iphone.png" gap:platform="ios" height="480" width="320"/>
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
-
 </widget>
