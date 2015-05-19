@@ -1,6 +1,9 @@
 angular.module('starter.controllers', [])
     .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'appServices', function ($scope, $rootScope, $log, $timeout, $location, appServices) {
-        var scanCounter = 0;
+        var scanCounter = 0,
+            prevPassages = localStorage.getItem('prevPassages');
+        if (!prevPassages) prevPassages = [];
+
         $rootScope.cardNum = "";
 
         $scope.scan = function () {
@@ -9,9 +12,15 @@ angular.module('starter.controllers', [])
                 promise.then(
                     function (result) {
                         if (result.error == false) {
-                            alert("Carte n° " + result.result.text);
-                            $rootScope.cardNum = result.result.text.replace(/.+\//, '');
-                            $('input[name=barcodeId]').val($rootScope.cardNum);
+                            if (result.result.text) {
+                                $timeout(function() {
+                                    alert("Carte n° " + result.result.text);
+                                }, 0);
+                                $rootScope.cardNum = result.result.text.replace(/.+\//, '');
+                                prevPassages.push({card: $rootScope.cardNum, date: new Date()});
+                                localStorage.setItem('prevPassages', prevPassages);
+                                $('input[name=barcodeId]').val($rootScope.cardNum);
+                            }
                         }
                         else {
                             alert('Erreur: ' + result);
@@ -21,7 +30,7 @@ angular.module('starter.controllers', [])
 
                 $timeout(function () {
                     scanCounter = 0;
-                }, 1200)
+                }, 2000)
             }
             scanCounter++;
         }
@@ -32,11 +41,8 @@ angular.module('starter.controllers', [])
         $scope.autoLogin = $rootScope.autoLogin;
     }])
 
-    .controller('ChatsCtrl', function ($scope, Chats) {
-        $scope.chats = Chats.all();
-        $scope.remove = function (chat) {
-            Chats.remove(chat);
-        }
+    .controller('ChatsCtrl', function ($scope) {
+        $scope.prevPassages = localStorage.getItem('prevPassages');
     })
 
     .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {

@@ -3,10 +3,10 @@
         xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>FF Pizza</name>
     <description>
-        An Ionic Framework and Cordova project.
+        Gestion Fidélité FF Pizza
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
-        Ionic Framework Team
+    <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
+        IZIPASS
     </author>
     <content src="index.html"/>
     <access origin="*"/>
