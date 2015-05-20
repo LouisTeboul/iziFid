@@ -7,10 +7,11 @@
 
     <link href='http://fonts.googleapis.com/css?family=Bevan' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Kameron:400,700' rel='stylesheet' type='text/css'>
-    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
     <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
     <link href="lib/waves/dist/waves.min.css" rel="stylesheet">
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/angular-material/angular-material.min.css" rel="stylesheet">
 
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -31,7 +32,6 @@
 </div>
 
 <ion-nav-view nav-view-transition="ios"></ion-nav-view>
-
 <script src="lib/jquery/dist/jquery.min.js"></script>
 <script src="lib/jquery-easing/jquery.easing.min.js"></script>
 
@@ -47,6 +47,8 @@
 <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="lib/waves/dist/waves.min.js"></script>
 <!--<script src="lib/smoothscroll/dist/smoothscroll.raf.js"></script>-->
+<script src="lib/angular-aria/angular-aria.min.js"></script>
+<script src="lib/angular-material/angular-material.min.js"></script>
 <script src="js/vendor/izi-api.min.js"></script>
 <script src="js/vendor/account.min.js"></script>
 
@@ -57,6 +59,10 @@
 
 <script>
     Waves.init();
+    window.onerror = function (e) {
+        alert(e);
+    };
+
     setTimeout(function () {
         $('.expand').addClass('expanded');
         ionic.material.motion.pushDown({

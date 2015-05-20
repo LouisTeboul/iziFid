@@ -2,7 +2,7 @@ angular.module('starter.controllers', [])
     .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'appServices', function ($scope, $rootScope, $log, $timeout, $location, appServices) {
         var scanCounter = 0,
             prevPassages = localStorage.getItem('prevPassages');
-        if (!prevPassages) prevPassages = [];
+        prevPassages = JSON.parse(prevPassages);
 
         $rootScope.cardNum = "";
 
@@ -18,7 +18,7 @@ angular.module('starter.controllers', [])
                                 }, 0);
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
-                                localStorage.setItem('prevPassages', prevPassages);
+                                localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
                                 $('input[name=barcodeId]').val($rootScope.cardNum);
                             }
                         }

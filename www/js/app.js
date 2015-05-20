@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'APIServiceApp'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'APIServiceApp'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -24,7 +24,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('green')
+            .accentPalette('lime');
 
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router
@@ -40,12 +43,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             })
 
             // Each tab has its own nav history stack:
-
             .state('tab.dash', {
                 url: '/dash',
                 views: {
                     'tab-dash': {
-                        templateUrl: 'templates/tab-dash.html',
+                        templateUrl: 'templates/tab-widget.html',
                         controller: 'DashCtrl'
                     }
                 }
@@ -55,17 +57,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 url: '/chats',
                 views: {
                     'tab-chats': {
-                        templateUrl: 'templates/tab-chats.html',
+                        templateUrl: 'templates/tab-history.html',
                         controller: 'ChatsCtrl'
-                    }
-                }
-            })
-            .state('tab.chat-detail', {
-                url: '/chats/:chatId',
-                views: {
-                    'tab-chats': {
-                        templateUrl: 'templates/chat-detail.html',
-                        controller: 'ChatDetailCtrl'
                     }
                 }
             })
@@ -74,13 +67,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 url: '/account',
                 views: {
                     'tab-account': {
-                        templateUrl: 'templates/tab-account.html',
+                        templateUrl: 'templates/tab-settings.html',
                         controller: 'AccountCtrl'
                     }
                 }
             });
 
-        // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/tab/dash');
-
-    });
+    }
+);
