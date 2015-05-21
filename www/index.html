@@ -16,6 +16,17 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <style>
+        .scrollable {
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* iOS specific fix, don't use it on Android devices */
+        .scrollable > * {
+            -webkit-transform: translateZ(0px);
+        }
+    </style>
 </head>
 <body ng-app="starter">
 <div class="ionic" ng-controller="HeaderCtrl">
