@@ -9,11 +9,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-//            if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-//                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-//            }
 //            if (window.StatusBar) {
 //                // org.apache.cordova.statusbar required
 //                StatusBar.styleLightContent();
@@ -24,8 +19,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
-
+    .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $ionicConfigProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('green')
             .accentPalette('lime');
@@ -44,7 +38,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             })
 
             // Each tab has its own nav history stack:
-
             .state('tab.dash', {
                 url: '/dash',
                 views: {
@@ -75,7 +68,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 }
             });
 
-        // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/tab/dash');
-
-    });
+    }
+);

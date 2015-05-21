@@ -46,7 +46,11 @@
 }
 
 .izi-account input {
-    font-family: "Kameron", Helvetica Neue, Helvetica, sans-serif !important
+    font-family: "Kameron", Helvetica Neue, Helvetica, sans-serif !important;
+    border-radius: 0 !important;
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
 }
 
 .izi-account input.ng-invalid:not(.ng-pristine) {
@@ -73,7 +77,7 @@
 }
 
 .izi-account form input:focus {
-    height: 45px !important;
+    height: 38px !important;
     outline: none
 }
 
@@ -142,6 +146,11 @@
     border-radius: 100%;
     -webkit-animation: rotateScale .6s ease-out;
     animation: rotate .6s ease-out
+}
+
+.izi-account [id=loginView] {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .izi-account [id=registerView] {
@@ -277,6 +286,7 @@
 
 .md-dialog-container {
     z-index: 99999 !important;
+    top: 25% !important;
 }
 
 md-dialog {
@@ -297,14 +307,18 @@ md-dialog button {
     display: block !important;
     position: relative !important;
 }
+
+.bar-header.expanded {
+    height: 68px !important;
+}
 </style>
 
 
 <div class="izi-account center-block">
-<div style="padding: 15px 15px 10px" ng-if="barcode && !register">
+<div style="padding: 30px 15px 10px" ng-if="barcode && !register">
     <i class="glyphicon glyphicon-remove blanc pull-right hvr-grow" style="cursor: pointer; font-size: 2.1em;"
        ng-click="disconnect()"></i>
-
+    <h3 class="text-center" style="margin-bottom: 0; margin-top: 4px">{{data.LoyaltyClass}}</h3>
 
     <h4 class="text-center" ng-if="data.CustomerFirstName">Prénom : {{data.CustomerFirstName}}</h4>
     <h4 class="text-center" ng-if="data.CustomerLastName">Nom : {{data.CustomerLastName}}</h4>
@@ -335,7 +349,7 @@ md-dialog button {
     <!-- Balances -->
     <ul class="izi-balances list-unstyled">
         <li data-ng-repeat="balance in data.Balances"
-            class="{{balance.Value > 0 ? 'bg-accent hvr-sink' : 'bg-rouge'}}"
+            class="{{balance.Value > 0 ? 'bg-accent' : 'bg-rouge'}} {{balance.UseToPay ? 'hvr-sink' : 0 }}"
             ng-click="balance.UseToPay ? showAdvanced($event, balance) : 0"
             style="margin-bottom: 12px;">
             <h4 class="text-center no-mg-vert">{{balance.BalanceName}}</h4>
@@ -346,13 +360,13 @@ md-dialog button {
         </li>
     </ul>
 
-    <div class="text-center" style="margin-top: 34px">
-        <button class="button bg-accent activated" ng-click="showAddPassageConfirm($event)">
+    <div class="text-center">
+        <button class="button bg-accent hvr-sink activated" ng-click="showAddPassageConfirm($event)">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
 
-    <h5 class="text-center light" ng-if="data.CustomerEmail"
+    <h5 class="text-center light hvr-sink" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)" style="margin-bottom: 0">
         <small style="color: #777">Dernier passage le: {{bipDate.getDate() + '/' + bipDate.getMonth() + '/' +
             bipDate.getFullYear()}}
@@ -361,10 +375,10 @@ md-dialog button {
 </div>
 
 <!-- LOGIN VIEW -->
-<div ng-if="!barcode && !register" style="padding: 15px 15px 5px;">
-    <h4 class="blanc text-center" style="font-weight: 700 !important">Veuillez saisir votre n° de carte pour accéder
-        à
-        votre compte</h4>
+<div id="loginView" ng-if="!barcode && !register">
+    <h4 class="blanc text-center" style="font-weight: 700 !important">
+        Scannez une carte via le bouton en haut à droite, ou saisissez le n° de la carte ci-dessous
+    </h4>
 
     <form name="iziLoginForm">
         <input type="tel" class="center-block" name="barcodeId" ng-model="form.barcode" style="line-height: 24px;"
@@ -373,8 +387,7 @@ md-dialog button {
                ng-enter="login()"
                ng-pattern="/^[0-9]*$/"
                placeholder="N° de carte&#8230;"
-               ng-change="autoLogin()"
-               onFocus="window.scrollTo(75, 0);"/>
+               ng-change="autoLogin()"/>
     </form>
 
     <div class="clearfix">
@@ -504,6 +517,4 @@ md-dialog button {
     </div>
 </div>
 </div>
-
 </div>
-
