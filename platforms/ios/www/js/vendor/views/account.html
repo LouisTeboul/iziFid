@@ -20,7 +20,7 @@
     font-family: "Bevan", Helvetica, sans-serif !important
 }
 
-.izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account b, .izi-account span, .izi-account small {
+.izi-account h4:not(.fid-item-title), .izi-account h5, .izi-account p, .izi-account a, .izi-account b, .izi-account span, .izi-account small {
     font-family: "Kameron", Helvetica, sans-serif !important
 }
 
@@ -234,7 +234,7 @@
 }
 
 .izi-account .izi-offers {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .izi-account .izi-offers li {
@@ -309,22 +309,20 @@ md-dialog button {
 }
 
 .bar-header.expanded {
-    height: 68px !important;
+    height: 50px !important;
+}
+
+.fid-item-title {
+    font-family: Bevan, "Abel", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 </style>
 
 
 <div class="izi-account center-block">
-<div style="padding: 30px 15px 10px" ng-if="barcode && !register">
-    <i class="glyphicon glyphicon-remove blanc pull-right hvr-grow" style="cursor: pointer; font-size: 2.1em;"
+<div style="padding: 5px 15px 10px" ng-if="barcode && !register">
+    <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="cursor: pointer; font-size: 2.1em;"
        ng-click="disconnect()"></i>
     <h3 class="text-center" style="margin-bottom: 0; margin-top: 4px">{{data.LoyaltyClass}}</h3>
-
-    <h4 class="text-center" ng-if="data.CustomerFirstName">Prénom : {{data.CustomerFirstName}}</h4>
-    <h4 class="text-center" ng-if="data.CustomerLastName">Nom : {{data.CustomerLastName}}</h4>
-    <h4 class="text-center" ng-if="data.CustomerEmail">Email :
-        <a class="green-sea" data-ng-href="mailto:{{data.CustomerEmail}}">{{data.CustomerEmail}}</a>
-    </h4>
 
     <h3 class="text-center" ng-if="!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail">
         CARTE
@@ -332,9 +330,9 @@ md-dialog button {
 
     <!-- Offers -->
     <ul class="izi-offers list-unstyled">
-        <li data-ng-repeat="offer in data.Offers" class="{{offer.isValid ? 'bg-accent hvr-sink' : 'bg-rouge'}}"
+        <li data-ng-repeat="offer in data.Offers" class="{{offer.isValid ? 'bg-accent hvr-sink waves-effect' : 'bg-rouge'}}"
             ng-click="showConfirm($event, offer)"
-            style="background: url({{offer.OfferImageUrl}}) no-repeat center -35px; margin-bottom: 12px;">
+            style="margin-bottom: 12px;">
             <b class="pull-right">x{{offer.counter === 0 ? 0 : offer.counter}}</b>
             <h4 class="text-center no-mg-vert">
                 {{offer.OfferClassDescription}}
@@ -349,22 +347,28 @@ md-dialog button {
     <!-- Balances -->
     <ul class="izi-balances list-unstyled">
         <li data-ng-repeat="balance in data.Balances"
-            class="{{balance.Value > 0 ? 'bg-accent' : 'bg-rouge'}} {{balance.UseToPay ? 'hvr-sink' : 0 }}"
+            class="{{balance.Value > 0 ? 'bg-accent' : 'bg-rouge'}} {{balance.UseToPay ? 'hvr-sink  waves-effect' : 0 }}"
             ng-click="balance.UseToPay ? showAdvanced($event, balance) : 0"
-            style="margin-bottom: 12px;">
-            <h4 class="text-center no-mg-vert">{{balance.BalanceName}}</h4>
+            style="margin-bottom: 12px; display: block">
+            <h4 class="text-center no-mg-vert fid-item-title">{{balance.BalanceName}}</h4>
 
             <div class="text-center">
-                <b>Solde: {{balance.Value}} {{balance.BalanceType === 'Euros' ? '€' : balance.BalanceType}}</b>
+                <b style="font-size: 1.2em;">Solde: {{balance.Value}} {{balance.BalanceType === 'Euros' ? '€' : balance.BalanceType}}</b>
             </div>
         </li>
     </ul>
 
     <div class="text-center">
-        <button class="button bg-accent hvr-sink activated" ng-click="showAddPassageConfirm($event)">
+        <button class="button bg-accent hvr-sink activated waves-effect" ng-click="showAddPassageConfirm($event)">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
+    <br/>
+    <h4 class="text-center no-mg-vert" ng-if="data.CustomerFirstName"><b>Prénom</b> : {{data.CustomerFirstName}}</h4>
+    <h4 class="text-center no-mg-vert" ng-if="data.CustomerLastName"><b>Nom</b> : {{data.CustomerLastName}}</h4>
+    <h4 class="text-center no-mg-vert" ng-if="data.CustomerEmail"><b>Email</b> :
+        <a class="green-sea" data-ng-href="mailto:{{data.CustomerEmail}}">{{data.CustomerEmail}}</a>
+    </h4>
 
     <h5 class="text-center light hvr-sink" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)" style="margin-bottom: 0">
@@ -402,8 +406,8 @@ md-dialog button {
 
 <!-- REGISTER VIEW -->
 <div id="registerView" ng-if="register">
-    <i class="glyphicon glyphicon-remove blanc pull-right hvr-grow"
-       style="cursor: pointer; margin-top: 12px;margin-right: 12px"
+    <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow"
+       style="cursor: pointer; margin-right: 12px; font-size: 2.1em;"
        ng-click="backToLogin()"></i>
 
     <div class="container-fluid">

@@ -1,22 +1,10 @@
-<!--
-Create tabs with an icon and label, using the tabs-positive style.
-Each tab's child <ion-nav-view> directive will have its own
-navigation history that also transitions its views in and out.
--->
-<ion-tabs class="tabs-icon tabs-dark tabs-color-balanced scrollable">
-  <!-- Dashboard Tab -->
-  <ion-tab icon-off="ion-qr-scanner" icon-on="ion-qr-scanner" href="#/tab/dash" data-ink-color="#ef473a" data-ink-opacity=".35">
-    <ion-nav-view name="tab-dash"></ion-nav-view>
-  </ion-tab>
-
-  <!-- Chats Tab -->
-  <ion-tab icon-off="ion-compose" icon-on="ion-compose" href="#/tab/chats" data-ink-color="#ef473a" data-ink-opacity=".35">
-    <ion-nav-view name="tab-chats"></ion-nav-view>
-  </ion-tab>
-
-  <!-- Account Tab -->
-  <ion-tab icon-off="ion-gear-a" icon-on="ion-gear-b" href="#/tab/account" data-ink-color="#ef473a" data-ink-opacity=".35">
-    <ion-nav-view name="tab-account"></ion-nav-view>
-  </ion-tab>
-</ion-tabs>
+<ion-view view-title="Fidélité">
+    <ion-content class="padding" style="height: 100% !important; -webkit-overflow-scrolling: touch !important;">
+        <div style="padding-top: 58px; height: 100% !important;">
+            <!--<h2 class="text-center balanced" style="font-family: Bevan, Helvetica, sans-serif !important; margin-bottom: 0 !important">FIDÉLITÉ</h2>-->
+            <izi-account client-url="http://ffpizza.izipass.pro" barcode="{{cardNum}}" theme="light"
+                         auto="false"></izi-account>
+        </div>
+    </ion-content>
+</ion-view>
 

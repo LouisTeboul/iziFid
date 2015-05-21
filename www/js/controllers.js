@@ -13,13 +13,13 @@ angular.module('starter.controllers', [])
                     function (result) {
                         if (result.error == false) {
                             if (result.result.text) {
-                                $timeout(function() {
-                                    alert("Carte n° " + result.result.text);
-                                }, 0);
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $('input[name=barcodeId]').val($rootScope.cardNum);
+                                $scope.$apply(function() {
+                                    $('input[name=barcodeId]').val("");
+                                    $('input[name=barcodeId]').val($rootScope.cardNum);
+                                });
                             }
                         }
                         else {
