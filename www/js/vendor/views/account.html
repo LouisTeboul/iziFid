@@ -332,9 +332,9 @@ md-dialog button {
     <ul class="izi-offers list-unstyled">
         <li data-ng-repeat="offer in data.Offers" class="{{offer.isValid ? 'bg-accent hvr-sink waves-effect' : 'bg-rouge'}}"
             ng-click="showConfirm($event, offer)"
-            style="margin-bottom: 12px;">
+            style="margin-bottom: 12px; width: 100%;">
             <b class="pull-right">x{{offer.counter === 0 ? 0 : offer.counter}}</b>
-            <h4 class="text-center no-mg-vert">
+            <h4 class="text-center no-mg-vert fid-item-title">
                 {{offer.OfferClassDescription}}
             </h4>
 
@@ -359,7 +359,7 @@ md-dialog button {
     </ul>
 
     <div class="text-center">
-        <button class="button bg-accent hvr-sink activated waves-effect" ng-click="showAddPassageConfirm($event)">
+        <button class="button bg-accent no-radius hvr-sink activated waves-effect" ng-click="showAddPassageConfirm($event)" style="width: 100%;">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
