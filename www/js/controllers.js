@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
                     function (result) {
                         if (result.error == false) {
                             if (result.result.text) {
-                                $rootScope.cardNum = result.result.text.replace(/.+\//, '');
+                                $rootScope.cardNum = result.result.tex$rootScope.scan = $scope.scat.replace(/.+\//, '');
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
                                 $scope.$apply(function() {
@@ -23,7 +23,7 @@ angular.module('starter.controllers', [])
                             }
                         }
                         else {
-                            alert('Erreur: ' + result);
+                            $log.error('Erreur: ' + result);
                         }
                     }
                 );
@@ -33,7 +33,7 @@ angular.module('starter.controllers', [])
                 }, 2000)
             }
             scanCounter++;
-        }
+        };
     }])
 
     .controller('DashCtrl', ['$scope', '$rootScope', '$window', '$log', function ($scope, $rootScope, $window, $log) {
