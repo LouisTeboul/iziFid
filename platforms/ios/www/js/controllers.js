@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
                     function (result) {
                         if (result.error == false) {
                             if (result.result.text) {
-                                $rootScope.cardNum = result.result.tex$rootScope.scan = $scope.scat.replace(/.+\//, '');
+                                $rootScope.cardNum = result.result.text.replace(/.+\//, '');
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
                                 $scope.$apply(function() {
@@ -34,6 +34,10 @@ angular.module('starter.controllers', [])
             }
             scanCounter++;
         };
+
+        $rootScope.scan = $scope.scan;
+
+        $scope.scan();
     }])
 
     .controller('DashCtrl', ['$scope', '$rootScope', '$window', '$log', function ($scope, $rootScope, $window, $log) {
