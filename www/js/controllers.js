@@ -16,13 +16,12 @@ angular.module('starter.controllers', [])
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $scope.$apply(function() {
+                                $scope.$apply(function () {
                                     $('input[name=barcodeId]').val("");
                                     $('input[name=barcodeId]').val($rootScope.cardNum);
                                 });
                             }
-                        }
-                        else {
+                        } else {
                             $log.error('Erreur: ' + result);
                         }
                     }
