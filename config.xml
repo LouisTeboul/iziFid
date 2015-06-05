@@ -21,6 +21,7 @@
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>
     </feature>
+    <feature name="http://api.phonegap.com/1.0/device"/>
     <icon src="resources/ios/icon/icon-72@2x.png"/>
     <splash src="resources/ios/splash/Default@2x~iphone.png"/>
     <platform name="ios">
@@ -55,4 +56,5 @@
         <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
+    <gap:plugin name="org.apache.cordova.device"/>
 </widget>
