@@ -1,0 +1,785 @@
+'use strict';
+
+angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$timeout', function ($http, $log, $timeout) {
+    var methods, vars, errors, fakeData, emptyData, passagePromise = null;
+
+    /** Variables & flags
+     * @variable endpoint [type: string] : the API endpoint, without domain name and params
+     * @variable clientUrl [type: string] : the domain name of the partner we want to hit (e.g: http://pitapit.fr)
+     * @variable fake [type: boolean] : whether this service should mock API calls by serving fake JSON data for debugging
+     * @variable debug [type: boolean] : Turns logging ON/OFF
+     */
+    vars = {
+        endpoint: "/api/RESTLoyalty/RESTLoyalty/",
+        clientUrl: "",
+        fake: false,
+        debug: true,
+        currLoyaltyObject: {},
+        validClientUrls: [
+            "http://pitapit.fr",
+            "http://urbun.fr",
+            "http://beautyburger.com",
+            "http://madamecroque.fr",
+            "http://planetalis.com",
+            "http://cooking.bigsister.biz",
+            "http://ffpizza.izipass.pro",
+            "http://le-b.izipass.pro"
+        ]
+    };
+
+    /** Shortcut functions for throwing the various possible errors */
+    errors = {
+        /** @function missingClientUrl
+         *  The error to throw in case 'vars.clientUrl' is not defined */
+        missingClientUrl: function () {
+            return vars.debug ? $log.error("Client URL is not set! Use APIService.set.clientUrl(xxx)") : 0;
+        },
+
+        /** @function missingClientUrl
+         *  The error to throw in case the barcode param is not valid (= not 8 characters long and/or not a number)
+         *  @param barcode [type: number]
+         *  The barcode we want to get the data from */
+        invalidBarcode: function (barcode) {
+            return vars.debug ? $log.error("Barcode is not valid:", barcode) : 0;
+        },
+
+        notLoggedIn: function () {
+            return vars.debug ? $log.error("No client logged in") : 0;
+        },
+
+        addPassage: function () {
+            return vars.debug ? $log.error("AddPassage ERROR, API returned false.") : 0;
+        }
+    };
+
+    /** Methods exposed by the service's API */
+    methods = {
+        set: {
+            /** @function methods.set.clientUrl(@param url)
+             *  Sets the client url. See 'vars.clientUrl' above
+             *  @params url [type: string]
+             *  the client's website url */
+            clientUrl: function (url) {
+                vars.clientUrl = url;
+            },
+
+            /** @function methods.set.endpoint(@param endpoint)
+             *  Sets the API endpoint. See 'vars.endpoint' above
+             *  @params endpoint [type: string]
+             *  the API's endpoint path without the url (= after the TLD) */
+            endpoint: function (endpoint) {
+                vars.endpoint = endpoint;
+            },
+
+            /** @function methods.set.debug
+             *  Allows to toggle debug mode (= logging in the console) on & off
+             *  @params bool [type: boolean]
+             *  Self-explanatory */
+            debug: function (bool) {
+                vars.debug = !!bool;
+            },
+
+            /** @function methods.set.fake
+             *  If set to true, we will use the fake data below for testing instead of actually calling the API
+             *  @params bool [type: boolean]
+             *  Self-explanatory */
+            fake: function (bool) {
+                vars.fake = !!bool;
+            }
+        },
+
+        get: {
+            /** @function methods.get.callableUrl
+             *  Returns the complete url to call an API method from the client url, the endpoint and the parameters
+             *  @param params [type: string]
+             *  The URL parameters to pass to the endpoint (e.g: '?barcode=12345678') */
+            callableUrl: function (params) {
+                return methods.validate.clientUrl() ? vars.clientUrl + vars.endpoint + params : errors.missingClientUrl();
+            },
+
+            emptyData: function () {
+                return emptyData;
+            },
+
+            /**
+             * @function methods.get.debugState
+             * Returns true if debugging is enabled
+             * @returns {boolean}
+             */
+            debugState: function() {
+                return vars.debug;
+            },
+
+            serverUrl: function(uuid) {
+                $http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
+                   $log.info('getServerUrl', data);
+                   if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
+                   methods.set.clientUrl(data['Server_Url']);
+                }).error(function(e) {
+                    vars.debug ? $log.error(e) : 0;
+                });
+            },
+
+            /** @function methods.get.loyaltyObject(@param barcode)
+             *  Get the data associated with a particular barcode
+             * @param barcode [type: number]
+             * The barcode we want to retrieve data from
+             * @param func [type: function]
+             * A callback function to which we pass the data */
+            loyaltyObject: function (barcode, func) {
+                return $timeout(function () {
+                    var isBarcodeValid = methods.validate.barcode(barcode),
+                        isClientUrlValid = methods.validate.clientUrl();
+                    if (isBarcodeValid && isClientUrlValid) {
+                        if (vars.fake) {
+                            vars.currLoyaltyObject = fakeData;
+                            return func(fakeData);
+                        } else {
+                            $http.get(methods.get.callableUrl("GetloyaltyObject?barcode=" + barcode)).success(function (data) {
+//                                $log.info('DATA: ', data.Offers);
+                                vars.currLoyaltyObject = data;
+                                return func(data);
+                            }).error(function(e) {
+                                vars.debug ? $log.error(e) : 0;
+                                return func(false);
+                            });
+                        }
+                    } else {
+                        return isBarcodeValid ? errors.missingClientUrl() : errors.invalidBarcode(barcode);
+                    }
+                }, 0);
+            },
+
+            formattedOffers: function (loyaltyObj) {
+                var offers = loyaltyObj.Offers;
+                $log.info('offers', offers);
+//                var types = [];
+                var offersTypes = [];
+
+                /** Group valid offers by OfferTypeId */
+                for (var i = 0; i < offers.length; i++) {
+//                    var next = i + 1;
+//                    if (next >= offers.length) next = i - 1;
+//                    if (offers[i].isValid) {
+//                        $log.info('offer is valid');
+//                        if (i === 0 || (offers[i].OfferTypeId !== offers[next].OfferTypeId)) {
+//                            $log.info('new offer type');
+//                            types.push(offers[i].OfferTypeId);
+//                            offersTypes.push(offers[i]);
+//                            offersTypes[offersTypes.length - 1].counter = 1;
+//                        } else if (types.indexOf(offers[i].OfferTypeId) > -1) {
+//                                $log.info('same offer type');
+//                                offersTypes[types.indexOf(offers[i].OfferTypeId)].counter++;
+//                        } else {
+//                            $log.info('last');
+//                            var last = offersTypes.length - 1;
+//                            last < 0 ? last = 0 : 0;
+//                            offersTypes[last] ? offersTypes[last].counter++ : 0;
+//                        }
+//                    }
+                    if (offers[i].isValid)
+                        offersTypes.push(offers[i]);
+                }
+                return offersTypes;
+            },
+
+            /** @function methods.get.emptyPassageObj
+             *  Returns a LoyaltyOrderRequest object with empty properties */
+            emptyPassageObj: function () {
+                return {
+                    "Login": null,
+                    "Password": null,
+                    "Key": null,
+                    "Barcode": vars.currLoyaltyObject.Barcodes[0].Barcode,
+                    "CustomerFirstName": vars.currLoyaltyObject.CustomerFirstName,
+                    "CustomerLastName": vars.currLoyaltyObject.CustomerLastName,
+                    "CustomerEmail": vars.currLoyaltyObject.CustomerEmail,
+                    "OrderTotalIncludeTaxes": 0,
+                    "OrderTotalExcludeTaxes": 0,
+                    "CurrencyCode": "EUR",
+                    "Items": [],
+                    "BalanceUpdate": {},
+                    "OrderSpecificInfo": "2"
+                };
+            }
+        },
+
+        actions: {
+            /** @function methods.actions.useOffer
+             *  @param offer_id = the OfferId property of the offer to use
+             *  @param offer_barcode = the Barcode property of the offer to use */
+            useOffer: function (offer_id, offer_barcode) {
+                if (methods.validate.barcode(offer_barcode)) {
+                    var passageObj = methods.get.emptyPassageObj();
+                    passageObj.Offer = {
+                        "OfferObjectId": offer_id,
+                        "Barcode": offer_barcode,
+                        "Date": new Date()
+                    };
+                    return methods.actions.addPassage(passageObj);
+                } else {
+                    return false;
+                }
+            },
+
+            /* @todo: @function useAvoir */
+            useAvoir: function (balance_id, amount) {
+                var passageObj = methods.get.emptyPassageObj();
+                passageObj.BalanceUpdate = {
+                    "Id": balance_id,
+                    "UpdateValue": amount
+                };
+            },
+
+            addPassage: function (obj) {
+                console.log(obj);
+                console.log(passagePromise);
+                passagePromise = null;
+                if (!passagePromise) {
+                    passagePromise = $http.post(methods.get.callableUrl("AddPassage"), JSON.stringify(JSON.stringify(obj))).success(function (data) {
+                        return data;
+                    });
+                    return passagePromise;
+                }
+            },
+
+            register: function (formObj) {
+                return $timeout(function () {
+                    return vars.fake ? fakeData : $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
+                        vars.currLoyaltyObject = data;
+                        return data;
+                    });
+                }, 0);
+            }
+        },
+
+        /** Methods to validate user input */
+        validate: {
+            /** @function methods.validate.clientUrl
+             * Checks if the clientUrl matches one of the correct urls in vars.validClientUrls */
+            clientUrl: function () {
+                return !!~vars.validClientUrls.indexOf(vars.clientUrl);
+            },
+
+            /** @function methods.validate.barcode
+             * Checks if the barcode is a number containing either 8 or 10 characters (8 = legacy, 10 = new) */
+            barcode: function (barcode) {
+                return !!((+barcode && ~[8, 10].indexOf(barcode.toString().length)) || new RegExp(/(^[0-9]*$)|(^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/));
+            }
+        }
+    };
+
+    /** fake LoyaltyObject for testing */
+    emptyData = {
+        "Barcodes": [],
+        "LoyaltyObjectId": 0,
+        "CustomerId": 0,
+        "LoyaltyClass": null,
+        "CustomerFirstName": null,
+        "CustomerLastName": null,
+        "CustomerEmail": null,
+        "Balances": [],
+        "Offers": []
+    };
+
+    fakeData = {
+        "Barcodes": [
+            {
+                "Barcode": "0004405498",
+                "BarcodeUrl": "/Barcode/77u_UXJCYXJjb2RlWzAsMCw1LDNdOjAwMDQ0MDU0OTg6LTk3MTEwMTEyNw2",
+                "BarcodeType": "QrCode",
+                "CreationDate": "2015-04-22T14:34:51.927",
+                "LastUseDate": null,
+                "LastBipDate": "2015-05-04T11:16:47.583"
+            }
+        ],
+        "LoyaltyObjectId": 2890,
+        "LoyaltyPictureUrl": null,
+        "CustomerId": 1300915,
+        "LoyaltyClass": "Carte Cooking",
+        "CustomerFirstName": "Stephen",
+        "CustomerLastName": "TISSOT",
+        "CustomerEmail": "toto01@toto.com",
+        "Balances": [
+            {
+                "Id": 2890,
+                "BalanceName": "Cagnotte Cooking",
+                "BalanceType": "Euros",
+                "BalanceType_Id": 3,
+                "Value": 25.97,
+                "ValidForTenant": "COOKING MAISON",
+                "UseToPay": true,
+                "MinOrderTotalIncVAT": 0.00,
+                "MinOrderTotalWitoutLoyalty": 0.00
+            }
+        ],
+        "Offers": [
+            {
+                "OfferObjectId": 22058,
+                "Barcode": "0741110815",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": false,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22059,
+                "Barcode": "0901429129",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": false,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22061,
+                "Barcode": "0399778143",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": false,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22062,
+                "Barcode": "0594962883",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22063,
+                "Barcode": "0452116923",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22064,
+                "Barcode": "0006106690",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22065,
+                "Barcode": "0222065758",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22066,
+                "Barcode": "0058445470",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22067,
+                "Barcode": "0274404538",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22068,
+                "Barcode": "0469589278",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22069,
+                "Barcode": "0862371496",
+                "OfferObjectDescription": "Dessert offert",
+                "OfferClassDescription": "Dessert offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
+                "OfferTypeId": 4,
+                "OfferTypeName": "OneProductInCategory",
+                "isValid": true,
+                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22071,
+                "Barcode": "0555905249",
+                "OfferObjectDescription": "Dessert offert",
+                "OfferClassDescription": "Dessert offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
+                "OfferTypeId": 4,
+                "OfferTypeName": "OneProductInCategory",
+                "isValid": true,
+                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22072,
+                "Barcode": "0751089989",
+                "OfferObjectDescription": "Dessert offert",
+                "OfferClassDescription": "Dessert offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
+                "OfferTypeId": 4,
+                "OfferTypeName": "OneProductInCategory",
+                "isValid": true,
+                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22073,
+                "Barcode": "0608244030",
+                "OfferObjectDescription": "Dessert offert",
+                "OfferClassDescription": "Dessert offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
+                "OfferTypeId": 4,
+                "OfferTypeName": "OneProductInCategory",
+                "isValid": true,
+                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22074,
+                "Barcode": "0325854084",
+                "OfferObjectDescription": "Dessert offert",
+                "OfferClassDescription": "Dessert offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
+                "OfferTypeId": 4,
+                "OfferTypeName": "OneProductInCategory",
+                "isValid": true,
+                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22075,
+                "Barcode": "0001987708",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22076,
+                "Barcode": "0375616471",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22077,
+                "Barcode": "0873348243",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22078,
+                "Barcode": "0327293246",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22079,
+                "Barcode": "0272771550",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22080,
+                "Barcode": "0165293831",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22081,
+                "Barcode": "0890548605",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22082,
+                "Barcode": "0298220727",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22083,
+                "Barcode": "0904549275",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22084,
+                "Barcode": "0510877822",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22085,
+                "Barcode": "0117206369",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22086,
+                "Barcode": "0723534916",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22087,
+                "Barcode": "0329863464",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22088,
+                "Barcode": "0294997038",
+                "OfferObjectDescription": "Coca offert",
+                "OfferClassDescription": "Coca offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
+                "OfferTypeId": 2,
+                "OfferTypeName": "AddProduct",
+                "isValid": true,
+                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22089,
+                "Barcode": "0804926779",
+                "OfferObjectDescription": "Dessert offert",
+                "OfferClassDescription": "Dessert offert",
+                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
+                "OfferTypeId": 4,
+                "OfferTypeName": "OneProductInCategory",
+                "isValid": false,
+                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
+            },
+            {
+                "OfferObjectId": 22101,
+                "Barcode": "0641824893",
+                "OfferObjectDescription": "Vous avez gagné un bisou !",
+                "OfferClassDescription": "Un bisou",
+                "OfferImageUrl": "http://cooking.bigsister.biz/Media/Thumbs/0003/0003141.jpg",
+                "OfferTypeId": 1,
+                "OfferTypeName": "PromoText",
+                "isValid": true,
+                "OfferParam": "{\"Value\":\"Vous avez gagné un bisou !\"}"
+            }
+        ],
+        "History": [
+            {
+                "date": "2015-05-04T11:16:28.65",
+                "Description": "Vous avez gagné un bisou !",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-05-04T09:16:28.503",
+                "Description": "Créditer la carte",
+                "BalanceName": null,
+                "Value": 2.07
+            },
+            {
+                "date": "2015-04-22T19:59:20.67",
+                "Description": "Ticket 11896 use offer Carte Cooking",
+                "BalanceName": null,
+                "Value": 0.0
+            },
+            {
+                "date": "2015-04-22T19:55:48.763",
+                "Description": "Ticket 11895 use offer Carte Cooking",
+                "BalanceName": null,
+                "Value": 0.0
+            },
+            {
+                "date": "2015-04-22T19:55:48.457",
+                "Description": "Dessert offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:51:34.18",
+                "Description": "Ticket 11894 use offer Carte Cooking",
+                "BalanceName": null,
+                "Value": 0.0
+            },
+            {
+                "date": "2015-04-22T19:51:33.947",
+                "Description": "Ticket 11894 use offer Carte Cooking",
+                "BalanceName": null,
+                "Value": 0.0
+            },
+            {
+                "date": "2015-04-22T19:42:22.617",
+                "Description": "Ticket 11893 use offer Carte Cooking",
+                "BalanceName": null,
+                "Value": 0.0
+            },
+            {
+                "date": "2015-04-22T19:42:17.6",
+                "Description": "Ticket 11893 use offer Carte Cooking",
+                "BalanceName": null,
+                "Value": 0.0
+            },
+            {
+                "date": "2015-04-22T19:18:08.017",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:18:07.763",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:18:07.513",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:18:07.263",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:18:07.013",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:18:06.763",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:18:06.513",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:04:18.277",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:04:15.637",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:03:42.467",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            },
+            {
+                "date": "2015-04-22T19:03:37.913",
+                "Description": "Coca offert",
+                "BalanceName": null,
+                "Value": 1.0
+            }
+        ]
+    };
+
+    /** return the exposed API methods */
+    return methods;
+}]);
