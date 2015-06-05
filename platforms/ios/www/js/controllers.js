@@ -1,5 +1,5 @@
-angular.module('starter.controllers', [])
-    .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'appServices', function ($scope, $rootScope, $log, $timeout, $location, appServices) {
+angular.module('fid.controllers', [])
+    .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'barcodeService', function ($scope, $rootScope, $log, $timeout, $location, barcodeService) {
         var scanCounter = 0,
             prevPassages = localStorage.getItem('prevPassages');
         prevPassages = JSON.parse(prevPassages);
@@ -8,7 +8,7 @@ angular.module('starter.controllers', [])
 
         $scope.scan = function () {
             if (scanCounter === 0) {
-                var promise = appServices.scanBarcode();
+                var promise = barcodeService.scanBarcode();
                 promise.then(
                     function (result) {
                         if (result.error == false) {
@@ -16,15 +16,18 @@ angular.module('starter.controllers', [])
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $scope.$apply(function () {
-                                    $('input[name=barcodeId]').val("");
-                                    $('input[name=barcodeId]').val($rootScope.cardNum);
+                                $scope.$apply(function() {
+                                    var barcodeField = $('input[name=barcodeId]');
+                                    barcodeField.val("");
+                                    barcodeField.val($rootScope.cardNum);
                                 });
                             }
                         }
                         else {
-                            $log.error('Erreur: ' + result);
+                            $log.warn('Erreur: ', result);
                         }
+                    }, function(error) {
+                        $log.warn('Erreur: ', error);
                     }
                 );
 
@@ -36,25 +39,10 @@ angular.module('starter.controllers', [])
         };
 
         $rootScope.scan = $scope.scan;
-
         $scope.scan();
     }])
 
     .controller('DashCtrl', ['$scope', '$rootScope', '$window', '$log', function ($scope, $rootScope, $window, $log) {
         $log.info('DashCtrl');
         $scope.autoLogin = $rootScope.autoLogin;
-    }])
-
-    .controller('ChatsCtrl', function ($scope) {
-        $scope.prevPassages = localStorage.getItem('prevPassages');
-    })
-
-    .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-        $scope.chat = Chats.get($stateParams.chatId);
-    })
-
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
-        };
-    });
+    }]);

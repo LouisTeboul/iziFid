@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline' http://* https://*; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://* https://*; font-src 'self' http://* https://*">
     <title></title>
 
     <link href='http://fonts.googleapis.com/css?family=Bevan' rel='stylesheet' type='text/css'>
@@ -20,9 +21,15 @@
 <body ng-app="starter">
 <div class="ionic" ng-controller="HeaderCtrl">
     <div class="bar bar-header bar-dark expanded push-down">
-        <h1 class="title">FF PIZZA</h1>
+        <!--<button class="button button-icon icon ion-navicon flat"></button>-->
+        <!--<button class="button button-icon icon ion-android-more-vertical flat pull-right"></button>-->
+        <h1 class="title"
+            style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 600; font-size: 1.35em; color: #33cd5f">
+            FF PIZZA</h1>
     </div>
-    <button class="button button-fab button-fab-top-right button-balanced icon ion-qr-scanner waves-effect waves-button waves-light" ng-click="scan()"></button>
+    <button class="button button-fab button-fab-top-right button-balanced icon ion-qr-scanner waves-effect waves-button waves-light"
+            style="z-index:999; top: 22px"
+            ng-click="scan()"></button>
 </div>
 
 <ion-nav-view nav-view-transition="ios"></ion-nav-view>
@@ -38,6 +45,10 @@
 <script src="cordova.js"></script>
 <script src="cordova_plugins.js"></script>
 
+<!-- Firebase -->
+<script src="lib/firebase/firebase.js"></script>
+<!-- AngularFire -->
+<script src="lib/angularfire/dist/angularfire.min.js"></script>
 
 <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="lib/waves/dist/waves.min.js"></script>
@@ -54,17 +65,23 @@
 
 <script>
     Waves.init();
+
     window.onerror = function (e) {
         alert(e);
     };
 
-    window.phonegap = new RegExp(/^https?:/).test(document.URL);
+    window.phonegap = !new RegExp(/^https?:/).test(document.URL);
+
+    document.addEventListener("deviceready", function() {
+        console.log('UUID: ', device.uuid);
+    }, false);
 
     setTimeout(function () {
         $('.expand').addClass('expanded');
         ionic.material.motion.pushDown({
             selector: '.push-down'
         });
+
     }, 500);
 
     setTimeout(function () {

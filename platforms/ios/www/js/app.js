@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'firebase', 'APIServiceApp'])
+angular.module('starter', ['ionic', 'fid.controllers', 'fid.services', 'ngMaterial', 'firebase', 'APIServiceApp'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -24,50 +24,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             .primaryPalette('green')
             .accentPalette('lime');
 
-        // Ionic uses AngularUI Router which uses the concept of states
-        // Learn more here: https://github.com/angular-ui/ui-router
-        // Set up the various states which the app can be in.
-        // Each state's controller can be found in controllers.js
         $stateProvider
 
             // setup an abstract state for the tabs directive
-            .state('tab', {
-                url: "/tab",
+            .state('fid', {
+                url: "/fid",
                 abstract: true,
-                templateUrl: "templates/tabs.html"
+                templateUrl: "templates/tab-widget.html"
             })
 
             // Each tab has its own nav history stack:
-            .state('tab.dash', {
-                url: '/dash',
+            .state('fid.main', {
+                url: '/main',
                 views: {
                     'tab-dash': {
                         templateUrl: 'templates/tab-widget.html',
                         controller: 'DashCtrl'
                     }
                 }
-            })
-
-            .state('tab.chats', {
-                url: '/chats',
-                views: {
-                    'tab-chats': {
-                        templateUrl: 'templates/tab-history.html',
-                        controller: 'ChatsCtrl'
-                    }
-                }
-            })
-
-            .state('tab.account', {
-                url: '/account',
-                views: {
-                    'tab-account': {
-                        templateUrl: 'templates/tab-settings.html',
-                        controller: 'AccountCtrl'
-                    }
-                }
             });
 
-        $urlRouterProvider.otherwise('/tab/dash');
+        $urlRouterProvider.otherwise('/fid/main');
     }
 );

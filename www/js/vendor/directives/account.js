@@ -34,17 +34,20 @@ angular.module('APIServiceApp')
                         if (window.device) {
                             APIService.get.serverUrl(device.uuid);
                             console.log(device);
-                        } else
-                            $timeout(function() {
-                                checkDevice()
+                        } else if (!window.phonegap) {
+                            !APIService.get.debugState() ? $window.alert('The app is running in a browser, no UUID found!') : $log.info('The app is running in a browser, no UUID found!');
+                        } else {
+                            $timeout(function () {
+                                checkDevice();
                             }, 500);
+                        }
                     }
 
                     checkDevice();
 
                     if ($scope.remoteCss) {
                         /** Get css content and inject it into the <head> tag of the page this directive is included in */
-                        var cssUrl =  $scope.remoteCss || 'http://localhost:8001/remotecss.css';
+                        var cssUrl = $scope.remoteCss || 'http://localhost:8001/remotecss.css';
                         $http.get(cssUrl).success(function (data) {
                             $scope.isReady = true;
                             angular.element(document).find('head').append("<style type='text/css'>" + data + "</style>");

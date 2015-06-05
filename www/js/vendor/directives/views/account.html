@@ -1,5 +1,9 @@
 <div>
 <style id="izi-style">
+    .izi-account {
+        min-height: 400px;
+    }
+
     .izi-account input {
         color: #000;
         border: 0;
@@ -10,7 +14,7 @@
         width: 33%;
         height: 34px;
         margin-bottom: 20px;
-        font-size: 1.1em;
+        font-size: 1.4em;
         -webkit-transition: all .3s ease-in;
         -moz-transition: all .3s ease-in;
         -ms-transition: all .3s ease-in;
@@ -64,6 +68,7 @@
 
     .izi-account .card {
         margin-bottom: 20px;
+        padding: 10px;
     }
 
     .izi-account .md-toast span {
@@ -84,10 +89,14 @@
     md-dialog {
         width: 60% !important;
     }
+
+    .izi-account [id=balancePaymentInput] {
+        padding-top: 13px;
+    }
 </style>
 
 <div class="izi-account center-block">
-<md-progress-circular class="md-accent" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
+<md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
 <div ng-if="isReady && barcode && !register">
     <div class="card">
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
@@ -102,6 +111,7 @@
                          data-ng-src="{{clientUrl}}/{{data.Barcodes[0].BarcodeUrl}}"
                          alt=""
                          onerror="$('.barcode-container').slideUp(); $('.onMissingQR').fadeIn('slow')"/>
+
                     <div class="text-center">
                         <small class="blanc">Carte n° {{barcode}}</small>
                     </div>
@@ -165,7 +175,7 @@
     </ul>
 
     <div class="text-center" ng-if="data.CustomerEmail">
-        <button class="button btn bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
@@ -178,7 +188,7 @@
 </div>
 
 <!-- LOGIN VIEW -->
-<div id="loginView" ng-if="isReady && !barcode && !register">
+<div id="loginView" ng-if="isReady && !barcode && !register" style="margin-top: 30px;">
     <h2 class="title text-center">{{firebase ? customization.title : 'FIDÉLITÉ'}}</h2>
     <h4 class="blanc text-center subtitle">
         {{firebase ? customization.subtitle : 'Veuillez saisir votre numéro de carte ci-dessous'}}
@@ -194,10 +204,10 @@
                required/>
 
         <!--<input class="center-block" type="password" name="password"-->
-               <!--ng-model="form.password"-->
-               <!--ng-minlength="8"-->
-               <!--ng-enter="login()"-->
-               <!--placeholder="Mot de passe..." required/>-->
+        <!--ng-model="form.password"-->
+        <!--ng-minlength="8"-->
+        <!--ng-enter="login()"-->
+        <!--placeholder="Mot de passe..." required/>-->
     </form>
 
     <div class="clearfix">

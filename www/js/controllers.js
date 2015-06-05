@@ -24,8 +24,10 @@ angular.module('fid.controllers', [])
                             }
                         }
                         else {
-                            $log.error('Erreur: ' + result);
+                            $log.warn('Erreur: ', result);
                         }
+                    }, function(error) {
+                        $log.warn('Erreur: ', error);
                     }
                 );
 

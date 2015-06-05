@@ -71,7 +71,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 vars.endpoint = endpoint;
             },
 
-            /** @function methods.set.debug(@param bool)
+            /** @function methods.set.debug
              *  Allows to toggle debug mode (= logging in the console) on & off
              *  @params bool [type: boolean]
              *  Self-explanatory */
@@ -79,7 +79,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 vars.debug = !!bool;
             },
 
-            /** @function methods.set.fake(@param bool)
+            /** @function methods.set.fake
              *  If set to true, we will use the fake data below for testing instead of actually calling the API
              *  @params bool [type: boolean]
              *  Self-explanatory */
@@ -89,7 +89,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
         },
 
         get: {
-            /** @function methods.get.callableUrl(@param params)
+            /** @function methods.get.callableUrl
              *  Returns the complete url to call an API method from the client url, the endpoint and the parameters
              *  @param params [type: string]
              *  The URL parameters to pass to the endpoint (e.g: '?barcode=12345678') */
@@ -101,9 +101,19 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 return emptyData;
             },
 
+            /**
+             * @function methods.get.debugState
+             * Returns true if debugging is enabled
+             * @returns {boolean}
+             */
+            debugState: function() {
+                return vars.debug;
+            },
+
             serverUrl: function(uuid) {
                 $http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
                    $log.info('getServerUrl', data);
+                   if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
                    methods.set.clientUrl(data['Server_Url']);
                 }).error(function(e) {
                     vars.debug ? $log.error(e) : 0;
@@ -126,7 +136,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                             return func(fakeData);
                         } else {
                             $http.get(methods.get.callableUrl("GetloyaltyObject?barcode=" + barcode)).success(function (data) {
-                                $log.info('DATA: ', data.Offers);
+//                                $log.info('DATA: ', data.Offers);
                                 vars.currLoyaltyObject = data;
                                 return func(data);
                             }).error(function(e) {

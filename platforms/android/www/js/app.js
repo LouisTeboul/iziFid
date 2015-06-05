@@ -30,7 +30,7 @@ angular.module('starter', ['ionic', 'fid.controllers', 'fid.services', 'ngMateri
             .state('fid', {
                 url: "/fid",
                 abstract: true,
-                templateUrl: "templates/tabs.html"
+                templateUrl: "templates/tab-widget.html"
             })
 
             // Each tab has its own nav history stack:
