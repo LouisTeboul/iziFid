@@ -39,12 +39,18 @@
 		7E7966E61810823500FA85AD /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DC1810823500FA85AD /* icon-small.png */; };
 		7E7966E71810823500FA85AD /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DD1810823500FA85AD /* icon-small@2x.png */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
-		4621DC6616CC4524BCB7368B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FADBDDC71EA4ABD9170CDCF /* libiconv.dylib */; };
-		3393FDB8037D42EEBBD27BD2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D6B05C9285428D9C8B4C05 /* AVFoundation.framework */; };
-		369FC13AAF0840EB89267475 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A63E406321F43BBBAD832E9 /* CoreVideo.framework */; };
-		4F9DBE5493DB4142A5777FE4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A885454AAA0482DAF860F9D /* QuartzCore.framework */; };
-		28458F316C1548D7A4D69EFA /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B743D199474AA5BB713154 /* CoreImage.framework */; };
-		90907AC198B246A1875BF82E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B325D2AABDBA406391409497 /* AudioToolbox.framework */; };
+		574A4892D46E4307A2AB0C8F /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22B14C39524D46B2643402 /* IonicKeyboard.m */; };
+		41D06588811F446785EBBB42 /* UIWebViewExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = F5ABFBE292AB436BB4C07373 /* UIWebViewExtension.m */; };
+		5588C73DC3E14B5584B20555 /* CDVBarcodeScanner.mm in Resources */ = {isa = PBXBuildFile; fileRef = 86C22330E113420BAB1E4A6E /* CDVBarcodeScanner.mm */; settings = {COMPILER_FLAGS = -fno-objc-arc; }; };
+		F833192CA5AE4350B99DCBE1 /* zxing-all-in-one.cpp in Resources */ = {isa = PBXBuildFile; fileRef = 5D506B4E118043B5BC2954EB /* zxing-all-in-one.cpp */; };
+		DA2D93C062034B739E7F0439 /* scannerOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9EEFACA1A1D14A1DB28091E0 /* scannerOverlay.xib */; };
+		A959A60A7886441EBC404AE0 /* CDVBarcodeScanner.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 47AAD7A267FE4C698777C90A /* CDVBarcodeScanner.bundle */; };
+		CEE6596E6E3E4C0CAFD695DC /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69032E34F1EA4658A7BE9CD2 /* libiconv.dylib */; };
+		EE94847C9A564A3692AE4F6C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 722C1A21CE8047D1804A60D3 /* AVFoundation.framework */; };
+		8552EE8F89294A2288EF7CC4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6A66981047048518BAB3FD1 /* CoreVideo.framework */; };
+		52D03B3A1EB54CC68F0E730C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F20E25C7F48C4FBA919C6D93 /* QuartzCore.framework */; };
+		3B0E5B15F6B7476BB6D5F6C4 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91192D57658F4843BDA42CB7 /* CoreImage.framework */; };
+		19070971B4534F56AE66DCF2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EED7784D80F42A4B67B06EA /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +73,7 @@
 /* Begin PBXFileReference section */
 		1D3623240D0F684500981E51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1D6058910D05DD3D006BFB54 /* Bellacci.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bellacci.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* Memphis Coffee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Memphis Coffee.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F766FDD13BBADB100FB74C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		1F766FE013BBADB100FB74C0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -92,7 +98,7 @@
 		30B4F2FF19D5E07200D9F7D8 /* Default-Landscape-736h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape-736h.png"; sourceTree = "<group>"; };
 		30C1856519D5FC0A00212699 /* icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@3x.png"; sourceTree = "<group>"; };
 		30FC414816E50CA1004E6F35 /* icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72@2x.png"; sourceTree = "<group>"; };
-		32CA4F630368D1EE00C91783 /* Bellacci-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bellacci-Prefix.pch"; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* Memphis Coffee-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Memphis Coffee-Prefix.pch"; sourceTree = "<group>"; };
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7E7966D41810823500FA85AD /* icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40.png"; sourceTree = "<group>"; };
 		7E7966D51810823500FA85AD /* icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40@2x.png"; sourceTree = "<group>"; };
@@ -104,18 +110,27 @@
 		7E7966DB1810823500FA85AD /* icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76@2x.png"; sourceTree = "<group>"; };
 		7E7966DC1810823500FA85AD /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small.png"; sourceTree = "<group>"; };
 		7E7966DD1810823500FA85AD /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small@2x.png"; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Bellacci-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Bellacci-Info.plist"; path = "../Bellacci-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Memphis Coffee-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Memphis Coffee-Info.plist"; path = "../Memphis Coffee-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		EB87FDF21871DA7A0020F90C /* merges */ = {isa = PBXFileReference; lastKnownFileType = folder; name = merges; path = ../../merges; sourceTree = "<group>"; };
 		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
 		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
-		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "Bellacci/config.xml"; sourceTree = "<group>"; };
-		6FADBDDC71EA4ABD9170CDCF /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libiconv.dylib"; path = "usr/lib/libiconv.dylib"; sourceTree = SDKROOT; fileEncoding = 4; };
-		66D6B05C9285428D9C8B4C05 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AVFoundation.framework"; path = "System/Library/Frameworks/AVFoundation.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		4A63E406321F43BBBAD832E9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreVideo.framework"; path = "System/Library/Frameworks/CoreVideo.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		2A885454AAA0482DAF860F9D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		76B743D199474AA5BB713154 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreImage.framework"; path = "System/Library/Frameworks/CoreImage.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		B325D2AABDBA406391409497 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "Memphis Coffee/config.xml"; sourceTree = "<group>"; };
+		3C22B14C39524D46B2643402 /* IonicKeyboard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "IonicKeyboard.m"; path = "com.ionic.keyboard/IonicKeyboard.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		F5ABFBE292AB436BB4C07373 /* UIWebViewExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIWebViewExtension.m"; path = "com.ionic.keyboard/UIWebViewExtension.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		AF31F27C5F00482196283E5E /* IonicKeyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "IonicKeyboard.h"; path = "com.ionic.keyboard/IonicKeyboard.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		BC1008315DBA4028974696AE /* UIWebViewExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIWebViewExtension.h"; path = "com.ionic.keyboard/UIWebViewExtension.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		86C22330E113420BAB1E4A6E /* CDVBarcodeScanner.mm */ = {isa = PBXFileReference; lastKnownFileType = unknown; name = "CDVBarcodeScanner.mm"; path = "com.phonegap.plugins.barcodescanner/CDVBarcodeScanner.mm"; sourceTree = "<group>"; fileEncoding = 4; };
+		5D506B4E118043B5BC2954EB /* zxing-all-in-one.cpp */ = {isa = PBXFileReference; lastKnownFileType = unknown; name = "zxing-all-in-one.cpp"; path = "com.phonegap.plugins.barcodescanner/zxing-all-in-one.cpp"; sourceTree = "<group>"; fileEncoding = 4; };
+		3BD9262526CB4EC7934D872D /* zxing-all-in-one.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "zxing-all-in-one.h"; path = "com.phonegap.plugins.barcodescanner/zxing-all-in-one.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		9EEFACA1A1D14A1DB28091E0 /* scannerOverlay.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "scannerOverlay.xib"; path = "scannerOverlay.xib"; sourceTree = "<group>"; fileEncoding = 4; };
+		47AAD7A267FE4C698777C90A /* CDVBarcodeScanner.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "CDVBarcodeScanner.bundle"; path = "CDVBarcodeScanner.bundle"; sourceTree = "<group>"; };
+		69032E34F1EA4658A7BE9CD2 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libiconv.dylib"; path = "usr/lib/libiconv.dylib"; sourceTree = SDKROOT; fileEncoding = 4; };
+		722C1A21CE8047D1804A60D3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AVFoundation.framework"; path = "System/Library/Frameworks/AVFoundation.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		D6A66981047048518BAB3FD1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreVideo.framework"; path = "System/Library/Frameworks/CoreVideo.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		F20E25C7F48C4FBA919C6D93 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		91192D57658F4843BDA42CB7 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreImage.framework"; path = "System/Library/Frameworks/CoreImage.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		9EED7784D80F42A4B67B06EA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,12 +142,12 @@
 				301BF552109A68D80062928A /* libCordova.a in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
-				4621DC6616CC4524BCB7368B /* libiconv.dylib in Frameworks */,
-				3393FDB8037D42EEBBD27BD2 /* AVFoundation.framework in Frameworks */,
-				369FC13AAF0840EB89267475 /* CoreVideo.framework in Frameworks */,
-				4F9DBE5493DB4142A5777FE4 /* QuartzCore.framework in Frameworks */,
-				28458F316C1548D7A4D69EFA /* CoreImage.framework in Frameworks */,
-				90907AC198B246A1875BF82E /* AudioToolbox.framework in Frameworks */,
+				CEE6596E6E3E4C0CAFD695DC /* libiconv.dylib in Frameworks */,
+				EE94847C9A564A3692AE4F6C /* AVFoundation.framework in Frameworks */,
+				8552EE8F89294A2288EF7CC4 /* CoreVideo.framework in Frameworks */,
+				52D03B3A1EB54CC68F0E730C /* QuartzCore.framework in Frameworks */,
+				3B0E5B15F6B7476BB6D5F6C4 /* CoreImage.framework in Frameworks */,
+				19070971B4534F56AE66DCF2 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,13 +164,13 @@
 				1D3623250D0F684500981E51 /* AppDelegate.m */,
 			);
 			name = Classes;
-			path = "Bellacci/Classes";
+			path = "Memphis Coffee/Classes";
 			sourceTree = SOURCE_ROOT;
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* Bellacci.app */,
+				1D6058910D05DD3D006BFB54 /* Memphis Coffee.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -181,11 +196,11 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				32CA4F630368D1EE00C91783 /* Bellacci-Prefix.pch */,
+				32CA4F630368D1EE00C91783 /* Memphis Coffee-Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
-			path = "Bellacci";
+			path = "Memphis Coffee";
 			sourceTree = "<group>";
 		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
@@ -193,10 +208,12 @@
 			children = (
 				308D052D1370CCF300D202BF /* icons */,
 				308D05311370CCF300D202BF /* splash */,
-				8D1107310486CEB800E47090 /* Bellacci-Info.plist */,
+				8D1107310486CEB800E47090 /* Memphis Coffee-Info.plist */,
+				9EEFACA1A1D14A1DB28091E0 /* scannerOverlay.xib */,
+				47AAD7A267FE4C698777C90A /* CDVBarcodeScanner.bundle */,
 			);
 			name = Resources;
-			path = "Bellacci/Resources";
+			path = "Memphis Coffee/Resources";
 			sourceTree = "<group>";
 		};
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
@@ -205,12 +222,12 @@
 				5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */,
-				6FADBDDC71EA4ABD9170CDCF /* libiconv.dylib */,
-				66D6B05C9285428D9C8B4C05 /* AVFoundation.framework */,
-				4A63E406321F43BBBAD832E9 /* CoreVideo.framework */,
-				2A885454AAA0482DAF860F9D /* QuartzCore.framework */,
-				76B743D199474AA5BB713154 /* CoreImage.framework */,
-				B325D2AABDBA406391409497 /* AudioToolbox.framework */,
+				69032E34F1EA4658A7BE9CD2 /* libiconv.dylib */,
+				722C1A21CE8047D1804A60D3 /* AVFoundation.framework */,
+				D6A66981047048518BAB3FD1 /* CoreVideo.framework */,
+				F20E25C7F48C4FBA919C6D93 /* QuartzCore.framework */,
+				91192D57658F4843BDA42CB7 /* CoreImage.framework */,
+				9EED7784D80F42A4B67B06EA /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -226,9 +243,16 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				3C22B14C39524D46B2643402 /* IonicKeyboard.m */,
+				F5ABFBE292AB436BB4C07373 /* UIWebViewExtension.m */,
+				AF31F27C5F00482196283E5E /* IonicKeyboard.h */,
+				BC1008315DBA4028974696AE /* UIWebViewExtension.h */,
+				86C22330E113420BAB1E4A6E /* CDVBarcodeScanner.mm */,
+				5D506B4E118043B5BC2954EB /* zxing-all-in-one.cpp */,
+				3BD9262526CB4EC7934D872D /* zxing-all-in-one.h */,
 			);
 			name = Plugins;
-			path = "Bellacci/Plugins";
+			path = "Memphis Coffee/Plugins";
 			sourceTree = SOURCE_ROOT;
 		};
 		308D052D1370CCF300D202BF /* icons */ = {
@@ -282,9 +306,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* Bellacci */ = {
+		1D6058900D05DD3D006BFB54 /* Memphis Coffee */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Bellacci" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Memphis Coffee" */;
 			buildPhases = (
 				304B58A110DAC018002A0835 /* Copy www directory */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
@@ -296,9 +320,9 @@
 			dependencies = (
 				301BF551109A68C00062928A /* PBXTargetDependency */,
 			);
-			name = "Bellacci";
-			productName = "Bellacci";
-			productReference = 1D6058910D05DD3D006BFB54 /* Bellacci.app */;
+			name = "Memphis Coffee";
+			productName = "Memphis Coffee";
+			productReference = 1D6058910D05DD3D006BFB54 /* Memphis Coffee.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -333,7 +357,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* Bellacci */,
+				1D6058900D05DD3D006BFB54 /* Memphis Coffee */,
 			);
 		};
 /* End PBXProject section */
@@ -379,6 +403,8 @@
 				7E7966E11810823500FA85AD /* icon-50@2x.png in Resources */,
 				7E7966E51810823500FA85AD /* icon-76@2x.png in Resources */,
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
+				DA2D93C062034B739E7F0439 /* scannerOverlay.xib in Resources */,
+				A959A60A7886441EBC404AE0 /* CDVBarcodeScanner.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +436,10 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
+				574A4892D46E4307A2AB0C8F /* IonicKeyboard.m in Sources */,
+				41D06588811F446785EBBB42 /* UIWebViewExtension.m in Sources */,
+				5588C73DC3E14B5584B20555 /* CDVBarcodeScanner.mm in Resources */,
+				F833192CA5AE4350B99DCBE1 /* zxing-all-in-one.cpp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,10 +463,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Bellacci/Bellacci-Prefix.pch";
+				GCC_PREFIX_HEADER = "Memphis Coffee/Memphis Coffee-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
-				INFOPLIST_FILE = "Bellacci/Bellacci-Info.plist";
+				INFOPLIST_FILE = "Memphis Coffee/Memphis Coffee-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -450,7 +480,7 @@
 					"-weak-lSystem",
 					"-ObjC",
 				);
-				PRODUCT_NAME = "Bellacci";
+				PRODUCT_NAME = "Memphis Coffee";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -462,10 +492,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Bellacci/Bellacci-Prefix.pch";
+				GCC_PREFIX_HEADER = "Memphis Coffee/Memphis Coffee-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
-				INFOPLIST_FILE = "Bellacci/Bellacci-Info.plist";
+				INFOPLIST_FILE = "Memphis Coffee/Memphis Coffee-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -479,7 +509,7 @@
 					"-weak-lSystem",
 					"-ObjC",
 				);
-				PRODUCT_NAME = "Bellacci";
+				PRODUCT_NAME = "Memphis Coffee";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -574,7 +604,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Bellacci" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Memphis Coffee" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,

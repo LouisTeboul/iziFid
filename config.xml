@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.izipass.bellacci" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
+<widget id="com.izipass.memphis" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Bellacci</name>
+    <name>Memphis Coffee</name>
     <description>
-        Gestion Fidélité Bellacci
+        Gestion Fidélité Memphis Coffee
     </description>
     <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS

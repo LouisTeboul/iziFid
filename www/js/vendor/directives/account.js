@@ -89,9 +89,9 @@ angular.module('APIServiceApp')
 
                         return "@import url(" + data.styling.mainFont + ");" +
                             "@import url(" + data.styling.secondaryFont + ");" +
-                            "h1, h2, h3 { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            "h4, h5, p, a, b, em, small, div { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            "a, a:hover { color: " + data.styling.mainColor + " !important; }";
+                            ".izi-account h1, .izi-account h2, .izi-account h3 { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account b, .izi-account small, .izi-account div { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; }";
                     }
 
                     $scope.toastPosition = {

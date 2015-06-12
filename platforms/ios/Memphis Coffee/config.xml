@@ -14,18 +14,6 @@
     <feature name="LocalStorage">
         <param name="ios-package" value="CDVLocalStorage" />
     </feature>
-    <feature name="Keyboard">
-        <param name="ios-package" onload="true" value="IonicKeyboard" />
-    </feature>
-    <feature name="Device">
-        <param name="ios-package" value="CDVDevice" />
-    </feature>
-    <feature name="Console">
-        <param name="ios-package" value="CDVLogger" />
-    </feature>
-    <feature name="BarcodeScanner">
-        <param name="ios-package" value="CDVBarcodeScanner" />
-    </feature>
     <icon gap:platform="ios" height="114" src="resources/ios/icon/icon@2x.png" width="114" />
     <icon gap:platform="ios" height="72" src="resources/ios/icon/icon-72.png" width="72" />
     <icon gap:platform="ios" height="57" src="resources/ios/icon/icon.png" width="57" />
@@ -34,9 +22,9 @@
     <gap:splash gap:platform="ios" height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
     <gap:splash gap:platform="ios" height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
     <gap:splash gap:platform="ios" height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-    <name>Bellacci</name>
+    <name>Memphis Coffee</name>
     <description>
-        Gestion Fidélité Bellacci
+        Gestion Fidélité Memphis Coffee
     </description>
     <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS
@@ -54,4 +42,11 @@
     <icon gap:platform="ios" height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
     <splash src="resources/ios/splash/Default@2x~iphone.png" />
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0" />
+    <gap:plugin name="org.apache.cordova.device" />
+    <feature name="Keyboard">
+        <param name="ios-package" onload="true" value="IonicKeyboard" />
+    </feature>
+    <feature name="BarcodeScanner">
+        <param name="ios-package" value="CDVBarcodeScanner" />
+    </feature>
 </widget>
