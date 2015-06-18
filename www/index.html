@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline' http://* https://*; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://* https://*; font-src 'self' http://* https://*">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src *; style-src 'self' 'unsafe-inline' http://* https://*; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://* https://*; font-src 'self' http://* https://*">
     <title></title>
 
-    <link href='http://fonts.googleapis.com/css?family=Bevan' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Kameron:400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
     <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
     <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
     <link href="lib/waves/dist/waves.min.css" rel="stylesheet">
@@ -25,7 +25,8 @@
         <!--<button class="button button-icon icon ion-android-more-vertical flat pull-right"></button>-->
         <h1 class="title"
             style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 600; font-size: 2em; color: #dd6161">
-            BELLACCI</h1>
+            COOKING MAISON
+        </h1>
     </div>
     <button class="button button-fab button-fab-top-right button-balanced icon ion-qr-scanner waves-effect waves-button waves-light"
             style="z-index:999; top: 22px; border-color: #d15d5d; background-color: #dd6161;"
@@ -55,8 +56,8 @@
 <!--<script src="lib/smoothscroll/dist/smoothscroll.raf.js"></script>-->
 <script src="lib/angular-aria/angular-aria.min.js"></script>
 <script src="lib/angular-material/angular-material.min.js"></script>
-<script src="js/vendor/izi-api.min.js"></script>
-<script src="js/vendor/account.min.js"></script>
+<script src="js/vendor/services/api.js"></script>
+<script src="js/vendor/directives/account.js"></script>
 
 <!-- your app's js -->
 <script src="js/app.js"></script>
@@ -72,7 +73,7 @@
 
     window.phonegap = !new RegExp(/^https?:/).test(document.URL);
 
-    document.addEventListener("deviceready", function() {
+    document.addEventListener("deviceready", function () {
         console.log('UUID: ', device.uuid);
     }, false);
 
