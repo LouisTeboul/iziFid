@@ -13,7 +13,8 @@ angular.module('APIServiceApp')
                 remoteCss: "@",
                 otherModelValue: "=compareTo",
                 firebase: "@",
-                auto: "="
+                auto: "=",
+                caisse: "="
             },
 
             templateUrl: 'js/vendor/directives/views/account.html',
@@ -35,7 +36,7 @@ angular.module('APIServiceApp')
                             !APIService.get.debugState() ?
                                 $window.alert('The app is running in a browser, no UUID found!') :
                                 $log.info('The app is running in a browser, no UUID found!');
-                            $scope.isBrowser = true;
+                            $scope.isBrowser = $scope.caisse ? false : true;
                         }
                     }, 0);
 
@@ -207,13 +208,13 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.login = function () {
-                        checkBarcode($scope.form.barcode);
-                        $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
+//                        checkBarcode($scope.form.barcode);
+                        displayData();
                     };
 
                     $scope.autoLogin = function () {
                         if ($scope.auto) {
-                            checkBarcode($scope.form.barcode);
+//                          checkBarcode($scope.form.barcode);
                             $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                         }
                     };
@@ -472,6 +473,7 @@ angular.module('APIServiceApp')
         };
 
         $scope.useBalanceToPay = function (val) {
+            $rootScope.useBalanceToPay(val);
             $rootScope.useBalanceToPay(val);
             $scope.hide();
         };

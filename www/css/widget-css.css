@@ -33,6 +33,10 @@
     color: #fdfdfd
 }
 
+.izi-account button.bg-accent {
+    color: #fdfdfd !important;
+}
+
 .izi-account h3, .izi-account h4 {
     font-weight: 500 !important;
     color: #d43b44
@@ -52,6 +56,10 @@
 
 .izi-account input.ng-valid:not(.ng-pristine):not(.ng-dirty) {
     border-color: #d43b44
+}
+
+.izi-account .card {
+    padding: 12px;
 }
 
 .izi-account form input {
@@ -74,6 +82,10 @@
     outline: none
 }
 
+.izi-account [name=registerForm] {
+    margin-top: 28px;
+}
+
 .izi-account [name=registerForm] input {
     font-size: 1.2em;
     margin: 0;
@@ -88,12 +100,16 @@
     border-color: #ccc !important
 }
 
+[name=barcodeId] {
+    line-height: 34px !important;
+}
+
 .izi-account [name=registerForm] input.ng-valid:not(.ng-pristine):focus, .izi-account [name=registerForm] input [name=barcodeId].ng-valid:not(.ng-pristine):focus {
     border-color: #d43b44 !important
 }
 
 .izi-account [name=registerForm] label {
-    padding-top: 8px;
+    padding-top: 0;
     text-align: right;
     padding-left: 0;
     margin-left: 0
@@ -133,7 +149,7 @@
 
 .izi-account .barcode-container {
     background: #d43b44;
-    padding: 40px;
+    padding: 52px;
     width: 224px;
     height: 224px;
     border-radius: 100%;

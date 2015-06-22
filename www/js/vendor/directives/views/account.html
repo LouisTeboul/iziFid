@@ -121,8 +121,9 @@
                ng-minlength="8"
                ng-enter="login()"
                ng-pattern="/(^[0-9]{8,8}$)|(^[0-9]{10,10}$)|(^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/"
-               placeholder="N° de carte&#8230;"
+               placeholder="N° de carte ou Adresse Email&#8230;"
                ng-change="autoLogin()"
+               style="border-bottom: 1px solid #eee;"
                required/>
 
         <input class="center-block" type="password" name="password"

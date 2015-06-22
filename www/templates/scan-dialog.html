@@ -1,0 +1,18 @@
+<md-dialog aria-label="Scanner La Carte" style="width: 80%">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools" style="background: #d43b44">
+                <h2 style="color: #fdfdfd;">Scanner La Carte</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="img/clear.svg" aria-label="Fermer dialogue"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="padding: 0">
+            <div id="reader-container" style="width: 600px; min-width: 350px;">
+                <div id="reader"></div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>
