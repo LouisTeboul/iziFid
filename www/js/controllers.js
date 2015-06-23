@@ -110,8 +110,13 @@ angular.module('fid.controllers', [])
                 var barcodeField = $('input[name=barcodeId]');
                 barcodeField.val("");
                 barcodeField.val(cardNum);
-                angular.element('.izi-account').scope().form = { barcode: cardNum };
-                angular.element('.izi-account').scope().login();
+            });
+
+            var accountScope = angular.element('.izi-account').scope();
+            accountScope.$apply(function() {
+                accountScope.form = { barcode: cardNum };
+                accountScope.barcode = cardNum;
+                accountScope.login();
             });
 
             vca.gain.value = 1;
