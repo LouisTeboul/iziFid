@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.izipass.bellacci" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
+<widget id="com.izipass.ffpizza" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Bellacci</name>
+    <name>FF Pizza</name>
     <description>
-        Gestion Fidélité Bellacci
+        Gestion Fidélité FF Pizza
     </description>
     <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS
@@ -23,7 +23,7 @@
     </feature>
     <feature name="http://api.phonegap.com/1.0/device"/>
     <icon src="resources/ios/icon/icon-72@2x.png"/>
-    <splash src="resources/ios/splash/Default@2x~iphone.png"/>
+    <gap:splash src="resources/ios/splash/Default@2x~iphone.png" gap:platform="ios" height="960" width="640"/>
     <platform name="ios">
         <icon src="resources/ios/icon/icon-72@2x.png" gap:platform="ios" width="144" height="144"/>
         <icon src="resources/ios/icon/icon@2x.png" gap:platform="ios" width="114" height="114"/>
@@ -35,6 +35,7 @@
         <gap:splash src="resources/ios/splash/Default@2x~iphone.png" gap:platform="ios" height="960" width="640"/>
         <gap:splash src="resources/ios/splash/Default~iphone.png" gap:platform="ios" height="480" width="320"/>
     </platform>
+
     <platform name="android">
         <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
         <icon src="resources/android/icon/drawable-mdpi-icon.png" density="mdpi"/>
@@ -55,6 +56,7 @@
         <splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
         <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
     </platform>
+
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
     <gap:plugin name="org.apache.cordova.device"/>
 </widget>
