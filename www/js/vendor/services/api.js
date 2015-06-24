@@ -1,14 +1,22 @@
 'use strict';
 
+/**
+ * @author Louis Teboul (louis.teboul@izi-pass.com)
+ * @overview Service AngularJS faisant l'abstraction entre l'API SmartStore et les apps Angular
+ */
+
+/** @module APIService */
+
 angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$timeout', function ($http, $log, $timeout) {
     var methods, vars, errors, fakeData, emptyData, passagePromise = null;
 
-    /** Variables & flags
-     * @variable endpoint [type: string] : the API endpoint, without domain name and params
-     * @variable clientUrl [type: string] : the domain name of the partner we want to hit (e.g: http://pitapit.fr)
-     * @variable fake [type: boolean] : whether this service should mock API calls by serving fake JSON data for debugging
-     * @variable debug [type: boolean] : Turns logging ON/OFF
-     */
+    /** @namespace module:APIService~vars
+     *  @description Variables & Flags
+     *  @property {string} endpoint - The API endpoint path, without the domain name and params
+     *  @property {string} clientUrl - The domain name of the partner's back-office we want to hit (e.g: http://ffpizza.izipass.pro). This is set either via the client-url attribute of the <izi-account> element, or via the APIService#set.clientUrl(x) method
+     *  @property {boolean} debug - If false, the service will not log anything to the console
+     *  @property {object} currLoyaltyObject - An object to keep reference of the current user
+     *  @property {array} validClientUrls - Whitelist for the client urls (see {@link clientUrl}) */
     vars = {
         endpoint: "/api/RESTLoyalty/RESTLoyalty/",
         clientUrl: "",
@@ -21,24 +29,28 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             "http://beautyburger.com",
             "http://madamecroque.fr",
             "http://planetalis.com",
-            "http://cooking.bigsister.biz",
+            "http://cooking.izipass.pro",
             "http://ffpizza.izipass.pro",
-            "http://le-b.izipass.pro"
+            "http://bellacci.izipass.pro",
+            "http://le-b.izipass.pro",
+            "http://le-b2.izipass.pro"
         ]
     };
 
-    /** Shortcut functions for throwing the various possible errors */
+    /** @namespace module:APIService~errors
+     *  @description Shortcut methods to throw the various possible errors, if vars.debug is true */
     errors = {
         /** @function missingClientUrl
-         *  The error to throw in case 'vars.clientUrl' is not defined */
+         *  @memberof module:APIService~errors
+         *  @returns {error} The error to throw in case vars.clientUrl is not defined (@see vars.clientUrl) */
         missingClientUrl: function () {
             return vars.debug ? $log.error("Client URL is not set! Use APIService.set.clientUrl(xxx)") : 0;
         },
 
-        /** @function missingClientUrl
-         *  The error to throw in case the barcode param is not valid (= not 8 characters long and/or not a number)
-         *  @param barcode [type: number]
-         *  The barcode we want to get the data from */
+        /** @function invalidBarcode
+         *  @memberof module:APIService~errors
+         *  @param {number} barcode - The invalid barcode
+         *  @returns {error} The error to throw for an invalid barcode */
         invalidBarcode: function (barcode) {
             return vars.debug ? $log.error("Barcode is not valid:", barcode) : 0;
         },
@@ -47,85 +59,105 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             return vars.debug ? $log.error("No client logged in") : 0;
         },
 
+        /** @function addPassage
+         *  @description Adds a passage without using an offer or paying with a balance
+         *  @memberof module:APIService~errors
+         *  @returns {error} The error to throw if methods.actions.addPassage returns false (@see methods.actions.addPassage) */
         addPassage: function () {
             return vars.debug ? $log.error("AddPassage ERROR, API returned false.") : 0;
         }
     };
 
-    /** Methods exposed by the service's API */
+    /** @namespace module:APIService~methods
+     *  @description Methods exposed by the service  */
     methods = {
+        /** @namespace module:APIService~set
+         *  @description Methods for setting variables */
         set: {
-            /** @function methods.set.clientUrl(@param url)
-             *  Sets the client url. See 'vars.clientUrl' above
-             *  @params url [type: string]
-             *  the client's website url */
+            /** @function clientUrl
+             *  @description Sets the client-url to use
+             *  @memberof module:APIService~set
+             *  @params {string} url - The client-url to set (@see vars.clientUrl) */
             clientUrl: function (url) {
                 vars.clientUrl = url;
             },
 
-            /** @function methods.set.endpoint(@param endpoint)
-             *  Sets the API endpoint. See 'vars.endpoint' above
-             *  @params endpoint [type: string]
-             *  the API's endpoint path without the url (= after the TLD) */
+            /** @function endpoint
+             *  @description Sets the endpoint path to use
+             *  @memberof module:APIService~set
+             *  @params {string} endpoint - The API's endpoint path without the domain name or parameters (@see vars.endpoint) */
             endpoint: function (endpoint) {
                 vars.endpoint = endpoint;
             },
 
-            /** @function methods.set.debug
-             *  Allows to toggle debug mode (= logging in the console) on & off
-             *  @params bool [type: boolean]
-             *  Self-explanatory */
+            /** @function debug
+             *  @description Allows to toggle debug mode (= logging in the console) on & off
+             *  @memberof module:APIService~set
+             *  @params {boolean} bool */
             debug: function (bool) {
                 vars.debug = !!bool;
             },
 
-            /** @function methods.set.fake
-             *  If set to true, we will use the fake data below for testing instead of actually calling the API
-             *  @params bool [type: boolean]
-             *  Self-explanatory */
+            /** @function methods.set.fake(@param bool)
+             *  @description If set to true, we will use the fake data below for testing instead of actually calling the API
+             *  @params {boolean} bool - Self-explanatory */
             fake: function (bool) {
                 vars.fake = !!bool;
             }
         },
 
+        /** @namespace module:APIService~get
+         *  @description Methods returning data */
         get: {
-            /** @function methods.get.callableUrl
-             *  Returns the complete url to call an API method from the client url, the endpoint and the parameters
-             *  @param params [type: string]
-             *  The URL parameters to pass to the endpoint (e.g: '?barcode=12345678') */
+            /** @function callableUrl
+             *  @description Returns the complete url to call an API method from the client url, the endpoint and the parameters
+             *  @memberof APIService.get
+             *  @param {string} params - The URL parameters to pass to the endpoint (e.g: '?barcode=12345678')
+             *  @returns {string} The full URL to use in our $http calls */
             callableUrl: function (params) {
                 return methods.validate.clientUrl() ? vars.clientUrl + vars.endpoint + params : errors.missingClientUrl();
             },
 
+            /** @function emptyData
+             *  @description Returns a local copy of an empty loyaltyObject
+             *  @memberof APIService.get
+             *  @returns {object} A local copy of an empty response from the API */
             emptyData: function () {
                 return emptyData;
             },
 
-            /**
-             * @function methods.get.debugState
-             * Returns true if debugging is enabled
-             * @returns {boolean}
-             */
-            debugState: function() {
+            /** @function debugState
+             *  @description Returns true if debugging is enabled
+             *  @memberof APIService.get
+             *  @returns {boolean} */
+            debugState: function () {
                 return vars.debug;
             },
 
-            serverUrl: function(uuid) {
-                $http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
+            /** @function serverUrl
+             *  @description Get the correct clientUrl for the current device
+             *  @memberof APIService.get
+             *  @param uuid - The device's Universal Unique Identifier, retrieved via phonegap/cordova */
+            serverUrl: function(uuid, callback) {
+                return $http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
                    $log.info('getServerUrl', data);
-                   if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
-                   methods.set.clientUrl(data['Server_Url']);
-                }).error(function(e) {
-                    vars.debug ? $log.error(e) : 0;
-                });
+                   if (data.Server_Url) {
+                       callback(data.Server_Url);
+                   } else {
+                       methods.set.clientUrl("");
+                       window.alert("Cet appareil n'est pas relié à la fidélité (UUID: " + uuid + ")");
+                   }
+               }).error(function (e) {
+                   vars.debug ? $log.error(e) : 0;
+               });
             },
 
-            /** @function methods.get.loyaltyObject(@param barcode)
-             *  Get the data associated with a particular barcode
-             * @param barcode [type: number]
-             * The barcode we want to retrieve data from
-             * @param func [type: function]
-             * A callback function to which we pass the data */
+            /** @function loyaltyObject
+             *  @description Get the data associated with a particular barcode
+             *  @memberof APIService.get
+             *  @param {number|string} barcode - The barcode we want to retrieve data from
+             *  @param {function} func - A callback function to which we pass the data
+             *  @returns {function|error} Either a call to the callback function that was passed, or an error */
             loyaltyObject: function (barcode, func) {
                 return $timeout(function () {
                     var isBarcodeValid = methods.validate.barcode(barcode),
@@ -136,10 +168,10 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                             return func(fakeData);
                         } else {
                             $http.get(methods.get.callableUrl("GetloyaltyObject?barcode=" + barcode)).success(function (data) {
-//                                $log.info('DATA: ', data.Offers);
+                                $log.info('DATA: ', data.Offers);
                                 vars.currLoyaltyObject = data;
                                 return func(data);
-                            }).error(function(e) {
+                            }).error(function (e) {
                                 vars.debug ? $log.error(e) : 0;
                                 return func(false);
                             });
@@ -150,33 +182,41 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 }, 0);
             },
 
+            /** @function methods.get.loyaltyObjectWithPassword(@param barcode)
+             *  Get the data associated with a particular barcode
+             * @param barcode [type: number]
+             * The barcode we want to retrieve data from
+             * @param func [type: function]
+             * @param password The user's password
+             * A callback function to which we pass the data */
+            loyaltyObjectWithPassword: function (barcode, password, func) {
+                return $timeout(function () {
+                    var isBarcodeValid = methods.validate.barcode(barcode),
+                        isClientUrlValid = methods.validate.clientUrl();
+                    if (isBarcodeValid && isClientUrlValid) {
+                        $http.get(methods.get.callableUrl("GetloyaltyObject?login=" + barcode + "&password=" + password)).success(function (data) {
+                            $log.info('DATA: ', data.Offers);
+                            vars.currLoyaltyObject = data;
+                            return func(data);
+                        }).error(function (e) {
+                            vars.debug ? $log.error(e) : 0;
+                            return func(false);
+                        });
+                    } else return isBarcodeValid ? errors.missingClientUrl() : errors.invalidBarcode(barcode);
+
+                }, 0);
+            },
+
+            /** @function methods.get.formattedOffers
+             * Groups same valid offers in an array
+             * @param loyaltyObj - The LoyaltyObject returned by the api
+             * @returns {Array} */
             formattedOffers: function (loyaltyObj) {
                 var offers = loyaltyObj.Offers;
                 $log.info('offers', offers);
-//                var types = [];
                 var offersTypes = [];
 
-                /** Group valid offers by OfferTypeId */
                 for (var i = 0; i < offers.length; i++) {
-//                    var next = i + 1;
-//                    if (next >= offers.length) next = i - 1;
-//                    if (offers[i].isValid) {
-//                        $log.info('offer is valid');
-//                        if (i === 0 || (offers[i].OfferTypeId !== offers[next].OfferTypeId)) {
-//                            $log.info('new offer type');
-//                            types.push(offers[i].OfferTypeId);
-//                            offersTypes.push(offers[i]);
-//                            offersTypes[offersTypes.length - 1].counter = 1;
-//                        } else if (types.indexOf(offers[i].OfferTypeId) > -1) {
-//                                $log.info('same offer type');
-//                                offersTypes[types.indexOf(offers[i].OfferTypeId)].counter++;
-//                        } else {
-//                            $log.info('last');
-//                            var last = offersTypes.length - 1;
-//                            last < 0 ? last = 0 : 0;
-//                            offersTypes[last] ? offersTypes[last].counter++ : 0;
-//                        }
-//                    }
                     if (offers[i].isValid)
                         offersTypes.push(offers[i]);
                 }
@@ -243,6 +283,18 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 }
             },
 
+            addOrder: function (obj) {
+                console.log(obj);
+                console.log(passagePromise);
+                passagePromise = null;
+                if (!passagePromise) {
+                    passagePromise = $http.post(methods.get.callableUrl("AddOrder"), JSON.stringify(JSON.stringify(obj))).success(function (data) {
+                        return data;
+                    });
+                    return passagePromise;
+                }
+            },
+
             register: function (formObj) {
                 return $timeout(function () {
                     return vars.fake ? fakeData : $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
@@ -262,9 +314,14 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             },
 
             /** @function methods.validate.barcode
-             * Checks if the barcode is a number containing either 8 or 10 characters (8 = legacy, 10 = new) */
+             * Checks if the barcode is a number containing either 8 or 10 characters (8 = legacy, 10 = new) or a valid email address
+             * It tests three RegExps in one:
+             * (^[0-9]{8,8}$) -> An int or a string containing exactly 8 numbers
+             * (^[0-9]{10,10}$) -> An int or a string containing exactly 10 numbers
+             * (^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/) -> A valid email address (with the TLD forced, while the standard spec accepts TLD-less adresses)
+             * */
             barcode: function (barcode) {
-                return !!((+barcode && ~[8, 10].indexOf(barcode.toString().length)) || new RegExp(/(^[0-9]*$)|(^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/));
+                return new RegExp(/(^[0-9]{8,8}$)|(^[0-9]{10,10}$)|(^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/).test(barcode);
             }
         }
     };
@@ -282,503 +339,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
         "Offers": []
     };
 
-    fakeData = {
-        "Barcodes": [
-            {
-                "Barcode": "0004405498",
-                "BarcodeUrl": "/Barcode/77u_UXJCYXJjb2RlWzAsMCw1LDNdOjAwMDQ0MDU0OTg6LTk3MTEwMTEyNw2",
-                "BarcodeType": "QrCode",
-                "CreationDate": "2015-04-22T14:34:51.927",
-                "LastUseDate": null,
-                "LastBipDate": "2015-05-04T11:16:47.583"
-            }
-        ],
-        "LoyaltyObjectId": 2890,
-        "LoyaltyPictureUrl": null,
-        "CustomerId": 1300915,
-        "LoyaltyClass": "Carte Cooking",
-        "CustomerFirstName": "Stephen",
-        "CustomerLastName": "TISSOT",
-        "CustomerEmail": "toto01@toto.com",
-        "Balances": [
-            {
-                "Id": 2890,
-                "BalanceName": "Cagnotte Cooking",
-                "BalanceType": "Euros",
-                "BalanceType_Id": 3,
-                "Value": 25.97,
-                "ValidForTenant": "COOKING MAISON",
-                "UseToPay": true,
-                "MinOrderTotalIncVAT": 0.00,
-                "MinOrderTotalWitoutLoyalty": 0.00
-            }
-        ],
-        "Offers": [
-            {
-                "OfferObjectId": 22058,
-                "Barcode": "0741110815",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": false,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22059,
-                "Barcode": "0901429129",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": false,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22061,
-                "Barcode": "0399778143",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": false,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22062,
-                "Barcode": "0594962883",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22063,
-                "Barcode": "0452116923",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22064,
-                "Barcode": "0006106690",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22065,
-                "Barcode": "0222065758",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22066,
-                "Barcode": "0058445470",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22067,
-                "Barcode": "0274404538",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22068,
-                "Barcode": "0469589278",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22069,
-                "Barcode": "0862371496",
-                "OfferObjectDescription": "Dessert offert",
-                "OfferClassDescription": "Dessert offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
-                "OfferTypeId": 4,
-                "OfferTypeName": "OneProductInCategory",
-                "isValid": true,
-                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22071,
-                "Barcode": "0555905249",
-                "OfferObjectDescription": "Dessert offert",
-                "OfferClassDescription": "Dessert offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
-                "OfferTypeId": 4,
-                "OfferTypeName": "OneProductInCategory",
-                "isValid": true,
-                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22072,
-                "Barcode": "0751089989",
-                "OfferObjectDescription": "Dessert offert",
-                "OfferClassDescription": "Dessert offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
-                "OfferTypeId": 4,
-                "OfferTypeName": "OneProductInCategory",
-                "isValid": true,
-                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22073,
-                "Barcode": "0608244030",
-                "OfferObjectDescription": "Dessert offert",
-                "OfferClassDescription": "Dessert offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
-                "OfferTypeId": 4,
-                "OfferTypeName": "OneProductInCategory",
-                "isValid": true,
-                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22074,
-                "Barcode": "0325854084",
-                "OfferObjectDescription": "Dessert offert",
-                "OfferClassDescription": "Dessert offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
-                "OfferTypeId": 4,
-                "OfferTypeName": "OneProductInCategory",
-                "isValid": true,
-                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22075,
-                "Barcode": "0001987708",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22076,
-                "Barcode": "0375616471",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22077,
-                "Barcode": "0873348243",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22078,
-                "Barcode": "0327293246",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22079,
-                "Barcode": "0272771550",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22080,
-                "Barcode": "0165293831",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22081,
-                "Barcode": "0890548605",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22082,
-                "Barcode": "0298220727",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22083,
-                "Barcode": "0904549275",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22084,
-                "Barcode": "0510877822",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22085,
-                "Barcode": "0117206369",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22086,
-                "Barcode": "0723534916",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22087,
-                "Barcode": "0329863464",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22088,
-                "Barcode": "0294997038",
-                "OfferObjectDescription": "Coca offert",
-                "OfferClassDescription": "Coca offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003139.jpg",
-                "OfferTypeId": 2,
-                "OfferTypeName": "AddProduct",
-                "isValid": true,
-                "OfferParam": "{\"ProductId\":[\"1660-COCA.COLA ZERO\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22089,
-                "Barcode": "0804926779",
-                "OfferObjectDescription": "Dessert offert",
-                "OfferClassDescription": "Dessert offert",
-                "OfferImageUrl": "http://montpellier.bigsister.biz/Media/Thumbs/0003/0003140.jpg",
-                "OfferTypeId": 4,
-                "OfferTypeName": "OneProductInCategory",
-                "isValid": false,
-                "OfferParam": "{\"CategoryId\":[\"67-DESSERTS\"],\"Price\":0,\"MinOrderIncTax\":0}"
-            },
-            {
-                "OfferObjectId": 22101,
-                "Barcode": "0641824893",
-                "OfferObjectDescription": "Vous avez gagné un bisou !",
-                "OfferClassDescription": "Un bisou",
-                "OfferImageUrl": "http://cooking.bigsister.biz/Media/Thumbs/0003/0003141.jpg",
-                "OfferTypeId": 1,
-                "OfferTypeName": "PromoText",
-                "isValid": true,
-                "OfferParam": "{\"Value\":\"Vous avez gagné un bisou !\"}"
-            }
-        ],
-        "History": [
-            {
-                "date": "2015-05-04T11:16:28.65",
-                "Description": "Vous avez gagné un bisou !",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-05-04T09:16:28.503",
-                "Description": "Créditer la carte",
-                "BalanceName": null,
-                "Value": 2.07
-            },
-            {
-                "date": "2015-04-22T19:59:20.67",
-                "Description": "Ticket 11896 use offer Carte Cooking",
-                "BalanceName": null,
-                "Value": 0.0
-            },
-            {
-                "date": "2015-04-22T19:55:48.763",
-                "Description": "Ticket 11895 use offer Carte Cooking",
-                "BalanceName": null,
-                "Value": 0.0
-            },
-            {
-                "date": "2015-04-22T19:55:48.457",
-                "Description": "Dessert offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:51:34.18",
-                "Description": "Ticket 11894 use offer Carte Cooking",
-                "BalanceName": null,
-                "Value": 0.0
-            },
-            {
-                "date": "2015-04-22T19:51:33.947",
-                "Description": "Ticket 11894 use offer Carte Cooking",
-                "BalanceName": null,
-                "Value": 0.0
-            },
-            {
-                "date": "2015-04-22T19:42:22.617",
-                "Description": "Ticket 11893 use offer Carte Cooking",
-                "BalanceName": null,
-                "Value": 0.0
-            },
-            {
-                "date": "2015-04-22T19:42:17.6",
-                "Description": "Ticket 11893 use offer Carte Cooking",
-                "BalanceName": null,
-                "Value": 0.0
-            },
-            {
-                "date": "2015-04-22T19:18:08.017",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:18:07.763",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:18:07.513",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:18:07.263",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:18:07.013",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:18:06.763",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:18:06.513",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:04:18.277",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:04:15.637",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:03:42.467",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            },
-            {
-                "date": "2015-04-22T19:03:37.913",
-                "Description": "Coca offert",
-                "BalanceName": null,
-                "Value": 1.0
-            }
-        ]
-    };
+    fakeData = emptyData;
 
     /** return the exposed API methods */
     return methods;

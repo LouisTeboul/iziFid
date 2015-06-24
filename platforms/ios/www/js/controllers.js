@@ -13,23 +13,15 @@ angular.module('fid.controllers', [])
                     function (result) {
                         if (result.error == false) {
                             if (result.result.text) {
-                                $rootScope.cardNum = result.result.text.replace(/.+\//, '');
-                                prevPassages.push({card: $rootScope.cardNum, date: new Date()});
-                                localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $scope.$apply(function () {
-                                    var barcodeField = $('input[name=barcodeId]');
-                                    barcodeField.val("");
-                                    barcodeField.val($rootScope.cardNum);
+                                alert('Carte n°' + result.result.text);
+
+                                angular.element('.izi-account').scope().$apply(function () {
+                                    angular.element('.izi-account').scope().barcode = $rootScope.cardNum;
+                                    angular.element('.izi-account').scope().form = { barcode: $rootScope.cardNum };
                                 });
-                                var accountScope = angular.element('.izi-account').scope();
-                                accountScope.$apply(function () {
-                                    accountScope.barcode = $rootScope.cardNum;
-                                    accountScope.form = { barcode: $rootScope.cardNum };
-                                    accountScope.login();
-                                });
+                                angular.element('.izi-account').scope().login($rootScope.cardNum);
                             }
-                        }
-                        else {
+                        } else {
                             $log.warn('Erreur: ', result);
                         }
                     }, function (error) {

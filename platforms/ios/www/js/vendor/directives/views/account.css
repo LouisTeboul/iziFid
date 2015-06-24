@@ -1,14 +1,20 @@
+.izi-account {
+    max-width: 850px;
+    min-height: 300px;
+}
+
 .izi-account input {
-    color: #000;
+    padding-left: 3px;
+    color: #654321;
     border: 0;
     border-bottom: 1px solid #ccc;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
-    width: 33%;
+    width: 50%;
     height: 34px;
     margin-bottom: 20px;
-    font-size: 1.1em;
+    font-size: 1.25em;
     -webkit-transition: all .3s ease-in;
     -moz-transition: all .3s ease-in;
     -ms-transition: all .3s ease-in;
@@ -19,6 +25,7 @@
 .izi-account input:focus {
     border-bottom: 1px solid #123456;
     height: 40px;
+    outline: none;
 }
 
 .izi-account button {
@@ -36,7 +43,6 @@
 }
 
 .izi-account .izi-offers li, .izi-account .izi-balances li {
-    color: #fdfdfd;
     padding: 7px 20px;
     margin-bottom: 12px;
     width: 100%;
@@ -47,7 +53,7 @@
 }
 
 .izi-account .izi-offers li h3, .izi-account .izi-balances li h3, .izi-account li b {
-    color: #fdfdfd !important;
+    color: #fdfdfd;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -56,12 +62,9 @@
     color: #123456 !important;
 }
 
-.izi-account .subtitle {
-    color: #333 !important;
-}
-
 .izi-account .card {
     margin-bottom: 20px;
+    padding: 10px;
 }
 
 .izi-account .md-toast span {
@@ -75,10 +78,33 @@
 
 .izi-account md-progress-circular {
     position: absolute;
-    top: 25%;
+    top: 50%;
     left: 50%;
 }
 
 md-dialog {
     width: 60% !important;
+}
+
+.izi-account [name=registerForm] input {
+    width: 100%;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.izi-account [name=registerForm] .form-group {
+    margin-bottom: 10px
+}
+
+.izi-account [name=registerForm] label.col-sm-3 {
+    margin-top: 8px;
+}
+
+.izi-account .fid-item-title + div.text-center > b {
+    color: #fdfdfd !important;
+}
+
+button.bg-accent, button.bg-accent:hover, button.bg-accent:focus, button.bg-accent:active {
+    background-color: #123456 !important;
 }
