@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.izipass.ffpizza" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>FF Pizza</name>
+    <name>Bellacci</name>
     <description>
-        Gestion Fidélité FF Pizza
+        Gestion Fidélité Bellacci
     </description>
     <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS
