@@ -147,13 +147,13 @@ angular.module('APIServiceApp')
 
                     /** If the barcode to check is valid we assign it to $scope.barcode, otherwise we delete $scope.barcode altogether */
                     function checkBarcode(barcode) {
-                        ($scope.barcodeValid = !!(barcode && APIService.validate.barcode(barcode))) ? $scope.barcode = barcode : delete $scope.barcode;
+                        $scope.barcodeValid = !!(barcode) ? $scope.barcode = barcode : delete $scope.barcode;
                     }
 
                     function displayData() {
                         $scope.isReady = false;
                         if ($scope.isBrowser) {
-                            APIService.get.loyaltyObjectWithPassword($scope.barcode, $scope.form.password, function (data) {
+                            APIService.get.loyaltyObjectWithPassword($scope.form.barcode, $scope.form.password, function (data) {
                                 $scope.isReady = true;
                                 $log.info(data);
                                 if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {

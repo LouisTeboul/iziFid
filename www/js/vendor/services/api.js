@@ -321,7 +321,8 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
              * (^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/) -> A valid email address (with the TLD forced, while the standard spec accepts TLD-less adresses)
              * */
             barcode: function (barcode) {
-                return new RegExp(/(^[0-9]{8,8}$)|(^[0-9]{10,10}$)|(^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/).test(barcode);
+//                return new RegExp(/(^[0-9]{8,8}$)|(^[0-9]{10,10}$)|(^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/).test(barcode);
+                return true;
             }
         }
     };
