@@ -1,0 +1,84 @@
+.izi-account input {
+    color: #000;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    width: 33%;
+    height: 34px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    -webkit-transition: all .3s ease-in;
+    -moz-transition: all .3s ease-in;
+    -ms-transition: all .3s ease-in;
+    -o-transition: all .3s ease-in;
+    transition: all .3s ease-in;
+}
+
+.izi-account input:focus {
+    border-bottom: 1px solid #123456;
+    height: 40px;
+}
+
+.izi-account button {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background-color: #123456;
+    color: #fdfdfd;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.izi-account button:hover, .izi-account button:focus {
+    color: #fff;
+}
+
+.izi-account .izi-offers li, .izi-account .izi-balances li {
+    color: #fdfdfd;
+    padding: 7px 20px;
+    margin-bottom: 12px;
+    width: 100%;
+    background-color: #123456;
+    -webkit-box-shadow: 2px 4px 3px #cdcdcd;
+    -moz-box-shadow: 2px 4px 3px #cdcdcd;
+    box-shadow: 2px 4px 3px #cdcdcd;
+}
+
+.izi-account .izi-offers li h3, .izi-account .izi-balances li h3, .izi-account li b {
+    color: #fdfdfd !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.izi-account .glyphicon {
+    color: #123456 !important;
+}
+
+.izi-account .subtitle {
+    color: #333 !important;
+}
+
+.izi-account .card {
+    margin-bottom: 20px;
+}
+
+.izi-account .md-toast span {
+    color: #fdfdfd !important;
+}
+
+.izi-account .input-group {
+    max-width: 75%;
+    margin: 10px auto;
+}
+
+.izi-account md-progress-circular {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+}
+
+md-dialog {
+    width: 60% !important;
+}

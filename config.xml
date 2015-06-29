@@ -16,7 +16,10 @@
     <preference name="BackupWebStorage" value="none"/>
     <preference name="SplashScreen" value="screen"/>
     <preference name="SplashScreenDelay" value="3000"/>
-    <preference name="KeyboardShrinksView" value="true" />
+    <preference name="KeyboardShrinksView" value="true"/>
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device"/>
+    </feature>
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>
     </feature>
@@ -35,4 +38,5 @@
         <gap:splash src="resources/ios/splash/Default~iphone.png" gap:platform="ios" height="480" width="320"/>
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
+    <gap:plugin name="org.apache.cordova.device" version="0.2.12"/>
 </widget>
