@@ -144,6 +144,24 @@ angular.module('APIServiceApp')
                         ($scope.barcodeValid = !!(barcode && APIService.validate.barcode(barcode))) ? $scope.barcode = barcode : delete $scope.barcode;
                     }
 
+                    $scope.orderAmount = function() {
+                        var amount = prompt("Veuillez entrer le montant d'achat");
+                        if (amount) {
+                            var passageObj = APIService.get.emptyPassageObj();
+                            passageObj.OrderTotalIncludeTaxes = amount;
+                            passageObj.OrderTotalExcludeTaxes = amount;
+                            APIService.actions.addPassage(passageObj).success(function () {
+                                $scope.hideDialog();
+                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.reset();
+                                $timeout(function () {
+                                    $rootScope.scan();
+                                }, 1600);
+                                return true;
+                            });
+                        }
+                    };
+
                     function displayData() {
                         $scope.isReady = false;
                         APIService.get.loyaltyObject($scope.barcode, function (data) {

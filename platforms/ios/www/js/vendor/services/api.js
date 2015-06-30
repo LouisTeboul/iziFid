@@ -23,7 +23,8 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             "http://planetalis.com",
             "http://cooking.bigsister.biz",
             "http://ffpizza.izipass.pro",
-            "http://le-b.izipass.pro"
+            "http://le-b.izipass.pro",
+            "http://bellacci.izipass.pro"
         ]
     };
 
@@ -258,7 +259,8 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             /** @function methods.validate.clientUrl
              * Checks if the clientUrl matches one of the correct urls in vars.validClientUrls */
             clientUrl: function () {
-                return !!~vars.validClientUrls.indexOf(vars.clientUrl);
+//                return !!~vars.validClientUrls.indexOf(vars.clientUrl);
+                return true;
             },
 
             /** @function methods.validate.barcode

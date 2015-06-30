@@ -105,7 +105,7 @@
         <h2 class="text-center">{{data.LoyaltyClass}}</h2>
 
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-3 hidden-xs">
                 <div class="barcode-container center-block">
                     <img class="img-responsive center-block barcode-img"
                          data-ng-src="{{clientUrl}}/{{data.Barcodes[0].BarcodeUrl}}"
@@ -172,11 +172,18 @@
         </li>
     </ul>
 
-    <div class="text-center" ng-if="data.CustomerEmail">
+    <div class="text-center" ng-if="data.CustomerEmail && !data.OneRuleWithOrderAmount">
         <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
+
+    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">
+            <i class="icon ion-plus"></i> MONTANT D'ACHAT
+        </button>
+    </div>
+
     <h5 class="text-center light" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
         <small>Dernier passage le: {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
