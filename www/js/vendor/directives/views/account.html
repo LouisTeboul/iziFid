@@ -164,7 +164,7 @@
                            placeholder="Paiement en avoir..." required>
 
                     <div class="input-group-addon wave-effect"
-                         ng-click="(balancePayment.value && +balancePayment.value > 0) ? useBalanceToPay(balancePayment.value, balance) : 0"
+                         ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
                             >VALIDER
                     </div>
                 </div>
