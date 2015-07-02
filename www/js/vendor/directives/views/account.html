@@ -11,7 +11,8 @@
         -webkit-border-radius: 0;
         -moz-border-radius: 0;
         border-radius: 0;
-        width: 33%;
+        width: 100%;
+        max-width: 280px;
         height: 34px;
         margin-bottom: 20px;
         font-size: 1.4em;
@@ -105,7 +106,7 @@
         <h2 class="text-center">{{data.LoyaltyClass}}</h2>
 
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-3 hidden-xs">
                 <div class="barcode-container center-block hidden-xs">
                     <img class="img-responsive center-block barcode-img"
                          data-ng-src="{{clientUrl}}/{{data.Barcodes[0].BarcodeUrl}}"

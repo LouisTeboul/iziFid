@@ -152,7 +152,7 @@ angular.module('APIServiceApp')
 
                     function displayData() {
                         $scope.isReady = false;
-                        if ($scope.isBrowser) {
+                        /*if ($scope.isBrowser) {
                             APIService.get.loyaltyObjectWithPassword($scope.barcode, $scope.form.password, function (data) {
                                 $scope.isReady = true;
                                 $log.info(data);
@@ -165,7 +165,7 @@ angular.module('APIServiceApp')
                                     $scope.hideData = false;
                                 }
                             });
-                        } else {
+                        } else {*/
                             APIService.get.loyaltyObject($scope.barcode, function (data) {
                                 $log.info('loyalty object:', data);
                                 $scope.isReady = true;
@@ -182,7 +182,7 @@ angular.module('APIServiceApp')
                                     $scope.hideData = false;
                                 }
                             });
-                        }
+//                        }
                     }
 
                     $scope.getDate = function (date) {
@@ -336,60 +336,64 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.showConfirm = function (ev, offer) {
-                        $scope.currentOffer = offer;
-                        $mdDialog.show({
-                            scope: $scope,
-                            preserveScope: true,
-                            clickOutsideToClose: true,
-                            targetEvent: ev,
-                            template: '<md-dialog aria-label="Utiliser Offre"> \
-                                <md-dialog-content class="sticky-container clearfix"> \
-                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
-                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
-                                </md-dialog-content> \
-                                <div class="md-actions" layout="row"> \
-                                 <div class="clearfix">\
-                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
-                                    VALIDER \
-                                    </md-button> \
-                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-                                    ANNULER \
-                                    </md-button> \
-                                 </div> \
-                                </div> \
-                            </md-dialog>'
-                        }).then(function () {
-                        }, function () {
-                        });
+                        var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
+                        if (doUse) $scope.useOffer(offer);
+//                        $scope.currentOffer = offer;
+//                        $mdDialog.show({
+//                            scope: $scope,
+//                            preserveScope: true,
+//                            clickOutsideToClose: true,
+//                            targetEvent: ev,
+//                            template: '<md-dialog aria-label="Utiliser Offre"> \
+//                                <md-dialog-content class="sticky-container clearfix"> \
+//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
+//                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
+//                                </md-dialog-content> \
+//                                <div class="md-actions" layout="row"> \
+//                                 <div class="clearfix">\
+//                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
+//                                    VALIDER \
+//                                    </md-button> \
+//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
+//                                    ANNULER \
+//                                    </md-button> \
+//                                 </div> \
+//                                </div> \
+//                            </md-dialog>'
+//                        }).then(function () {
+//                        }, function () {
+//                        });
                     };
 
                     $scope.showAddPassageConfirm = function (ev) {
-                        $mdDialog.show({
-                            scope: $scope,
-                            preserveScope: true,
-                            clickOutsideToClose: true,
-                            targetEvent: ev,
-                            template: '<md-dialog aria-label="Ajouter un Passage"> \
-                                <md-dialog-content class="sticky-container clearfix"> \
-                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
-                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
-                                </md-dialog-content> \
-                                <div class="md-actions" layout="row"> \
-                                 <div class="clearfix">\
-                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
-                                    VALIDER \
-                                    </md-button> \
-                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-                                    ANNULER \
-                                    </md-button> \
-                                 </div> \
-                                </div> \
-                            </md-dialog>'
-                        }).then(function () {
-
-                        }, function () {
-
-                        });
+                        var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
+                        if (doUse) $scope.addPassage();
+//                        $mdDialog.show({
+//                            scope: $scope,
+//                            preserveScope: true,
+//                            clickOutsideToClose: true,
+//                            targetEvent: ev,
+//                            template: '<md-dialog aria-label="Ajouter un Passage"> \
+//                                <md-dialog-content class="sticky-container clearfix"> \
+//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
+//                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
+//                                </md-dialog-content> \
+//                                <div class="md-actions" layout="row"> \
+//                                 <div class="clearfix">\
+//                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
+//                                    VALIDER \
+//                                    </md-button> \
+//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
+//                                    ANNULER \
+//                                    </md-button> \
+//                                 </div> \
+//                                </div> \
+//                            </md-dialog>'
+//                        }).then(function () {
+//
+//                        }, function () {
+//
+//                        });
                     };
 
                     $scope.showAdvanced = function (ev, balance) {
