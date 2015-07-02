@@ -144,24 +144,6 @@ angular.module('APIServiceApp')
                         ($scope.barcodeValid = !!(barcode && APIService.validate.barcode(barcode))) ? $scope.barcode = barcode : delete $scope.barcode;
                     }
 
-                    $scope.orderAmount = function() {
-                        var amount = prompt("Veuillez entrer le montant d'achat");
-                        if (amount) {
-                            var passageObj = APIService.get.emptyPassageObj();
-                            passageObj.OrderTotalIncludeTaxes = amount;
-                            passageObj.OrderTotalExcludeTaxes = amount;
-                            APIService.actions.addPassage(passageObj).success(function () {
-                                $scope.hideDialog();
-                                $scope.toast("Un passage a bien été ajouté à cette carte");
-                                $scope.reset();
-                                $timeout(function () {
-                                    $rootScope.scan();
-                                }, 1600);
-                                return true;
-                            });
-                        }
-                    };
-
                     function displayData() {
                         $scope.isReady = false;
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
@@ -238,12 +220,31 @@ angular.module('APIServiceApp')
                         });
                     };
 
+                    $scope.orderAmount = function() {
+                        var amount = prompt("Veuillez entrer le montant d'achat");
+                        if (amount) {
+                            var passageObj = APIService.get.emptyPassageObj();
+                            passageObj.OrderTotalIncludeTaxes = amount;
+                            passageObj.OrderTotalExcludeTaxes = amount;
+                            APIService.actions.addPassage(passageObj).success(function () {
+                                $scope.hideDialog();
+                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.reset();
+                                $timeout(function () {
+                                    $rootScope.scan();
+                                }, 1600);
+                                return true;
+                            });
+                        }
+                    };
+
                     /**
                      * @function $scope.useBalanceToPay
                      * @param {number} val The amount of the balance to use for payment
                      * @param {object} balance The balance object to use
                      */
                     $scope.useBalanceToPay = function (val, balance) {
+                        $scope.hasUsedBalance = true;
                         var passageObj = APIService.get.emptyPassageObj();
 
                         if (~~balance.Value < ~~val) {
@@ -262,6 +263,7 @@ angular.module('APIServiceApp')
                                 $scope.toast("Le paiement en avoir a bien été effectué");
                                 $scope.reset();
                                 $timeout(function () {
+                                    $scope.hasUsedBalance = false;
                                     $rootScope.scan();
                                 }, 1600);
                                 return true;
@@ -313,60 +315,64 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.showConfirm = function (ev, offer) {
-                        $scope.currentOffer = offer;
-                        $mdDialog.show({
-                            scope: $scope,
-                            preserveScope: true,
-                            clickOutsideToClose: true,
-                            targetEvent: ev,
-                            template: '<md-dialog aria-label="Utiliser Offre"> \
-                                <md-dialog-content class="sticky-container clearfix"> \
-                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
-                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
-                                </md-dialog-content> \
-                                <div class="md-actions" layout="row"> \
-                                 <div class="clearfix">\
-                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
-                                    VALIDER \
-                                    </md-button> \
-                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-                                    ANNULER \
-                                    </md-button> \
-                                 </div> \
-                                </div> \
-                            </md-dialog>'
-                        }).then(function () {
-                        }, function () {
-                        });
+//                        $scope.currentOffer = offer;
+                        var doUse = $window.confirm('Voulez-vous utiliser cette offre ?');
+                        if (doUse) $scope.useOffer(offer);
+//                        $mdDialog.show({
+//                            scope: $scope,
+//                            preserveScope: true,
+//                            clickOutsideToClose: true,
+//                            targetEvent: ev,
+//                            template: '<md-dialog aria-label="Utiliser Offre"> \
+//                                <md-dialog-content class="sticky-container clearfix"> \
+//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
+//                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
+//                                </md-dialog-content> \
+//                                <div class="md-actions" layout="row"> \
+//                                 <div class="clearfix">\
+//                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
+//                                    VALIDER \
+//                                    </md-button> \
+//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
+//                                    ANNULER \
+//                                    </md-button> \
+//                                 </div> \
+//                                </div> \
+//                            </md-dialog>'
+//                        }).then(function () {
+//                        }, function () {
+//                        });
                     };
 
                     $scope.showAddPassageConfirm = function (ev) {
-                        $mdDialog.show({
-                            scope: $scope,
-                            preserveScope: true,
-                            clickOutsideToClose: true,
-                            targetEvent: ev,
-                            template: '<md-dialog aria-label="Ajouter un Passage"> \
-                                <md-dialog-content class="sticky-container clearfix"> \
-                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
-                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
-                                </md-dialog-content> \
-                                <div class="md-actions" layout="row"> \
-                                 <div class="clearfix">\
-                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
-                                    VALIDER \
-                                    </md-button> \
-                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-                                    ANNULER \
-                                    </md-button> \
-                                 </div> \
-                                </div> \
-                            </md-dialog>'
-                        }).then(function () {
-
-                        }, function () {
-
-                        });
+                        var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
+                        if (doUse) $scope.addPassage();
+//                        $mdDialog.show({
+//                            scope: $scope,
+//                            preserveScope: true,
+//                            clickOutsideToClose: true,
+//                            targetEvent: ev,
+//                            template: '<md-dialog aria-label="Ajouter un Passage"> \
+//                                <md-dialog-content class="sticky-container clearfix"> \
+//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
+//                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
+//                                </md-dialog-content> \
+//                                <div class="md-actions" layout="row"> \
+//                                 <div class="clearfix">\
+//                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
+//                                    VALIDER \
+//                                    </md-button> \
+//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
+//                                    ANNULER \
+//                                    </md-button> \
+//                                 </div> \
+//                                </div> \
+//                            </md-dialog>'
+//                        }).then(function () {
+//
+//                        }, function () {
+//
+//                        });
                     };
 
                     $scope.showAdvanced = function (ev, balance) {
