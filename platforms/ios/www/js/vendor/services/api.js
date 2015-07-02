@@ -152,8 +152,12 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 
             formattedOffers: function (loyaltyObj) {
                 var offers = loyaltyObj.Offers;
-                $log.info('Offers', offers);
-                return offers;
+                var validOffers = [];
+                for (var i = 0; i < offers.length; i++) {
+                    if (offers[i].isValid) validOffers.push(offers[i]);
+                }
+                $log.info("Valid offers", validOffers);
+                return validOffers;
             },
 
             /** @function methods.get.emptyPassageObj

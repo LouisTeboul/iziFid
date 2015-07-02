@@ -13,6 +13,7 @@
         border-radius: 0;
         width: 100%;
         max-width: 280px;
+        height: 34px;
         margin-bottom: 20px;
         font-size: 1.4em;
         -webkit-transition: all .3s ease-in;
@@ -131,7 +132,7 @@
 
     <!-- Offers -->
     <ul class="izi-offers list-unstyled" ng-if="offer.isValid" ng-repeat="offer in data.Offers">
-        <li class="bg-accent hvr-sink waves-effect"
+        <li class="bg-accent hvr-sink waves-effect" style="background: #2980b9"
             ng-click="showConfirm($event, data.Offers[0])">
             <!--<b class="pull-right" style="font-family: Raleway, Helvetica Neue, Helvetica, Arial !important">x{{data.Offers.length}}</b>-->
 
@@ -170,17 +171,30 @@
                 </div>
             </div>
         </li>
+
+        <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+            <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}</h3>
+
+            <div>
+                <div class="input-group">
+                    <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
+                           type="number"
+                           ng-model="orderAmountInput.value"
+                           placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
+                           required>
+
+                    <div class="input-group-addon wave-effect"
+                         ng-click="orderAmount(orderAmountInput.value)"
+                            >VALIDER
+                    </div>
+                </div>
+            </div>
+        </li>
     </ul>
 
     <div class="text-center" ng-if="data.CustomerEmail && !data.OneRuleWithOrderAmount">
         <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
-        </button>
-    </div>
-
-    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">
-            <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountText}}
         </button>
     </div>
 

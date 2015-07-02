@@ -107,6 +107,24 @@ angular.module('APIServiceApp')
                         right: true
                     };
 
+                    $scope.orderAmount = function() {
+                        var amount = prompt("Veuillez entrer le " + $scope.data.OneRuleWithOrderAmountString);
+                        if (amount) {
+                            var passageObj = APIService.get.emptyPassageObj();
+                            passageObj.OrderTotalIncludeTaxes = amount;
+                            passageObj.OrderTotalExcludeTaxes = amount;
+                            APIService.actions.addPassage(passageObj).success(function () {
+                                $scope.hideDialog();
+                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.reset();
+                                $timeout(function () {
+                                    $rootScope.scan();
+                                }, 1600);
+                                return true;
+                            });
+                        }
+                    };
+
                     /**
                      * @function $scope.getToastPosition Utility function for material toast
                      * @returns {string} The toast position
