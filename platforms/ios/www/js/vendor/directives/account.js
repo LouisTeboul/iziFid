@@ -226,6 +226,7 @@ angular.module('APIServiceApp')
                      * @param {object} balance The balance object to use
                      */
                     $scope.useBalanceToPay = function (val, balance) {
+                        $scope.hasUsedBalance = true;
                         var passageObj = APIService.get.emptyPassageObj();
 
                         if (~~balance.Value < ~~val) {
@@ -244,6 +245,7 @@ angular.module('APIServiceApp')
                                 $scope.toast("Le paiement en avoir a bien été effectué");
                                 $scope.reset();
                                 $timeout(function () {
+                                    $scope.hasUsedBalance = false;
                                     $rootScope.scan();
                                 }, 1600);
                                 return true;
