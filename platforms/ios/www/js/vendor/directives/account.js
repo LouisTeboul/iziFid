@@ -30,20 +30,26 @@ angular.module('APIServiceApp')
                     APIService.set.clientUrl($scope.clientUrl);
                     $scope.isReady = false;
 
-                    function checkDevice() {
+                    $timeout(function () {
+                        if (!window.phonegap) {
+                            !APIService.get.debugState() ?
+                                $window.alert('The app is running in a browser, no UUID found!') :
+                                $log.info('The app is running in a browser, no UUID found!');
+                            $scope.isBrowser = true;
+                        }
+                    }, 0);
+
+                    function onDeviceReady() {
                         if (window.device) {
-                            APIService.get.serverUrl(device.uuid);
-                            console.log(device);
-                        } else if (!window.phonegap) {
-                            !APIService.get.debugState() ? $window.alert('The app is running in a browser, no UUID found!') : $log.info('The app is running in a browser, no UUID found!');
-                        } else {
-                            $timeout(function () {
-                                checkDevice();
-                            }, 500);
+                            $scope.isBrowser = false;
+                            APIService.get.serverUrl(window.device.uuid, function(serverUrl) {
+                                APIService.set.clientUrl(serverUrl);
+                                $log.info(serverUrl);
+                            });
                         }
                     }
 
-                    checkDevice();
+                    document.addEventListener("deviceready", onDeviceReady, false);
 
                     if ($scope.remoteCss) {
                         /** Get css content and inject it into the <head> tag of the page this directive is included in */
@@ -69,7 +75,7 @@ angular.module('APIServiceApp')
                                 /** Get the customization data from firebase and build css style from it */
                                 angular.element(document).find('head').append("<style type='text/css'>" +
                                     buildStyleFromData($scope.customization) +
-                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor) + "</style>");
+                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor) + "</style>");
                                 angular.element('#izi-style').remove();
 
                             })
@@ -89,9 +95,9 @@ angular.module('APIServiceApp')
 
                         return "@import url(" + data.styling.mainFont + ");" +
                             "@import url(" + data.styling.secondaryFont + ");" +
-                            "h1, h2, h3 { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            "h4, h5, p, a, b, em, small, div { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            "a, a:hover { color: " + data.styling.mainColor + " !important; }";
+                            ".izi-account h1, .izi-account h2, .izi-account h3:not(.fid-item-title) { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account div { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; }";
                     }
 
                     $scope.toastPosition = {
@@ -146,12 +152,27 @@ angular.module('APIServiceApp')
 
                     function displayData() {
                         $scope.isReady = false;
+//                        if ($scope.isBrowser) {
+//                            APIService.get.loyaltyObjectWithPassword($scope.barcode, $scope.form.password, function (data) {
+//                                $scope.isReady = true;
+//                                $log.info(data);
+//                                if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
+//                                    $scope.reset();
+//                                    $window.alert('Login ou Mot de passe erronné !');
+//                                } else {
+//                                    $scope.data = data;
+//                                    $scope.data.Offers = APIService.get.formattedOffers(data);
+//                                    $scope.hideData = false;
+//                                }
+//                            });
+//                        } else {
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
+                            $log.info('loyalty object:', data);
                             $scope.isReady = true;
                             if (data === false) {
                                 $scope.reset();
                                 $window.alert('Carte inconnue!');
-                                $rootScope.scan();
+                                !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.reset();
                                 $scope.goRegister();
@@ -161,6 +182,7 @@ angular.module('APIServiceApp')
                                 $scope.hideData = false;
                             }
                         });
+//                        }
                     }
 
                     $scope.getDate = function (date) {
@@ -181,7 +203,7 @@ angular.module('APIServiceApp')
                     $scope.backToLogin = function () {
                         $scope.register = false;
                         $scope.reset();
-                        $rootScope.scan();
+                        !$scope.isBrowser ? $rootScope.scan() : 0;
                     };
 
                     $scope.login = function () {
@@ -205,6 +227,7 @@ angular.module('APIServiceApp')
                         delete $scope.barcode;
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;
+                        delete $scope.form.password;
                     };
 
                     $scope.addPassage = function () {
@@ -214,36 +237,34 @@ angular.module('APIServiceApp')
                             $scope.toast("Un passage a bien été ajouté à cette carte");
                             $scope.reset();
                             $timeout(function () {
-                                $rootScope.scan();
+                                !$scope.isBrowser ? $rootScope.scan() : 0;
                             }, 1600);
                             return true;
                         });
                     };
 
-                    $scope.orderAmount = function() {
-                        var amount = prompt("Veuillez entrer le montant d'achat");
-                        if (amount) {
-                            var passageObj = APIService.get.emptyPassageObj();
-                            passageObj.OrderTotalIncludeTaxes = amount;
-                            passageObj.OrderTotalExcludeTaxes = amount;
-                            APIService.actions.addPassage(passageObj).success(function () {
-                                $scope.hideDialog();
-                                $scope.toast("Un passage a bien été ajouté à cette carte");
-                                $scope.reset();
-                                $timeout(function () {
-                                    $rootScope.scan();
-                                }, 1600);
-                                return true;
-                            });
-                        }
+                    $scope.addOrder = function (amount) {
+                        var passageObj = APIService.get.emptyPassageObj();
+                        passageObj.barcode = $scope.barcode;
+                        passageObj.OrderTotalIncludeTaxes = amount;
+                        passageObj.OrderTotalExcludeTaxes = amount;
+                        APIService.actions.addOrder(passageObj).success(function () {
+//                            $scope.hideDialog();
+                            $scope.toast("Le montant d'achat a bien été enregistré");
+//                            $scope.reset();
+//                            $timeout(function () {
+//                                !$scope.isBrowser ? $rootScope.scan() : 0;
+//                            }, 1600);
+                            return true;
+                        });
                     };
 
                     /**
                      * @function $scope.useBalanceToPay
                      * @param {number} val The amount of the balance to use for payment
-                     * @param {object} balance The balance object to use
-                     */
+                     * @param {object} balance The balance object to use */
                     $scope.useBalanceToPay = function (val, balance) {
+                        $scope.hasUsedBalance = true;
                         var passageObj = APIService.get.emptyPassageObj();
 
                         if (~~balance.Value < ~~val) {
@@ -262,7 +283,8 @@ angular.module('APIServiceApp')
                                 $scope.toast("Le paiement en avoir a bien été effectué");
                                 $scope.reset();
                                 $timeout(function () {
-                                    $rootScope.scan();
+                                    $scope.hasUsedBalance = false;
+                                    !$scope.isBrowser ? $rootScope.scan() : 0;
                                 }, 1600);
                                 return true;
                             });
@@ -285,7 +307,7 @@ angular.module('APIServiceApp')
                             $scope.toast("L'offre a bien été utilisée");
                             $scope.reset();
                             $timeout(function () {
-                                $rootScope.scan();
+                                !$scope.isBrowser ? $rootScope.scan() : 0;
                             }, 1600);
                             return true;
                         });
@@ -307,66 +329,20 @@ angular.module('APIServiceApp')
 
                         APIService.actions.register(obj).then(function () {
                             $scope.barcode = $scope.client.barcode;
+                            $scope.form.password = $scope.client.password;
                             $scope.register = false;
                             displayData();
                         });
                     };
 
                     $scope.showConfirm = function (ev, offer) {
-                        $scope.currentOffer = offer;
-                        $mdDialog.show({
-                            scope: $scope,
-                            preserveScope: true,
-                            clickOutsideToClose: true,
-                            targetEvent: ev,
-                            template: '<md-dialog aria-label="Utiliser Offre"> \
-                                <md-dialog-content class="sticky-container clearfix"> \
-                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
-                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
-                                </md-dialog-content> \
-                                <div class="md-actions" layout="row"> \
-                                 <div class="clearfix">\
-                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
-                                    VALIDER \
-                                    </md-button> \
-                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-                                    ANNULER \
-                                    </md-button> \
-                                 </div> \
-                                </div> \
-                            </md-dialog>'
-                        }).then(function () {
-                        }, function () {
-                        });
+                        var doUse = $window.confirm('Voulez-vous utiliser cette offre ?');
+                        if (doUse) $scope.useOffer(offer);
                     };
 
                     $scope.showAddPassageConfirm = function (ev) {
-                        $mdDialog.show({
-                            scope: $scope,
-                            preserveScope: true,
-                            clickOutsideToClose: true,
-                            targetEvent: ev,
-                            template: '<md-dialog aria-label="Ajouter un Passage"> \
-                                <md-dialog-content class="sticky-container clearfix"> \
-                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
-                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
-                                </md-dialog-content> \
-                                <div class="md-actions" layout="row"> \
-                                 <div class="clearfix">\
-                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
-                                    VALIDER \
-                                    </md-button> \
-                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-                                    ANNULER \
-                                    </md-button> \
-                                 </div> \
-                                </div> \
-                            </md-dialog>'
-                        }).then(function () {
-
-                        }, function () {
-
-                        });
+                        var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
+                        if (doUse) $scope.addPassage();
                     };
 
                     $scope.showAdvanced = function (ev, balance) {
@@ -421,6 +397,7 @@ angular.module('APIServiceApp')
                     /** If the barcode defined in the parameters is valid,*/
                     $scope.barcodeValid ? displayData() : $scope.hideData = true;
                 }
+
             ]
         };
     })
