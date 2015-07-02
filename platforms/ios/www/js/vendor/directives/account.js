@@ -16,7 +16,7 @@ angular.module('APIServiceApp')
                 auto: "="
             },
 
-            templateUrl: 'scripts/directives/views/account.html',
+            templateUrl: 'js/vendor/directives/views/account.html',
             link: function (scope) {
                 if (scope.theme === 'light') {
                     angular.element('.izi-account').addClass('izi-light-theme');

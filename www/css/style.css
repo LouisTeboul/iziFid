@@ -1,11 +1,11 @@
 /* Empty. Add your own CSS if you like */
 h1, h2, h3, h4, h5 {
-    font-family: Bevan, "Abel", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-family: Raleway, "Abel", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 p, a, b, label, input, li, span, small {
-    font-family: Kameron, "Bookman", Georgia, "Times New Roman", serif !important;
-
+    font-family: Raleway, "Bookman", Georgia, "Times New Roman", serif !important;
+}
 @media screen and (max-width: 420px) {
     .barcode-container {
         width: 100%;
