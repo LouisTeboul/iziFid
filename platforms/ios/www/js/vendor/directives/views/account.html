@@ -68,7 +68,7 @@
     }
 
     .izi-account .card {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         padding: 10px;
     }
 
@@ -101,9 +101,9 @@
 <div ng-if="isReady && barcode && !register">
     <div class="card">
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
-           ng-click="disconnect()" style="font-size: 2em;"></i>
+           ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px"></i>
 
-        <h2 class="text-center">{{data.LoyaltyClass}}</h2>
+        <!--<h2 class="text-center">{{data.LoyaltyClass}}</h2>-->
 
         <div class="row">
             <div class="col-sm-3 hidden-xs">
@@ -160,7 +160,7 @@
             <div ng-if="balance.UseToPay">
                 <div class="input-group">
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                           type="tel"
+                           type="number"
                            ng-model="balancePayment.value"
                            placeholder="Paiement en avoir..." required>
 
@@ -171,19 +171,33 @@
                 </div>
             </div>
         </li>
+
+        <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+            <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
+                data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}</h3>
+
+            <div>
+                <div class="input-group">
+                    <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
+                           type="number"
+                           ng-model="orderAmountInput.value"
+                           placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
+                           required>
+
+                    <div class="input-group-addon wave-effect"
+                         ng-click="orderAmount(orderAmountInput.value)"
+                            >VALIDER
+                    </div>
+                </div>
+            </div>
+        </li>
     </ul>
 
-    <div class="text-center" ng-if="data.CustomerEmail && !data.OneRuleWithOrderAmount">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
-            <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
-        </button>
-    </div>
-
-    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">
-            <i class="icon ion-plus"></i> MONTANT D'ACHAT
-        </button>
-    </div>
+    <!--<div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">-->
+    <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">-->
+    <!--<i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}-->
+    <!--</button>-->
+    <!--</div>-->
 
     <h5 class="text-center light" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">

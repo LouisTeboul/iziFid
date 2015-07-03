@@ -246,7 +246,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 
             register: function (formObj) {
                 return $timeout(function () {
-                    return vars.fake ? fakeData : $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
+                    return $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
                         vars.currLoyaltyObject = data;
                         return data;
                     });
