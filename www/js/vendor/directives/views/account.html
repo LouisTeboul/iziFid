@@ -68,7 +68,7 @@
     }
 
     .izi-account .card {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         padding: 10px;
     }
 
@@ -101,9 +101,9 @@
 <div ng-if="isReady && barcode && !register">
     <div class="card">
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
-           ng-click="disconnect()" style="font-size: 2em;"></i>
+           ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px;"></i>
 
-        <h2 class="text-center">{{data.LoyaltyClass}}</h2>
+        <!--<h2 class="text-center">{{data.LoyaltyClass}}</h2>-->
 
         <div class="row">
             <div class="col-sm-3 hidden-xs">
@@ -331,7 +331,7 @@
 
                 <div class="form-group col-sm-9">
                     <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                           placeholder="Code Postal&#8230;" ng-minlength="6"
+                           placeholder="Code Postal&#8230;" ng-minlength="5"
                            required=""/>
 
                     <div class="alert alert-danger"

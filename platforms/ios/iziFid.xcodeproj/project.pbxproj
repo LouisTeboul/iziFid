@@ -53,6 +53,9 @@
 		6061E35424954EC0A512A984 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C9FC272D58340AEA5221D4C /* QuartzCore.framework */; };
 		804C3BDA43C74C05AD5A85F3 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDA308F8FCE4F82B8166EAF /* CoreImage.framework */; };
 		B6087063FCAC40469144F699 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87582EDB6AE8417192D7A7DC /* AudioToolbox.framework */; };
+		2FDD8895B37F4DD0B9996FF7 /* CDVNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CF327D1A8D40B0B5DC10F0 /* CDVNotification.m */; };
+		EB929EEEA9A948D5BB1C4A86 /* CDVNotification.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EB9BF1DE99384BE4A9C5068E /* CDVNotification.bundle */; };
+		8CA2186F1C154793B16260C6 /* CDVVibration.m in Sources */ = {isa = PBXBuildFile; fileRef = FD5C18E2572F445FBE8A8BDF /* CDVVibration.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +140,11 @@
 		2C9FC272D58340AEA5221D4C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 		DFDA308F8FCE4F82B8166EAF /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreImage.framework"; path = "System/Library/Frameworks/CoreImage.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 		87582EDB6AE8417192D7A7DC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		A6CF327D1A8D40B0B5DC10F0 /* CDVNotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVNotification.m"; path = "org.apache.cordova.dialogs/CDVNotification.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		5262455893EC42FB86EDA098 /* CDVNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVNotification.h"; path = "org.apache.cordova.dialogs/CDVNotification.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		EB9BF1DE99384BE4A9C5068E /* CDVNotification.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "CDVNotification.bundle"; path = "CDVNotification.bundle"; sourceTree = "<group>"; };
+		FD5C18E2572F445FBE8A8BDF /* CDVVibration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVVibration.m"; path = "org.apache.cordova.vibration/CDVVibration.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		2A685D11AD104EDDA8F91960 /* CDVVibration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVVibration.h"; path = "org.apache.cordova.vibration/CDVVibration.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +225,7 @@
 				8D1107310486CEB800E47090 /* iziFid-Info.plist */,
 				5E92802AC5FF47368DCBE2B6 /* scannerOverlay.xib */,
 				9A9BC46EBC504EC9A131DEC5 /* CDVBarcodeScanner.bundle */,
+				EB9BF1DE99384BE4A9C5068E /* CDVNotification.bundle */,
 			);
 			name = Resources;
 			path = "iziFid/Resources";
@@ -260,6 +269,10 @@
 				267CD785AC094464A57D1E87 /* CDVBarcodeScanner.mm */,
 				2D2F2EE2E7A34ACFB74BAA77 /* zxing-all-in-one.cpp */,
 				FF7F16487AAC4C4686D94561 /* zxing-all-in-one.h */,
+				A6CF327D1A8D40B0B5DC10F0 /* CDVNotification.m */,
+				5262455893EC42FB86EDA098 /* CDVNotification.h */,
+				FD5C18E2572F445FBE8A8BDF /* CDVVibration.m */,
+				2A685D11AD104EDDA8F91960 /* CDVVibration.h */,
 			);
 			name = Plugins;
 			path = "iziFid/Plugins";
@@ -415,6 +428,7 @@
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
 				62330D6EB3564F699D92FA0C /* scannerOverlay.xib in Resources */,
 				F72B05B393E0480A810595C5 /* CDVBarcodeScanner.bundle in Resources */,
+				EB929EEEA9A948D5BB1C4A86 /* CDVNotification.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +466,8 @@
 				771EE39DEBF04BB9988A69F5 /* CDVLogger.m in Sources */,
 				31DD4F9A67914B90A6103B56 /* CDVBarcodeScanner.mm in Resources */,
 				F18FBC851EDA46A4A1E0ADC7 /* zxing-all-in-one.cpp in Resources */,
+				2FDD8895B37F4DD0B9996FF7 /* CDVNotification.m in Sources */,
+				8CA2186F1C154793B16260C6 /* CDVVibration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

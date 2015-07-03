@@ -23,6 +23,9 @@
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>
     </feature>
+    <feature name="Notification">
+        <param name="ios-package" value="CDVNotification" />
+    </feature>
     <icon src="resources/ios/icon/icon-72@2x.png"/>
     <splash src="resources/ios/splash/Default@2x~iphone.png"/>
 
@@ -39,4 +42,6 @@
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
     <gap:plugin name="org.apache.cordova.device" version="0.2.12"/>
+    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
+    <gap:plugin name="org.apache.cordova.vibration" version="0.3.0"/>
 </widget>
