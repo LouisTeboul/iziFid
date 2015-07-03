@@ -23,6 +23,14 @@
                         {
                             "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"ios-package\" value=\"CDVVibration\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -75,6 +83,10 @@
                         {
                             "xml": false,
                             "count": 1
+                        },
+                        {
+                            "xml": true,
+                            "count": 2
                         }
                     ]
                 }
@@ -92,6 +104,12 @@
             "PACKAGE_NAME": "com.ionicframework.izifid749652"
         },
         "com.phonegap.plugins.barcodescanner": {
+            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+        },
+        "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "com.ionicframework.izifid749652"
         }
     },

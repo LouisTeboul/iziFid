@@ -11,7 +11,8 @@
         -webkit-border-radius: 0;
         -moz-border-radius: 0;
         border-radius: 0;
-        width: 33%;
+        width: 100%;
+        max-width: 280px;
         height: 34px;
         margin-bottom: 20px;
         font-size: 1.4em;
@@ -67,7 +68,7 @@
     }
 
     .izi-account .card {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         padding: 10px;
     }
 
@@ -100,13 +101,13 @@
 <div ng-if="isReady && barcode && !register">
     <div class="card">
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
-           ng-click="disconnect()" style="font-size: 2em;"></i>
+           ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px;"></i>
 
-        <h2 class="text-center">{{data.LoyaltyClass}}</h2>
+        <!--<h2 class="text-center">{{data.LoyaltyClass}}</h2>-->
 
         <div class="row">
-            <div class="col-sm-3">
-                <div class="barcode-container center-block">
+            <div class="col-sm-3 hidden-xs">
+                <div class="barcode-container center-block hidden-xs">
                     <img class="img-responsive center-block barcode-img"
                          data-ng-src="{{clientUrl}}/{{data.Barcodes[0].BarcodeUrl}}"
                          alt=""
@@ -172,11 +173,18 @@
         </li>
     </ul>
 
-    <div class="text-center" ng-if="data.CustomerEmail">
+    <div class="text-center" ng-if="data.CustomerEmail && !data.OneRuleWithOrderAmount">
         <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
+
+    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">
+            <i class="icon ion-plus"></i> MONTANT D'ACHAT
+        </button>
+    </div>
+
     <h5 class="text-center light" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
         <small>Dernier passage le: {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
@@ -323,7 +331,7 @@
 
                 <div class="form-group col-sm-9">
                     <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                           placeholder="Code Postal&#8230;" ng-minlength="6"
+                           placeholder="Code Postal&#8230;" ng-minlength="5"
                            required=""/>
 
                     <div class="alert alert-danger"
