@@ -160,7 +160,7 @@
             <div ng-if="balance.UseToPay">
                 <div class="input-group">
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                           type="tel"
+                           type="number"
                            ng-model="balancePayment.value"
                            placeholder="Paiement en avoir..." required>
 
@@ -201,7 +201,7 @@
     </h4>
 
     <form name="iziLoginForm">
-        <input type="tel" class="center-block" name="barcodeId" ng-model="form.barcode"
+        <input type="number" class="center-block" name="barcodeId" ng-model="form.barcode"
                ng-minlength="8"
                ng-enter="login()"
                ng-pattern="/(^[0-9]*$)|(^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/"
@@ -336,7 +336,7 @@
 
                     <div class="alert alert-danger"
                          ng-if="registerForm.zipcode.$invalid && !registerForm.zipcode.$pristine">
-                        <p class="text-center">Ce champ doit comporter au moins 6 caractères</p>
+                        <p class="text-center">Ce champ doit comporter au moins 5 caractères</p>
                     </div>
                 </div>
             </div>
