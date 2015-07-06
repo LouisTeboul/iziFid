@@ -15,7 +15,7 @@
         max-width: 280px;
         height: 34px;
         margin-bottom: 20px;
-        font-size: 1.4em;
+        font-size: 1.25em;
         -webkit-transition: all .3s ease-in;
         -moz-transition: all .3s ease-in;
         -ms-transition: all .3s ease-in;
@@ -162,6 +162,7 @@
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
                            ng-model="balancePayment.value"
+                           style="padding-top: 0; padding-bottom: 0; line-height: 20px;"
                            placeholder="Paiement en avoir..." required>
 
                     <div class="input-group-addon wave-effect"
@@ -180,6 +181,7 @@
                 <div class="input-group">
                     <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
+                           style="padding-top: 0; padding-bottom: 0; line-height: 20px;"
                            ng-model="orderAmountInput.value"
                            placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
                            required>
@@ -242,9 +244,7 @@
 
 <!-- REGISTER VIEW -->
 <div id="registerView" ng-if="register">
-    <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow"
-
-       ng-click="backToLogin()"></i>
+    <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;" ng-click="backToLogin()"></i>
 
     <div class="container-fluid">
         <h3 class="blanc text-center">Enregistrer Ma Carte<br>
