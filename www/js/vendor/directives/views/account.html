@@ -202,8 +202,9 @@
     <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
     <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
         <div class="input-label">&nbsp;</div>
-        <select name="actionSelect" id="actionSelect" class="center-block" style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px;">
-            <option ng-attr-selected="$index === 0" value="{{action.Name}}" ng-repeat="action in data.CustomActions">{{action.Name}}</option>
+        <select name="actionSelect" id="actionSelect"
+                class="center-block" style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px; background: #f8f8f8">
+            <option ng-attr-selected="$index === 0" value="{{action.Id}}" ng-repeat="action in data.CustomActions">{{action.Name}}</option>
         </select>
     </label>
 

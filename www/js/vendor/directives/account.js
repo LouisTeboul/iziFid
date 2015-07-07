@@ -180,6 +180,7 @@ angular.module('APIServiceApp')
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
+                                $scope.selectedAction = data.CustomActions[0].Id;
                                 $scope.hideData = false;
                             }
                         });
@@ -332,11 +333,16 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.orderAmount = function(amount) {
+                    $scope.orderAmount = function (amount) {
                         if (amount) {
                             var passageObj = APIService.get.emptyPassageObj();
                             passageObj.OrderTotalIncludeTaxes = amount;
                             passageObj.OrderTotalExcludeTaxes = amount;
+                            if ($scope.data.CustomActions) {
+                                passageObj.CustomAction = {
+                                    "CustomActionId": $('#actionSelect').val()
+                                }
+                            }
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
                                 $scope.toast("Un passage a bien été ajouté à cette carte");
@@ -372,10 +378,51 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useAction = function() {
-                        navigator.notification ? navigator.notification.alert("L'action a bien été effectuée :\n" , function() {
+                    $scope.useAction = function () {
+                        if (navigator.notification) {
+                            navigator.notification.alert("L'action a bien été effectuée :\n", function () {
+                                var passageObj = APIService.get.emptyPassageObj();
+                                var amount = $('#orderAmountInput').val();
+                                passageObj.OrderTotalIncludeTaxes = amount;
+                                passageObj.OrderTotalExcludeTaxes = amount;
+                                passageObj.CustomAction = {
+                                    "CustomActionId": $('#actionSelect').val()
+                                };
+                                $log.info(passageObj);
+
+                                APIService.actions.addPassage(passageObj).success(function () {
+                                    $scope.hideDialog();
+                                    $scope.toast("Un passage a bien été ajouté à cette carte");
+                                    $scope.reset();
+                                    $timeout(function () {
+                                        !$scope.isBrowser ? $rootScope.scan() : 0;
+                                    }, 1600);
+                                    return true;
+                                });
+                                $scope.backToLogin();
+                            });
+                        } else {
+                            alert("L'action a bien été effectuée :\n");
+                            var passageObj = APIService.get.emptyPassageObj();
+                            var amount = $('#orderAmountInput').val();
+                            passageObj.OrderTotalIncludeTaxes = amount;
+                            passageObj.OrderTotalExcludeTaxes = amount;
+                            passageObj.CustomAction = {
+                                "CustomActionId": $('#actionSelect').val()
+                            };
+                            $log.info(passageObj);
+
+                            APIService.actions.addPassage(passageObj).success(function () {
+                                $scope.hideDialog();
+                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.reset();
+                                $timeout(function () {
+                                    !$scope.isBrowser ? $rootScope.scan() : 0;
+                                }, 1600);
+                                return true;
+                            });
                             $scope.backToLogin();
-                        }) : alert("L'action a bien été effectuée :\n" );
+                        }
                     };
 
                     $scope.showConfirm = function (ev, offer) {
