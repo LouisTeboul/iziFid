@@ -42,7 +42,7 @@ angular.module('APIServiceApp')
                     function onDeviceReady() {
                         if (window.device) {
                             $scope.isBrowser = false;
-                            APIService.get.serverUrl(window.device.uuid, function(serverUrl) {
+                            APIService.get.serverUrl(window.device.uuid, function (serverUrl) {
                                 APIService.set.clientUrl(serverUrl);
                                 $log.info(serverUrl);
                             });
@@ -107,24 +107,6 @@ angular.module('APIServiceApp')
                         right: true
                     };
 
-                    $scope.orderAmount = function() {
-                        var amount = prompt("Veuillez entrer le " + $scope.data.OneRuleWithOrderAmountString);
-                        if (amount) {
-                            var passageObj = APIService.get.emptyPassageObj();
-                            passageObj.OrderTotalIncludeTaxes = amount;
-                            passageObj.OrderTotalExcludeTaxes = amount;
-                            APIService.actions.addPassage(passageObj).success(function () {
-                                $scope.hideDialog();
-                                $scope.toast("Un passage a bien été ajouté à cette carte");
-                                $scope.reset();
-                                $timeout(function () {
-                                    $rootScope.scan();
-                                }, 1600);
-                                return true;
-                            });
-                        }
-                    };
-
                     /**
                      * @function $scope.getToastPosition Utility function for material toast
                      * @returns {string} The toast position
@@ -170,26 +152,27 @@ angular.module('APIServiceApp')
 
                     function displayData() {
                         $scope.isReady = false;
-//                        if ($scope.isBrowser) {
-//                            APIService.get.loyaltyObjectWithPassword($scope.barcode, $scope.form.password, function (data) {
-//                                $scope.isReady = true;
-//                                $log.info(data);
-//                                if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
-//                                    $scope.reset();
-//                                    $window.alert('Login ou Mot de passe erronné !');
-//                                } else {
-//                                    $scope.data = data;
-//                                    $scope.data.Offers = APIService.get.formattedOffers(data);
-//                                    $scope.hideData = false;
-//                                }
-//                            });
-//                        } else {
+                        /*if ($scope.isBrowser) {
+                         APIService.get.loyaltyObjectWithPassword($scope.barcode, $scope.form.password, function (data) {
+                         $scope.isReady = true;
+                         $log.info(data);
+                         if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
+                         $scope.reset();
+                         $window.alert('Login ou Mot de passe erronné !');
+                         } else {
+                         $scope.data = data;
+                         $scope.data.Offers = APIService.get.formattedOffers(data);
+                         $scope.hideData = false;
+                         }
+                         });
+                         } else {*/
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
                             $scope.isReady = true;
                             if (data === false) {
                                 $scope.reset();
-                                $window.alert('Carte inconnue!');
+                                navigator.notification.alert('Carte inconnue !', null, "Leonidas", "OK");
+//                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.reset();
@@ -209,9 +192,15 @@ angular.module('APIServiceApp')
 
                     /** Disconnect function */
                     $scope.disconnect = function () {
-                        $window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?") ? (function () {
-                            $scope.reset();
-                        })() : 0;
+                        if (navigator.notification) {
+                            navigator.notification.confirm('Êtes-vous sûr de vouloir vous déconnecter ?', function () {
+                                $scope.reset();
+                            }, "Leonidas");
+                        } else {
+                            $window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?") ? (function () {
+                                $scope.reset();
+                            })() : 0;
+                        }
                     };
 
                     $scope.goRegister = function () {
@@ -226,13 +215,21 @@ angular.module('APIServiceApp')
 
                     $scope.login = function () {
                         checkBarcode($scope.form.barcode);
-                        $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
+                        if (navigator.notification) {
+                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Leonidas", "OK");
+                        } else {
+                            $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
+                        }
                     };
 
                     $scope.autoLogin = function () {
                         if ($scope.auto) {
                             checkBarcode($scope.form.barcode);
-                            $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
+                            if (navigator.notification) {
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Leonidas", "OK");
+                            } else {
+                                $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
+                            }
                         }
                     };
 
@@ -277,6 +274,23 @@ angular.module('APIServiceApp')
                         });
                     };
 
+                    $scope.orderAmount = function(amount) {
+                        if (amount) {
+                            var passageObj = APIService.get.emptyPassageObj();
+                            passageObj.OrderTotalIncludeTaxes = amount;
+                            passageObj.OrderTotalExcludeTaxes = amount;
+                            APIService.actions.addPassage(passageObj).success(function () {
+                                $scope.hideDialog();
+                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.reset();
+                                $timeout(function () {
+                                    $rootScope.scan();
+                                }, 1600);
+                                return true;
+                            });
+                        }
+                    };
+
                     /**
                      * @function $scope.useBalanceToPay
                      * @param {number} val The amount of the balance to use for payment
@@ -286,7 +300,11 @@ angular.module('APIServiceApp')
                         var passageObj = APIService.get.emptyPassageObj();
 
                         if (~~balance.Value < ~~val) {
-                            $window.alert('Ce montant est supérieur au total de la cagnotte');
+                            if (navigator.notification) {
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Leonidas", "OK");
+                            } else {
+                                $scope.barcodeValid ? displayData() : $window.alert('Ce montant est supérieur au total de la cagnotte');
+                            }
                             return false;
                         } else {
                             passageObj.BalanceUpdate = {
@@ -346,6 +364,7 @@ angular.module('APIServiceApp')
                         };
 
                         APIService.actions.register(obj).then(function () {
+                            $log.info('Retour API register ', obj);
                             $scope.barcode = $scope.client.barcode;
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
@@ -354,13 +373,77 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.showConfirm = function (ev, offer) {
-                        var doUse = $window.confirm('Voulez-vous utiliser cette offre ?');
-                        if (doUse) $scope.useOffer(offer);
+                        if (navigator.notification) {
+                            navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function () {
+                                $scope.useOffer(offer);
+                            }, "Leonidas");
+                        } else {
+                            var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
+                            if (doUse) $scope.useOffer(offer);
+                        }
+//                        $scope.currentOffer = offer;
+//                        $mdDialog.show({
+//                            scope: $scope,
+//                            preserveScope: true,
+//                            clickOutsideToClose: true,
+//                            targetEvent: ev,
+//                            template: '<md-dialog aria-label="Utiliser Offre"> \
+//                                <md-dialog-content class="sticky-container clearfix"> \
+//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
+//                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
+//                                </md-dialog-content> \
+//                                <div class="md-actions" layout="row"> \
+//                                 <div class="clearfix">\
+//                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
+//                                    VALIDER \
+//                                    </md-button> \
+//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
+//                                    ANNULER \
+//                                    </md-button> \
+//                                 </div> \
+//                                </div> \
+//                            </md-dialog>'
+//                        }).then(function () {
+//                        }, function () {
+//                        });
                     };
 
                     $scope.showAddPassageConfirm = function (ev) {
-                        var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
-                        if (doUse) $scope.addPassage();
+                        if (navigator.notification) {
+                            navigator.notification.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", function () {
+                                $scope.addPassage();
+                            }, "Leonidas");
+                        } else {
+                            var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
+                            if (doUse) $scope.addPassage();
+                        }
+
+//                        $mdDialog.show({
+//                            scope: $scope,
+//                            preserveScope: true,
+//                            clickOutsideToClose: true,
+//                            targetEvent: ev,
+//                            template: '<md-dialog aria-label="Ajouter un Passage"> \
+//                                <md-dialog-content class="sticky-container clearfix"> \
+//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
+//                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
+//                                </md-dialog-content> \
+//                                <div class="md-actions" layout="row"> \
+//                                 <div class="clearfix">\
+//                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
+//                                    VALIDER \
+//                                    </md-button> \
+//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
+//                                    ANNULER \
+//                                    </md-button> \
+//                                 </div> \
+//                                </div> \
+//                            </md-dialog>'
+//                        }).then(function () {
+//
+//                        }, function () {
+//
+//                        });
                     };
 
                     $scope.showAdvanced = function (ev, balance) {
