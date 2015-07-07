@@ -372,6 +372,12 @@ angular.module('APIServiceApp')
                         });
                     };
 
+                    $scope.useAction = function() {
+                        navigator.notification ? navigator.notification.alert("L'action a bien été effectuée :\n" , function() {
+                            $scope.backToLogin();
+                        }) : alert("L'action a bien été effectuée :\n" );
+                    };
+
                     $scope.showConfirm = function (ev, offer) {
                         if (navigator.notification) {
                             navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function () {

@@ -63,6 +63,10 @@
         color: #123456 !important;
     }
 
+    .izi-account .item-select::after {
+        color: #123456 !important;
+    }
+
     .izi-account .subtitle {
         color: #333 !important;
     }
@@ -162,7 +166,7 @@
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
                            ng-model="balancePayment.value"
-                           style="padding-top: 0; padding-bottom: 0; line-height: 20px;"
+                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
                            placeholder="Paiement en avoir..." required>
 
                     <div class="input-group-addon wave-effect"
@@ -181,7 +185,7 @@
                 <div class="input-group">
                     <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
-                           style="padding-top: 0; padding-bottom: 0; line-height: 20px;"
+                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
                            ng-model="orderAmountInput.value"
                            placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
                            required>
@@ -194,6 +198,16 @@
             </div>
         </li>
     </ul>
+
+    <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
+    <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
+        <div class="input-label">&nbsp;</div>
+        <select name="actionSelect" id="actionSelect" class="center-block" style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px;">
+            <option ng-attr-selected="$index === 0" value="{{action.Name}}" ng-repeat="action in data.CustomActions">{{action.Name}}</option>
+        </select>
+    </label>
+
+    <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
 
     <!--<div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">-->
     <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">-->
@@ -233,7 +247,7 @@
     </form>
 
     <div class="clearfix">
-        <button class="btn btn-lg center-block hvr-grow no-radius {{(iziLoginForm.barcodeId.$invalid || iziLoginForm.barcodeId.$pristine) ? 'bg-rouge' : 'bg-accent'}}"
+        <button class="btn btn-lg center-block hvr-grow no-radius ink {{(iziLoginForm.barcodeId.$invalid || iziLoginForm.barcodeId.$pristine) ? 'bg-rouge' : 'bg-accent'}}"
                 ng-disabled="iziLoginForm.barcodeId.$invalid || iziLoginForm.barcodeId.$pristine"
                 ng-click="login()">Valider
         </button>
@@ -400,7 +414,7 @@
             </div>
             <div class="text-center">
                 <button id="submitRegister"
-                        class="btn bg-{{registerForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius"
+                        class="btn bg-{{registerForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
                         ng-disabled="registerForm.$invalid || registerForm.$pristine"
                         ng-click="submitRegister()">VALIDER
                 </button>
