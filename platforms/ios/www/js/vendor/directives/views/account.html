@@ -28,6 +28,10 @@
         height: 40px;
     }
 
+    .izi-account label {
+        padding-left: 0;
+    }
+
     .izi-account button {
         -webkit-border-radius: 0;
         -moz-border-radius: 0;
@@ -63,6 +67,10 @@
         color: #123456 !important;
     }
 
+    .izi-account .item-select::after {
+        color: #123456 !important;
+    }
+
     .izi-account .subtitle {
         color: #333 !important;
     }
@@ -87,10 +95,6 @@
         left: 50%;
     }
 
-    .izi-account .item-select::after {
-        color: #123456 !important;
-    }
-
     md-dialog {
         width: 60% !important;
     }
@@ -100,7 +104,7 @@
     }
 </style>
 
-<div class="izi-account center-block">
+<div class="izi-account center-block" style="margin-top: 16px;">
 <md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
 <div ng-if="isReady && barcode && !register">
     <div class="card">
@@ -199,21 +203,34 @@
         </li>
     </ul>
 
-    <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
-    <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
-        <div class="input-label">&nbsp;</div>
-        <select name="actionSelect" id="actionSelect" class="center-block" style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px;">
-            <option ng-attr-selected="$index === 0" value="{{}}" ng-repeat="action in data.CustomActions">{{action.Name}}</option>
-        </select>
-    </label>
+    <div ng-if="data.CustomActions && data.CustomActions[0].Name">
+        <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
+        <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
+            <div class="input-label">&nbsp;</div>
+            <select name="actionSelect" id="actionSelect"
+                    class="center-block"
+                    style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px; background: #f8f8f8">
+                <option ng-attr-selected="$index === 0" value="{{action.Id}}" ng-repeat="action in data.CustomActions">
+                    {{action.Name}}
+                </option>
+            </select>
+        </label>
 
-    <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
+        <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
+    </div>
 
-    <!--<div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">-->
-    <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">-->
-    <!--<i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}-->
-    <!--</button>-->
-    <!--</div>-->
+    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">
+            <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :
+            'MONTANT D\'ACHAT'}}
+        </button>
+    </div>
+
+    <div class="text-center" ng-if="data.CustomerEmail" style="margin-top: 16px;">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
+            <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
+        </button>
+    </div>
 
     <h5 class="text-center light" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">

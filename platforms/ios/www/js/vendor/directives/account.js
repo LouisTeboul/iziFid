@@ -171,7 +171,7 @@ angular.module('APIServiceApp')
                             $scope.isReady = true;
                             if (data === false) {
                                 $scope.reset();
-                                navigator.notification.alert('Carte inconnue !', null, "Leonidas", "OK");
+                                navigator.notification.alert('Carte inconnue !', null, "FF Pizza", "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
@@ -180,6 +180,7 @@ angular.module('APIServiceApp')
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
+                                $scope.selectedAction = data.CustomActions[0].Id;
                                 $scope.hideData = false;
                             }
                         });
@@ -195,7 +196,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm('Êtes-vous sûr de vouloir vous déconnecter ?', function () {
                                 $scope.reset();
-                            }, "Leonidas");
+                            }, "FF Pizza");
                         } else {
                             $window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?") ? (function () {
                                 $scope.reset();
@@ -216,7 +217,7 @@ angular.module('APIServiceApp')
                     $scope.login = function () {
                         checkBarcode($scope.form.barcode);
                         if (navigator.notification) {
-                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Leonidas", "OK");
+                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "FF Pizza", "OK");
                         } else {
                             $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                         }
@@ -226,7 +227,7 @@ angular.module('APIServiceApp')
                         if ($scope.auto) {
                             checkBarcode($scope.form.barcode);
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Leonidas", "OK");
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "FF Pizza", "OK");
                             } else {
                                 $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                             }
@@ -284,7 +285,7 @@ angular.module('APIServiceApp')
 
                         if (~~balance.Value < ~~val) {
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Leonidas", "OK");
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "FF Pizza", "OK");
                             } else {
                                 $scope.barcodeValid ? displayData() : $window.alert('Ce montant est supérieur au total de la cagnotte');
                             }
@@ -332,11 +333,16 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.orderAmount = function(amount) {
+                    $scope.orderAmount = function (amount) {
                         if (amount) {
                             var passageObj = APIService.get.emptyPassageObj();
                             passageObj.OrderTotalIncludeTaxes = amount;
                             passageObj.OrderTotalExcludeTaxes = amount;
+                            if ($scope.data.CustomActions) {
+                                passageObj.CustomAction = {
+                                    "CustomActionId": $('#actionSelect').val()
+                                }
+                            }
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
                                 $scope.toast("Un passage a bien été ajouté à cette carte");
@@ -372,17 +378,58 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useAction = function() {
-                        navigator.notification ? navigator.notification.alert("L'action a bien été effectuée", function() {
+                    $scope.useAction = function () {
+                        if (navigator.notification) {
+                            navigator.notification.alert("L'action a bien été effectuée", function () {
+                                var passageObj = APIService.get.emptyPassageObj();
+                                var amount = $('#orderAmountInput').val();
+                                passageObj.OrderTotalIncludeTaxes = amount;
+                                passageObj.OrderTotalExcludeTaxes = amount;
+                                passageObj.CustomAction = {
+                                    "CustomActionId": $('#actionSelect').val()
+                                };
+                                $log.info(passageObj);
+
+                                APIService.actions.addPassage(passageObj).success(function () {
+                                    $scope.hideDialog();
+                                    $scope.toast("Un passage a bien été ajouté à cette carte");
+                                    $scope.reset();
+                                    $timeout(function () {
+                                        !$scope.isBrowser ? $rootScope.scan() : 0;
+                                    }, 1000);
+                                    return true;
+                                });
+                                $scope.backToLogin();
+                            });
+                        } else {
+                            alert("L'action a bien été effectuée :\n");
+                            var passageObj = APIService.get.emptyPassageObj();
+                            var amount = $('#orderAmountInput').val();
+                            passageObj.OrderTotalIncludeTaxes = amount;
+                            passageObj.OrderTotalExcludeTaxes = amount;
+                            passageObj.CustomAction = {
+                                "CustomActionId": $('#actionSelect').val()
+                            };
+                            $log.info(passageObj);
+
+                            APIService.actions.addPassage(passageObj).success(function () {
+                                $scope.hideDialog();
+                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.reset();
+                                $timeout(function () {
+                                    !$scope.isBrowser ? $rootScope.scan() : 0;
+                                }, 1600);
+                                return true;
+                            });
                             $scope.backToLogin();
-                        }) : alert("L'action a bien été effectuée");
+                        }
                     };
 
                     $scope.showConfirm = function (ev, offer) {
                         if (navigator.notification) {
                             navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function () {
                                 $scope.useOffer(offer);
-                            }, "Leonidas");
+                            }, "FF Pizza");
                         } else {
                             var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
                             if (doUse) $scope.useOffer(offer);
@@ -418,7 +465,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", function () {
                                 $scope.addPassage();
-                            }, "Leonidas");
+                            }, "FF Pizza");
                         } else {
                             var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
                             if (doUse) $scope.addPassage();
