@@ -12,7 +12,6 @@
         -moz-border-radius: 0;
         border-radius: 0;
         width: 100%;
-        max-width: 280px;
         height: 34px;
         margin-bottom: 20px;
         font-size: 1.4em;
@@ -160,7 +159,7 @@
             <div ng-if="balance.UseToPay">
                 <div class="input-group">
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                           type="tel"
+                           type="number"
                            ng-model="balancePayment.value"
                            placeholder="Paiement en avoir..." required>
 
