@@ -23,8 +23,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             "http://planetalis.com",
             "http://cooking.bigsister.biz",
             "http://ffpizza.izipass.pro",
-            "http://le-b.izipass.pro",
-            "http://bellacci.izipass.pro"
+            "http://le-b.izipass.pro"
         ]
     };
 
