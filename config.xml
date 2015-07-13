@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.izipass.suzette" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
+<widget id="com.izipass.cantine.gourmets" version="1.0.0" xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Suzette &amp; Co</name>
+    <name>La Cantine des Gourmets</name>
     <description>
-        Gestion Fidélité Suzette &amp; Co
+        Gestion Fidélité La Cantine des Gourmets
     </description>
     <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS
