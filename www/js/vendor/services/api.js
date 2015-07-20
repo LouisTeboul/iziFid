@@ -233,7 +233,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             },
 
             addPassage: function (obj) {
-                console.log(obj);
+//                console.log(obj);
                 console.log(passagePromise);
                 passagePromise = null;
                 if (!passagePromise) {

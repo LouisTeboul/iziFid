@@ -166,7 +166,7 @@
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
                            ng-model="balancePayment.value"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                           style="padding: 0 0 0 6px; line-height: 20px; max-width: 100% !important"
                            placeholder="Paiement en avoir..." required>
 
                     <div class="input-group-addon wave-effect"
@@ -182,19 +182,19 @@
                 data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}</h3>
 
             <div>
-                <div class="input-group">
+                <!--<div class="input-group">-->
                     <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                           style="padding: 0 0 0 6px; line-height: 20px; margin-left: auto; margin-right: auto; max-width: 75.2% !important"
                            ng-model="orderAmountInput.value"
                            placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
                            required>
 
-                    <div class="input-group-addon wave-effect"
-                         ng-click="orderAmount(orderAmountInput.value)"
-                            >VALIDER
-                    </div>
-                </div>
+                    <!--<div class="input-group-addon wave-effect"-->
+                         <!--ng-click="orderAmount(orderAmountInput.value)"-->
+                            <!--VALIDER-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
         </li>
     </ul>

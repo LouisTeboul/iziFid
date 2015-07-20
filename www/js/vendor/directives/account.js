@@ -379,34 +379,14 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.useAction = function () {
-                        if (navigator.notification) {
-                            navigator.notification.alert("L'action a bien été effectuée :\n", function () {
-                                var passageObj = APIService.get.emptyPassageObj();
-                                var amount = $('#orderAmountInput').val();
-                                passageObj.OrderTotalIncludeTaxes = amount;
-                                passageObj.OrderTotalExcludeTaxes = amount;
-                                passageObj.CustomAction = {
-                                    "CustomActionId": $('#actionSelect').val()
-                                };
-                                $log.info(passageObj);
-
-                                APIService.actions.addPassage(passageObj).success(function () {
-                                    $scope.hideDialog();
-                                    $scope.toast("Un passage a bien été ajouté à cette carte");
-                                    $scope.reset();
-                                    $timeout(function () {
-                                        !$scope.isBrowser ? $rootScope.scan() : 0;
-                                    }, 1600);
-                                    return true;
-                                });
-                                $scope.backToLogin();
-                            });
+                        var orderAmount = $('#orderAmountInput').val();
+                        if (orderAmount === "") {
+                            var err = "Veuillez d'abord saisir le montant d'achat !";
+                            navigator.notification ? navigator.notification.alert(err) : $window.alert(err);
                         } else {
-                            alert("L'action a bien été effectuée :\n");
                             var passageObj = APIService.get.emptyPassageObj();
-                            var amount = $('#orderAmountInput').val();
-                            passageObj.OrderTotalIncludeTaxes = amount;
-                            passageObj.OrderTotalExcludeTaxes = amount;
+                            passageObj.OrderTotalIncludeTaxes = orderAmount;
+                            passageObj.OrderTotalExcludeTaxes = orderAmount;
                             passageObj.CustomAction = {
                                 "CustomActionId": $('#actionSelect').val()
                             };
@@ -414,14 +394,14 @@ angular.module('APIServiceApp')
 
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
-                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.toast("L'action a bien été effectuée");
                                 $scope.reset();
                                 $timeout(function () {
                                     !$scope.isBrowser ? $rootScope.scan() : 0;
                                 }, 1600);
+                                $scope.backToLogin();
                                 return true;
                             });
-                            $scope.backToLogin();
                         }
                     };
 
