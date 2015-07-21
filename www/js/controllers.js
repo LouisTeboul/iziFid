@@ -6,6 +6,21 @@ angular.module('starter.controllers', [])
 
         $rootScope.cardNum = "";
 
+        $scope.updateValues = function() {
+            localStorage.setItem('custom', JSON.stringify($scope.custom));
+        };
+
+        $scope.custom = localStorage.getItem('custom');
+        console.log($scope.custom);
+        if (!$scope.custom) {
+            $scope.custom = {
+                clientUrl: 'http://serfim.lyon.izipass.pro',
+                firebase: 'https://widget-generator.firebaseio.com/serfim'
+            };
+            $scope.$apply()
+            $scope.updateValues();
+        }
+
         $scope.scan = function () {
             if (scanCounter === 0) {
                 var promise = appServices.scanBarcode();

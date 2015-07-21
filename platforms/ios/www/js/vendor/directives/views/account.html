@@ -63,6 +63,10 @@
         color: #123456 !important;
     }
 
+    .izi-account .item-select::after {
+        color: #123456 !important;
+    }
+
     .izi-account .subtitle {
         color: #333 !important;
     }
@@ -85,10 +89,6 @@
         position: absolute;
         top: 50%;
         left: 50%;
-    }
-
-    .izi-account .item-select::after {
-        color: #123456 !important;
     }
 
     md-dialog {
@@ -166,7 +166,7 @@
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
                            ng-model="balancePayment.value"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                           style="padding: 0 0 0 6px; line-height: 20px; max-width: 100% !important"
                            placeholder="Paiement en avoir..." required>
 
                     <div class="input-group-addon wave-effect"
@@ -182,19 +182,19 @@
                 data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}</h3>
 
             <div>
-                <div class="input-group">
+                <!--<div class="input-group">-->
                     <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="number"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                           style="padding: 0 0 0 6px; line-height: 20px; margin-left: auto; margin-right: auto; max-width: 75.2% !important"
                            ng-model="orderAmountInput.value"
                            placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
                            required>
 
-                    <div class="input-group-addon wave-effect"
-                         ng-click="orderAmount(orderAmountInput.value)"
-                            >VALIDER
-                    </div>
-                </div>
+                    <!--<div class="input-group-addon wave-effect"-->
+                         <!--ng-click="orderAmount(orderAmountInput.value)"-->
+                            <!--VALIDER-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
         </li>
     </ul>
@@ -202,8 +202,9 @@
     <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
     <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
         <div class="input-label">&nbsp;</div>
-        <select name="actionSelect" id="actionSelect" class="center-block" style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px;">
-            <option ng-attr-selected="$index === 0" value="{{}}" ng-repeat="action in data.CustomActions">{{action.Name}}</option>
+        <select name="actionSelect" id="actionSelect"
+                class="center-block" style="max-width: 100%; width: 100%; direction: ltr; font-size: 1.22em; height: 56px; padding-right: 30px; padding-top: 5px; background: #f8f8f8">
+            <option ng-attr-selected="$index === 0" value="{{action.Id}}" ng-repeat="action in data.CustomActions">{{action.Name}}</option>
         </select>
     </label>
 
@@ -359,12 +360,12 @@
 
                 <div class="form-group col-sm-9">
                     <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                           placeholder="Code Postal&#8230;" ng-minlength="6"
+                           placeholder="Code Postal&#8230;" ng-minlength="5"
                            required=""/>
 
                     <div class="alert alert-danger"
                          ng-if="registerForm.zipcode.$invalid && !registerForm.zipcode.$pristine">
-                        <p class="text-center">Ce champ doit comporter au moins 6 caractères</p>
+                        <p class="text-center">Ce champ doit comporter au moins 5 caractères</p>
                     </div>
                 </div>
             </div>
