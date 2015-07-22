@@ -252,7 +252,7 @@ angular.module('APIServiceApp')
                             $scope.toast("Un passage a bien été ajouté à cette carte");
                             $scope.reset();
                             $timeout(function () {
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                                $rootScope.scan();
                             }, 1600);
                             return true;
                         });
@@ -267,9 +267,9 @@ angular.module('APIServiceApp')
 //                            $scope.hideDialog();
                             $scope.toast("Le montant d'achat a bien été enregistré");
 //                            $scope.reset();
-//                            $timeout(function () {
-//                                !$scope.isBrowser ? $rootScope.scan() : 0;
-//                            }, 1600);
+                            $timeout(function () {
+                                $rootScope.scan();
+                            }, 1600);
                             return true;
                         });
                     };
@@ -320,7 +320,7 @@ angular.module('APIServiceApp')
                                 $scope.reset();
                                 $timeout(function () {
                                     $scope.hasUsedBalance = false;
-                                    !$scope.isBrowser ? $rootScope.scan() : 0;
+                                    $rootScope.scan();
                                 }, 1600);
                                 return true;
                             });
@@ -343,7 +343,7 @@ angular.module('APIServiceApp')
                             $scope.toast("L'offre a bien été utilisée");
                             $scope.reset();
                             $timeout(function () {
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                                $rootScope.scan();
                             }, 1600);
                             return true;
                         });
