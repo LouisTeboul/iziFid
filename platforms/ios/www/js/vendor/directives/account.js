@@ -173,7 +173,7 @@ angular.module('APIServiceApp')
                                 $scope.reset();
                                 navigator.notification.alert('Carte inconnue !', null, "Serfim", "OK");
 //                                $window.alert('Carte inconnue !');
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                                $rootScope.scan();
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.reset();
                                 $scope.goRegister();
@@ -211,7 +211,7 @@ angular.module('APIServiceApp')
                     $scope.backToLogin = function () {
                         $scope.register = false;
                         $scope.reset();
-                        !$scope.isBrowser ? $rootScope.scan() : 0;
+                        $rootScope.scan();
                     };
 
                     $scope.login = function () {
@@ -253,7 +253,7 @@ angular.module('APIServiceApp')
                             $scope.toast("Un passage a bien été ajouté à cette carte");
                             $scope.reset();
                             $timeout(function () {
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                                $rootScope.scan();
                             }, 1600);
                             return true;
                         });
@@ -269,7 +269,7 @@ angular.module('APIServiceApp')
                             $scope.toast("Le montant d'achat a bien été enregistré");
 //                            $scope.reset();
 //                            $timeout(function () {
-//                                !$scope.isBrowser ? $rootScope.scan() : 0;
+//                                $rootScope.scan();
 //                            }, 1600);
                             return true;
                         });
@@ -304,7 +304,7 @@ angular.module('APIServiceApp')
                                 $scope.reset();
                                 $timeout(function () {
                                     $scope.hasUsedBalance = false;
-                                    !$scope.isBrowser ? $rootScope.scan() : 0;
+                                    $rootScope.scan();
                                 }, 1600);
                                 return true;
                             });
@@ -327,7 +327,7 @@ angular.module('APIServiceApp')
                             $scope.toast("L'offre a bien été utilisée");
                             $scope.reset();
                             $timeout(function () {
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                                $rootScope.scan();
                             }, 1600);
                             return true;
                         });
@@ -397,7 +397,7 @@ angular.module('APIServiceApp')
                                 $scope.toast("L'action a bien été effectuée");
                                 $scope.reset();
                                 $timeout(function () {
-                                    !$scope.isBrowser ? $rootScope.scan() : 0;
+                                    $rootScope.scan();
                                 }, 1600);
                                 $scope.backToLogin();
                                 return true;
