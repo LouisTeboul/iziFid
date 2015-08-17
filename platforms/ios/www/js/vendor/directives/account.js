@@ -175,6 +175,7 @@ angular.module('APIServiceApp')
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
+                                $scope.client.barcode = $scope.barcode;
                                 $scope.reset();
                                 $scope.goRegister();
                             } else {
