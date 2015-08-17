@@ -23,7 +23,8 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             "http://planetalis.com",
             "http://cooking.bigsister.biz",
             "http://ffpizza.izipass.pro",
-            "http://le-b.izipass.pro"
+            "http://le-b.izipass.pro",
+            "http://bellacci.izipass.pro"
         ]
     };
 
@@ -112,9 +113,9 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 
             serverUrl: function(uuid) {
                 $http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
-                   $log.info('getServerUrl', data);
-                   if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
-                   methods.set.clientUrl(data['Server_Url']);
+                    $log.info('getServerUrl', data);
+                    if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
+                    methods.set.clientUrl(data['Server_Url']);
                 }).error(function(e) {
                     vars.debug ? $log.error(e) : 0;
                 });
@@ -245,7 +246,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 
             register: function (formObj) {
                 return $timeout(function () {
-                    return vars.fake ? fakeData : $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
+                    return $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
                         vars.currLoyaltyObject = data;
                         return data;
                     });
