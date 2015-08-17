@@ -1,9 +1,5 @@
 <div>
 <style id="izi-style">
-    .izi-account {
-        min-height: 400px;
-    }
-
     .izi-account input {
         color: #000;
         border: 0;
@@ -16,6 +12,10 @@
         height: 34px;
         margin-bottom: 20px;
         font-size: 1.25em;
+        line-height: 24px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
         -webkit-transition: all .3s ease-in;
         -moz-transition: all .3s ease-in;
         -ms-transition: all .3s ease-in;
@@ -23,9 +23,16 @@
         transition: all .3s ease-in;
     }
 
+    .izi-account {
+        min-height: 210px;
+    }
+
     .izi-account input:focus {
         border-bottom: 1px solid #123456;
         height: 40px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
 
     .izi-account label {
@@ -183,7 +190,7 @@
 
         <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
             <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
-                data.OneRuleWithOrderAmountString : 'MONTANT D\'ACHAT'}}</h3>
+                data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
 
             <div>
                 <div class="input-group">
@@ -219,18 +226,18 @@
         <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
     </div>
 
-    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount()">
-            <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :
-            'MONTANT D\'ACHAT'}}
-        </button>
-    </div>
+    <!--<div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">-->
+        <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount(orderAmountInput.value)">-->
+            <!--<i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :-->
+            <!--'MONTANT D\'ACHAT'}}-->
+        <!--</button>-->
+    <!--</div>-->
 
-    <div class="text-center" ng-if="data.CustomerEmail" style="margin-top: 16px;">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
-            <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
-        </button>
-    </div>
+    <!--<div class="text-center" ng-if="data.CustomerEmail" style="margin-top: 16px;">-->
+        <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">-->
+            <!--<i class="icon ion-plus"></i> AJOUTER UN PASSAGE-->
+        <!--</button>-->
+    <!--</div>-->
 
     <h5 class="text-center light" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
@@ -277,20 +284,19 @@
 <div id="registerView" ng-if="register">
     <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;" ng-click="backToLogin()"></i>
 
-    <div class="container-fluid">
-        <h3 class="blanc text-center">Enregistrer Ma Carte<br>
+    <div class="container" style="max-width: 600px; margin: auto;">
+        <h2 class="blanc text-center">Enregistrer Ma Carte<br>
             <small>Tous les champs sont obligatoires</small>
-        </h3>
+        </h2>
 
 
-        <form name="registerForm" class="form-horizontal" novalidate>
+        <form name="registerForm" class="form-horizontal" novalidate style="margin-top: 28px;">
             <div class="clearfix">
                 <label for="barcode" class="col-sm-3">N° de carte</label>
 
                 <div class="form-group col-sm-9">
                     <input id="barcode" name="barcode" class="form-control" type="text" ng-model="client.barcode"
-                           placeholder="N° de carte&#8230;" ng-minlength="8" required=""
-                           ng-init="client.barcode = registerBarcode"/>
+                           placeholder="N° de carte&#8230;" ng-minlength="8" required/>
 
                     <div class="alert alert-danger"
                          ng-if="registerForm.barcode.$invalid && !registerForm.barcode.$pristine">
@@ -376,7 +382,7 @@
 
                 <div class="form-group col-sm-9">
                     <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                           placeholder="Code Postal&#8230;" ng-minlength="6"
+                           placeholder="Code Postal&#8230;" ng-minlength="5" maxlength="5"
                            required=""/>
 
                     <div class="alert alert-danger"
