@@ -3,10 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FF PIZZA</title>
-
-    <link href='http://fonts.googleapis.com/css?family=Bevan' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Kameron:400,700' rel='stylesheet' type='text/css'>
+    <title>Vidici</title>
+    <link rel="stylesheet" href="css/fonts/styles.css"/>
     <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
     <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
     <link href="lib/waves/dist/waves.min.css" rel="stylesheet">
@@ -16,22 +14,30 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <style>
+       body {
+           font-size: 1.1em;
+       }
+
+        h2 {
+            font-weight: 700;
+        }
+
+    </style>
 </head>
 <body ng-app="starter">
 <div class="ionic" ng-controller="HeaderCtrl">
-    <div class="bar bar-header bar-dark expanded push-down" style="height: 50px;">
-        <!--<button class="button button-icon icon ion-navicon flat"></button>-->
-        <!--<button class="button button-icon icon ion-android-more-vertical flat pull-right"></button>-->
+    <div class="bar bar-header bar-dark expanded push-down" style="height: 50px; background-color: #84a08f; border-color: #84a08f;">
         <h1 class="title"
-            style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 1.35em; color: #33cd5f;">
-            FF PIZZA</h1>
+            style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em; color: #fbfbfb;">
+            Vidici</h1>
     </div>
     <button class="button button-fab button-fab-top-right button-balanced icon ion-qr-scanner waves-effect waves-button waves-light"
-            style="z-index:999; top: 22px; background: #33cd5f; border-color: #33cd5f"
+            style="z-index:999; top: 22px; background: #b1cfbe; border-color: #b1cfbe"
             ng-click="scan()"></button>
 </div>
 
-<ion-nav-view nav-view-transition="ios"></ion-nav-view>
+<ion-nav-view></ion-nav-view>
 
 <script src="lib/jquery/dist/jquery.min.js"></script>
 <script src="lib/jquery-easing/jquery.easing.min.js"></script>
@@ -79,7 +85,7 @@
 
     setTimeout(function () {
         $('.bar-header .button-icon').css('margin-top', '12px');
-    }, 1000)
+    }, 1000);
 </script>
 </body>
 </html>
