@@ -212,6 +212,7 @@ angular.module('APIServiceApp')
                     $scope.backToLogin = function () {
                         $scope.register = false;
                         $scope.reset();
+                        window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
                     };
 

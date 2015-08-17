@@ -5,6 +5,7 @@ h1, h2, h3, h4, h5 {
 
 p, a, b, label, input, li, span, small {
     font-family: Comfortaa, "Bookman", Georgia, "Times New Roman", serif !important;
+}
 
 @media screen and (max-width: 420px) {
     .barcode-container {
