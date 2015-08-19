@@ -225,18 +225,18 @@
         <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
     </div>
 
-    <div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount(orderAmountInput.value)">
-            <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :
-            'MONTANT D\'ACHAT'}}
-        </button>
-    </div>
+    <!--<div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">-->
+        <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount(orderAmountInput.value)">-->
+            <!--<i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :-->
+            <!--'MONTANT D\'ACHAT'}}-->
+        <!--</button>-->
+    <!--</div>-->
 
-    <div class="text-center" ng-if="data.CustomerEmail" style="margin-top: 16px;">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
-            <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
-        </button>
-    </div>
+    <!--<div class="text-center" ng-if="data.CustomerEmail" style="margin-top: 16px;">-->
+        <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">-->
+            <!--<i class="icon ion-plus"></i> AJOUTER UN PASSAGE-->
+        <!--</button>-->
+    <!--</div>-->
 
     <h5 class="text-center light" ng-if="data.CustomerEmail"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
