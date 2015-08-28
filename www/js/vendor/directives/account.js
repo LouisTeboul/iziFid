@@ -23,12 +23,78 @@ angular.module('APIServiceApp')
                 }
             },
             controller: [
-                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', 'APIService',
-                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, APIService) {
+                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService',
+                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService) {
+
+
+                    function onDeviceReady() {
+                        if (window.device) {
+                            $scope.isBrowser = false;
+                            if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
+                            $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
+                                $log.info('getServerUrl', data);
+                                if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
+                                APIService.set.clientUrl(data.Server_Url);
+                                $scope.clientUrl = data.Server_Url;
+                                var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
+                                var confTable = $firebaseArray(confTableRef);
+                                confTable.$loaded().then(function (data) {
+                                    $scope.configuration = data;
+                                    console.log("CONFIG!", data);
+                                    console.log('clientUrl', $scope.clientUrl);
+
+                                    var result = $.grep(data, function (e) {
+                                        return e.url === $scope.clientUrl;
+                                    });
+                                    console.log('RESULT', result);
+                                    if (result[0]) {
+                                        $scope.firebase = result[0].firebase;
+
+                                        console.log('firebase', $scope.firebase);
+                                        var ref = new Firebase($scope.firebase); //jshint ignore:line
+
+                                        $scope.data = $firebaseObject(ref);
+
+                                        $scope.data.$loaded()
+                                            .then(function (data) {
+                                                $scope.isReady = true;
+                                                document.title = data.title;
+                                                var topHeader = $('.bar-header h1');
+                                                topHeader.text(data.title.replace('Fidélité', ''));
+                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em; color: #fbfbfb;')
+                                                console.log(stripNameOffGoogleFonts(data.styling.mainFont));
+                                                $('.bar-header').css('background-color', data.styling.secondaryColor);
+                                                $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
+
+                                                $scope.customization = data;
+                                                /** Get the customization data from firebase and build css style from it */
+                                                angular.element(document).find('head').append("<style type='text/css'>" +
+                                                    buildStyleFromData($scope.customization) +
+                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor) + "</style>");
+                                                angular.element('#izi-style').remove();
+
+                                            })
+                                            .catch(function (error) {
+                                                console.error("Error:", error);
+                                            }
+                                        );
+                                    }
+                                });
+
+                            }).error(function(e) {
+                                vars.debug ? $log.error(e) : 0;
+                            });
+
+                        }
+                    }
+
+                    document.addEventListener("deviceready", onDeviceReady, false);
+
 
                     /** Initial setup */
-                    APIService.set.clientUrl($scope.clientUrl);
+//                    APIService.set.clientUrl($scope.clientUrl);
                     $scope.isReady = false;
+
 
                     $timeout(function () {
                         if (!window.phonegap) {
@@ -39,51 +105,6 @@ angular.module('APIServiceApp')
                         }
                     }, 0);
 
-                    function onDeviceReady() {
-                        if (window.device) {
-                            $scope.isBrowser = false;
-                            APIService.get.serverUrl(window.device.uuid, function (serverUrl) {
-                                APIService.set.clientUrl(serverUrl);
-                                $log.info(serverUrl);
-                            });
-                        }
-                    }
-
-                    document.addEventListener("deviceready", onDeviceReady, false);
-
-                    if ($scope.remoteCss) {
-                        /** Get css content and inject it into the <head> tag of the page this directive is included in */
-                        var cssUrl = $scope.remoteCss || 'http://localhost:8001/remotecss.css';
-                        $http.get(cssUrl).success(function (data) {
-                            $scope.isReady = true;
-                            angular.element(document).find('head').append("<style type='text/css'>" + data + "</style>");
-                            angular.element('#izi-style').remove();
-                        }).error(function (e) {
-                            $scope.isReady = true;
-                            $log.error(e);
-                        });
-
-                    } else if ($scope.firebase) {
-                        var ref = new Firebase($scope.firebase); //jshint ignore:line
-
-                        $scope.data = $firebaseObject(ref);
-
-                        $scope.data.$loaded()
-                            .then(function (data) {
-                                $scope.isReady = true;
-                                $scope.customization = data;
-                                /** Get the customization data from firebase and build css style from it */
-                                angular.element(document).find('head').append("<style type='text/css'>" +
-                                    buildStyleFromData($scope.customization) +
-                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor) + "</style>");
-                                angular.element('#izi-style').remove();
-
-                            })
-                            .catch(function (error) {
-                                console.error("Error:", error);
-                            }
-                        );
-                    }
 
                     function stripNameOffGoogleFonts(gfontsUrl) {
                         return gfontsUrl.replace("http://fonts.googleapis.com/css?family=", "").replace(/:.+/, "").replace("+", " ");
