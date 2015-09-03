@@ -171,7 +171,7 @@ angular.module('APIServiceApp')
                             $scope.isReady = true;
                             if (data === false) {
                                 $scope.reset();
-                                navigator.notification.alert('Carte inconnue !', null, "Miga", "OK");
+                                navigator.notification.alert('Carte inconnue !', null, "Vidici", "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
@@ -197,7 +197,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm('Êtes-vous sûr de vouloir vous déconnecter ?', function () {
                                 $scope.reset();
-                            }, "Miga");
+                            }, "Vidici");
                         } else {
                             $window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?") ? (function () {
                                 $scope.reset();
@@ -219,7 +219,7 @@ angular.module('APIServiceApp')
                     $scope.login = function () {
                         checkBarcode($scope.form.barcode);
                         if (navigator.notification) {
-                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Miga", "OK");
+                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Vidici", "OK");
                         } else {
                             $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                         }
@@ -229,7 +229,7 @@ angular.module('APIServiceApp')
                         if ($scope.auto) {
                             checkBarcode($scope.form.barcode);
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Miga", "OK");
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Vidici", "OK");
                             } else {
                                 $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                             }
@@ -287,7 +287,7 @@ angular.module('APIServiceApp')
 
                         if (~~balance.Value < ~~val) {
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Miga", "OK");
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Vidici", "OK");
                             } else {
                                 $scope.barcodeValid ? displayData() : $window.alert('Ce montant est supérieur au total de la cagnotte');
                             }
@@ -431,7 +431,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function () {
                                 $scope.useOffer(offer);
-                            }, "Miga");
+                            }, "Vidici");
                         } else {
                             var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
                             if (doUse) $scope.useOffer(offer);
@@ -467,7 +467,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", function () {
                                 $scope.addPassage();
-                            }, "Miga");
+                            }, "Vidici");
                         } else {
                             var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
                             if (doUse) $scope.addPassage();
