@@ -40,9 +40,9 @@
     <gap:splash gap:platform="ios" height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
     <gap:splash gap:platform="ios" height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
     <gap:splash gap:platform="ios" height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-    <name>Cantine des Gourmets</name>
+    <name>Fidelite IziPass</name>
     <description>
-        Gestion Fidélité Cantine des Gourmets
+        Gestion Fidélité
     </description>
     <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS

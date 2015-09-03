@@ -17,10 +17,19 @@
  under the License.
  */
 //
-// Prefix header for all source files of the 'Cantine des Gourmets' target in the 'Cantine des Gourmets' project
+//  main.m
+//  Fidelite IziPass
+//
+//  Created by ___FULLUSERNAME___ on ___DATE___.
+//  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
 //
 
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-#endif
+#import <UIKit/UIKit.h>
+
+int main(int argc, char* argv[])
+{
+    @autoreleasepool {
+        int retVal = UIApplicationMain(argc, argv, nil, @"AppDelegate");
+        return retVal;
+    }
+}

@@ -39,12 +39,12 @@
 		7E7966E61810823500FA85AD /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DC1810823500FA85AD /* icon-small.png */; };
 		7E7966E71810823500FA85AD /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DD1810823500FA85AD /* icon-small@2x.png */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
-		4553E33505234F0EA62CDFAA /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9B994331DC3490B8B266BF9 /* libiconv.dylib */; };
-		5E9D3A7EBB7B4501BE5DC505 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB850DAEAC2C4001AC05CD67 /* AVFoundation.framework */; };
-		BE68E53FFE214DD4946A139F /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3968850B354147895FB40A /* CoreVideo.framework */; };
-		A1E0ACA9367549E7804A2273 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14914C42133A49DEB311A46E /* QuartzCore.framework */; };
-		660A5284DF614FEAB892E0AC /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFA5E2CFBB84E3B86042B0B /* CoreImage.framework */; };
-		CD7CA7E4918C4146A365F517 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57803F83854D41528601A775 /* AudioToolbox.framework */; };
+		A750AFAA1A8644B3B2768320 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FDCD6E24CF55456AA8E952E4 /* libiconv.dylib */; };
+		FBCB6D5E241242B0A5154BA0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1954D25A45DB495DAA850F0E /* AVFoundation.framework */; };
+		43A7245298DE4A3CB40E8786 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A492DFD1E0D54AA59FD29BF4 /* CoreVideo.framework */; };
+		428448F41AE34416AE84BAA6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B8975FF0A474B019003DB66 /* QuartzCore.framework */; };
+		B9F027201C2F45638339AC74 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 112852BC32FC4D8EA15E57BE /* CoreImage.framework */; };
+		3B2A02F33834490F8B0F7A88 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E1135132CF4361B73CE48B /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +67,7 @@
 /* Begin PBXFileReference section */
 		1D3623240D0F684500981E51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1D6058910D05DD3D006BFB54 /* Cantine des Gourmets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cantine des Gourmets.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* Fidelite IziPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fidelite IziPass.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F766FDD13BBADB100FB74C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		1F766FE013BBADB100FB74C0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -92,7 +92,7 @@
 		30B4F2FF19D5E07200D9F7D8 /* Default-Landscape-736h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape-736h.png"; sourceTree = "<group>"; };
 		30C1856519D5FC0A00212699 /* icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@3x.png"; sourceTree = "<group>"; };
 		30FC414816E50CA1004E6F35 /* icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72@2x.png"; sourceTree = "<group>"; };
-		32CA4F630368D1EE00C91783 /* Cantine des Gourmets-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cantine des Gourmets-Prefix.pch"; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* Fidelite IziPass-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Fidelite IziPass-Prefix.pch"; sourceTree = "<group>"; };
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7E7966D41810823500FA85AD /* icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40.png"; sourceTree = "<group>"; };
 		7E7966D51810823500FA85AD /* icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40@2x.png"; sourceTree = "<group>"; };
@@ -104,18 +104,18 @@
 		7E7966DB1810823500FA85AD /* icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76@2x.png"; sourceTree = "<group>"; };
 		7E7966DC1810823500FA85AD /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small.png"; sourceTree = "<group>"; };
 		7E7966DD1810823500FA85AD /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small@2x.png"; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Cantine des Gourmets-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Cantine des Gourmets-Info.plist"; path = "../Cantine des Gourmets-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Fidelite IziPass-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Fidelite IziPass-Info.plist"; path = "../Fidelite IziPass-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		EB87FDF21871DA7A0020F90C /* merges */ = {isa = PBXFileReference; lastKnownFileType = folder; name = merges; path = ../../merges; sourceTree = "<group>"; };
 		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
 		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
-		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "Cantine des Gourmets/config.xml"; sourceTree = "<group>"; };
-		E9B994331DC3490B8B266BF9 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libiconv.dylib"; path = "usr/lib/libiconv.dylib"; sourceTree = SDKROOT; fileEncoding = 4; };
-		CB850DAEAC2C4001AC05CD67 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AVFoundation.framework"; path = "System/Library/Frameworks/AVFoundation.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		ED3968850B354147895FB40A /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreVideo.framework"; path = "System/Library/Frameworks/CoreVideo.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		14914C42133A49DEB311A46E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		5FFA5E2CFBB84E3B86042B0B /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreImage.framework"; path = "System/Library/Frameworks/CoreImage.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
-		57803F83854D41528601A775 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "Fidelite IziPass/config.xml"; sourceTree = "<group>"; };
+		FDCD6E24CF55456AA8E952E4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libiconv.dylib"; path = "usr/lib/libiconv.dylib"; sourceTree = SDKROOT; fileEncoding = 4; };
+		1954D25A45DB495DAA850F0E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AVFoundation.framework"; path = "System/Library/Frameworks/AVFoundation.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		A492DFD1E0D54AA59FD29BF4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreVideo.framework"; path = "System/Library/Frameworks/CoreVideo.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		3B8975FF0A474B019003DB66 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		112852BC32FC4D8EA15E57BE /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreImage.framework"; path = "System/Library/Frameworks/CoreImage.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		A9E1135132CF4361B73CE48B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,12 +127,12 @@
 				301BF552109A68D80062928A /* libCordova.a in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
-				4553E33505234F0EA62CDFAA /* libiconv.dylib in Frameworks */,
-				5E9D3A7EBB7B4501BE5DC505 /* AVFoundation.framework in Frameworks */,
-				BE68E53FFE214DD4946A139F /* CoreVideo.framework in Frameworks */,
-				A1E0ACA9367549E7804A2273 /* QuartzCore.framework in Frameworks */,
-				660A5284DF614FEAB892E0AC /* CoreImage.framework in Frameworks */,
-				CD7CA7E4918C4146A365F517 /* AudioToolbox.framework in Frameworks */,
+				A750AFAA1A8644B3B2768320 /* libiconv.dylib in Frameworks */,
+				FBCB6D5E241242B0A5154BA0 /* AVFoundation.framework in Frameworks */,
+				43A7245298DE4A3CB40E8786 /* CoreVideo.framework in Frameworks */,
+				428448F41AE34416AE84BAA6 /* QuartzCore.framework in Frameworks */,
+				B9F027201C2F45638339AC74 /* CoreImage.framework in Frameworks */,
+				3B2A02F33834490F8B0F7A88 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,13 +149,13 @@
 				1D3623250D0F684500981E51 /* AppDelegate.m */,
 			);
 			name = Classes;
-			path = "Cantine des Gourmets/Classes";
+			path = "Fidelite IziPass/Classes";
 			sourceTree = SOURCE_ROOT;
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* Cantine des Gourmets.app */,
+				1D6058910D05DD3D006BFB54 /* Fidelite IziPass.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -181,11 +181,11 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				32CA4F630368D1EE00C91783 /* Cantine des Gourmets-Prefix.pch */,
+				32CA4F630368D1EE00C91783 /* Fidelite IziPass-Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
-			path = "Cantine des Gourmets";
+			path = "Fidelite IziPass";
 			sourceTree = "<group>";
 		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
@@ -193,10 +193,10 @@
 			children = (
 				308D052D1370CCF300D202BF /* icons */,
 				308D05311370CCF300D202BF /* splash */,
-				8D1107310486CEB800E47090 /* Cantine des Gourmets-Info.plist */,
+				8D1107310486CEB800E47090 /* Fidelite IziPass-Info.plist */,
 			);
 			name = Resources;
-			path = "Cantine des Gourmets/Resources";
+			path = "Fidelite IziPass/Resources";
 			sourceTree = "<group>";
 		};
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
@@ -205,12 +205,12 @@
 				5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */,
-				E9B994331DC3490B8B266BF9 /* libiconv.dylib */,
-				CB850DAEAC2C4001AC05CD67 /* AVFoundation.framework */,
-				ED3968850B354147895FB40A /* CoreVideo.framework */,
-				14914C42133A49DEB311A46E /* QuartzCore.framework */,
-				5FFA5E2CFBB84E3B86042B0B /* CoreImage.framework */,
-				57803F83854D41528601A775 /* AudioToolbox.framework */,
+				FDCD6E24CF55456AA8E952E4 /* libiconv.dylib */,
+				1954D25A45DB495DAA850F0E /* AVFoundation.framework */,
+				A492DFD1E0D54AA59FD29BF4 /* CoreVideo.framework */,
+				3B8975FF0A474B019003DB66 /* QuartzCore.framework */,
+				112852BC32FC4D8EA15E57BE /* CoreImage.framework */,
+				A9E1135132CF4361B73CE48B /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -228,7 +228,7 @@
 			children = (
 			);
 			name = Plugins;
-			path = "Cantine des Gourmets/Plugins";
+			path = "Fidelite IziPass/Plugins";
 			sourceTree = SOURCE_ROOT;
 		};
 		308D052D1370CCF300D202BF /* icons */ = {
@@ -282,9 +282,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* Cantine des Gourmets */ = {
+		1D6058900D05DD3D006BFB54 /* Fidelite IziPass */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Cantine des Gourmets" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Fidelite IziPass" */;
 			buildPhases = (
 				304B58A110DAC018002A0835 /* Copy www directory */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
@@ -296,9 +296,9 @@
 			dependencies = (
 				301BF551109A68C00062928A /* PBXTargetDependency */,
 			);
-			name = "Cantine des Gourmets";
-			productName = "Cantine des Gourmets";
-			productReference = 1D6058910D05DD3D006BFB54 /* Cantine des Gourmets.app */;
+			name = "Fidelite IziPass";
+			productName = "Fidelite IziPass";
+			productReference = 1D6058910D05DD3D006BFB54 /* Fidelite IziPass.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -333,7 +333,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* Cantine des Gourmets */,
+				1D6058900D05DD3D006BFB54 /* Fidelite IziPass */,
 			);
 		};
 /* End PBXProject section */
@@ -433,10 +433,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Cantine des Gourmets/Cantine des Gourmets-Prefix.pch";
+				GCC_PREFIX_HEADER = "Fidelite IziPass/Fidelite IziPass-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
-				INFOPLIST_FILE = "Cantine des Gourmets/Cantine des Gourmets-Info.plist";
+				INFOPLIST_FILE = "Fidelite IziPass/Fidelite IziPass-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -450,7 +450,7 @@
 					"-weak-lSystem",
 					"-ObjC",
 				);
-				PRODUCT_NAME = "Cantine des Gourmets";
+				PRODUCT_NAME = "Fidelite IziPass";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -462,10 +462,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Cantine des Gourmets/Cantine des Gourmets-Prefix.pch";
+				GCC_PREFIX_HEADER = "Fidelite IziPass/Fidelite IziPass-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
-				INFOPLIST_FILE = "Cantine des Gourmets/Cantine des Gourmets-Info.plist";
+				INFOPLIST_FILE = "Fidelite IziPass/Fidelite IziPass-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -479,7 +479,7 @@
 					"-weak-lSystem",
 					"-ObjC",
 				);
-				PRODUCT_NAME = "Cantine des Gourmets";
+				PRODUCT_NAME = "Fidelite IziPass";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -574,7 +574,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Cantine des Gourmets" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Fidelite IziPass" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,

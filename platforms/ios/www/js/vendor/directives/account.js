@@ -26,11 +26,11 @@ angular.module('APIServiceApp')
                 '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService',
                 function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService) {
 
-
                     function onDeviceReady() {
                         if (window.device) {
                             $scope.isBrowser = false;
                             if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
+                            else APIService.set.clientUrl($scope.clientUrl);
                             $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
                                 $log.info('getServerUrl', data);
                                 if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
@@ -44,11 +44,11 @@ angular.module('APIServiceApp')
                                     console.log('clientUrl', $scope.clientUrl);
 
                                     var result = $.grep(data, function (e) {
-                                        return e.url === $scope.clientUrl;
+                                        return e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1;
                                     });
                                     console.log('RESULT', result);
                                     if (result[0]) {
-                                        $scope.firebase = result[0].firebase;
+                                        $scope.firebase = result[result.length - 1].firebase;
 
                                         console.log('firebase', $scope.firebase);
                                         var ref = new Firebase($scope.firebase); //jshint ignore:line
@@ -61,9 +61,9 @@ angular.module('APIServiceApp')
                                                 document.title = data.title;
                                                 var topHeader = $('.bar-header h1');
                                                 topHeader.text(data.title.replace('Fidélité', ''));
-                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em; color: #fbfbfb;')
+                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
                                                 console.log(stripNameOffGoogleFonts(data.styling.mainFont));
-                                                $('.bar-header').css('background-color', data.styling.secondaryColor);
+                                                $('.bar-header').css('background-color', data.styling.primaryColor);
                                                 $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
 
                                                 $scope.customization = data;
@@ -81,8 +81,8 @@ angular.module('APIServiceApp')
                                     }
                                 });
 
-                            }).error(function(e) {
-                                vars.debug ? $log.error(e) : 0;
+                            }).error(function (e) {
+                                $scope.debug ? $log.error(e) : 0;
                             });
 
                         }
@@ -196,15 +196,22 @@ angular.module('APIServiceApp')
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
-                                $scope.reset();
-                                $scope.goRegister();
+                                if (data.AllowAnonymous) {
+                                    $scope.data = APIService.get.registerAnonymous({Barcode: $scope.client.barcode});
+                                    $scope.data.Offers = APIService.get.formattedOffers(data);
+                                    $scope.selectedAction = data.CustomActions[0].Id;
+                                    $scope.hideData = false;
+                                } else {
+                                    $scope.reset();
+                                    $scope.goRegister();
+                                }
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
                                 $scope.selectedAction = data.CustomActions[0].Id;
                                 $scope.hideData = false;
                             }
-                        });
+                        }, displayData);
 //                        }
                     }
 

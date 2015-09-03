@@ -128,7 +128,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
              * The barcode we want to retrieve data from
              * @param func [type: function]
              * A callback function to which we pass the data */
-            loyaltyObject: function (barcode, func) {
+            loyaltyObject: function (barcode, func, loginFunc) {
                 return $timeout(function () {
                     var isBarcodeValid = methods.validate.barcode(barcode),
                         isClientUrlValid = methods.validate.clientUrl();
@@ -140,6 +140,13 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                             $http.get(methods.get.callableUrl("GetloyaltyObject?barcode=" + barcode)).success(function (data) {
 //                                $log.info('DATA: ', data.Offers);
                                 vars.currLoyaltyObject = data;
+                                if (data.AllowAnonymous && !data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
+                                    $log.info('Anonymous user & Anonymous login allowed');
+                                    $http.post(methods.get.callableUrl("RegisterAnonymous"), JSON.stringify(JSON.stringify({ "Barcode" : barcode }))).success(function (data) {
+                                        console.log(data);
+                                        loginFunc();
+                                    });
+                                }
                                 return func(data);
                             }).error(function(e) {
                                 vars.debug ? $log.error(e) : 0;
@@ -248,6 +255,15 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             register: function (formObj) {
                 return $timeout(function () {
                     return $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
+                        vars.currLoyaltyObject = data;
+                        return data;
+                    });
+                }, 0);
+            },
+
+            registerAnonymous: function (formObj) {
+                return $timeout(function () {
+                    return $http.post(methods.get.callableUrl("RegisterAnonymous"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {
                         vars.currLoyaltyObject = data;
                         return data;
                     });
