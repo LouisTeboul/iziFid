@@ -26,6 +26,16 @@ angular.module('APIServiceApp')
                 '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService',
                 function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService) {
 
+                    function blackOrWhite(hexcolor) {
+                        var color = hexcolor.substring(1);
+                        hexcolor = color.length < 5 ? color + color : color;
+                        var r = parseInt(hexcolor.substr(0,2),16);
+                        var g = parseInt(hexcolor.substr(2,2),16);
+                        var b = parseInt(hexcolor.substr(4,2),16);
+                        var yiq = ((r*299)+(g*587)+(b*114))/1000;
+                        return (yiq >= 125) ? '#333' : '#eee';
+                    }
+
                     function onDeviceReady() {
                         if (window.device) {
                             $scope.isBrowser = false;
@@ -65,8 +75,18 @@ angular.module('APIServiceApp')
                                                 console.log(stripNameOffGoogleFonts(data.styling.mainFont));
                                                 $('.bar-header').css('background-color', data.styling.primaryColor);
                                                 $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
+                                                var body = $('body');
+                                                var bgColor = body.css('background-color');
+                                                if (bgColor === "rgb(255, 255, 255)") {
+                                                    bgColor = "#ffffff";
+                                                }
+                                                var properColor = blackOrWhite(bgColor);
+
+                                                body.css('color', properColor + ' !important');
+                                                $('h4').css('color', properColor + ' !important');
 
                                                 $scope.customization = data;
+
                                                 /** Get the customization data from firebase and build css style from it */
                                                 angular.element(document).find('head').append("<style type='text/css'>" +
                                                     buildStyleFromData($scope.customization) +
