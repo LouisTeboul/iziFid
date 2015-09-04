@@ -44,7 +44,7 @@ angular.module('APIServiceApp')
                                     console.log('clientUrl', $scope.clientUrl);
 
                                     var result = $.grep(data, function (e) {
-                                        return e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1;
+                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : false;
                                     });
                                     console.log('RESULT', result);
                                     if (result[0]) {
