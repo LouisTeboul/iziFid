@@ -287,9 +287,9 @@ angular.module('APIServiceApp')
 
                         if (~~balance.Value < ~~val) {
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Miga", "OK");
+                               navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Miga", "OK");
                             } else {
-                                $scope.barcodeValid ? displayData() : $window.alert('Ce montant est supérieur au total de la cagnotte');
+                               $window.alert('Ce montant est supérieur au total de la cagnotte');
                             }
                             return false;
                         } else {
