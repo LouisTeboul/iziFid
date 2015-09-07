@@ -22,7 +22,7 @@
     "org.apache.cordova.vibration"
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "android",
+    "ios"
   ]
 }
