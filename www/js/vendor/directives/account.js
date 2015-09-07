@@ -26,6 +26,9 @@ angular.module('APIServiceApp')
                 '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService',
                 function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService) {
 
+                    $scope.isReady = false;
+                    $rootScope.isReady = false;
+
                     function blackOrWhite(hexcolor) {
                         var color = hexcolor.substring(1);
                         hexcolor = color.length < 5 ? color + color : color;
@@ -68,6 +71,7 @@ angular.module('APIServiceApp')
                                         $scope.data.$loaded()
                                             .then(function (data) {
                                                 $scope.isReady = true;
+                                                $rootScope.isReady = true;
                                                 document.title = data.title;
                                                 var topHeader = $('.bar-header h1');
                                                 topHeader.text(data.title.replace('Fidélité', ''));
@@ -109,10 +113,6 @@ angular.module('APIServiceApp')
                     document.addEventListener("deviceready", onDeviceReady, false);
 
                     /** Initial setup */
-//                    APIService.set.clientUrl($scope.clientUrl);
-                    $scope.isReady = false;
-
-
                     $timeout(function () {
                         if (!window.phonegap) {
                             !APIService.get.debugState() ?
