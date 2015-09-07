@@ -282,17 +282,17 @@ angular.module('APIServiceApp')
                      * @param {number} val The amount of the balance to use for payment
                      * @param {object} balance The balance object to use */
                     $scope.useBalanceToPay = function (val, balance) {
-                        $scope.hasUsedBalance = true;
-                        var passageObj = APIService.get.emptyPassageObj();
-
                         if (~~balance.Value < ~~val) {
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Miga", "OK");
+                               navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Miga", "OK");
                             } else {
-                                $scope.barcodeValid ? displayData() : $window.alert('Ce montant est supérieur au total de la cagnotte');
+                               $window.alert('Ce montant est supérieur au total de la cagnotte');
                             }
                             return false;
                         } else {
+                            $scope.hasUsedBalance = true;
+                            var passageObj = APIService.get.emptyPassageObj();
+
                             passageObj.BalanceUpdate = {
                                 "Id": balance.Id,
                                 "UpdateValue": -parseFloat(val)
