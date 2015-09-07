@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.izipass.miga" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-  <name>Miga</name>
+<widget id="com.izipass.ibiskitchen" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
+  <name>Ibis Kitchen</name>
   <description>
-        Gestion Fidélité Miga
+        Gestion Fidélité Ibis Kitchen
     </description>
   <author email="louis.teboul@izi-pass.com" href="http://izipass.pro">
         IZIPASS
