@@ -177,6 +177,8 @@ angular.module('APIServiceApp')
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
                                 $scope.reset();
+                                if (data === "login error - #1003")
+                                    $window.alert('Cette adresse email est déjà utilisée !');
                                 $scope.goRegister();
                             } else {
                                 $scope.data = data;
@@ -242,6 +244,7 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.reset = function () {
+                        $scope.client = {barcode: $scope.form.barcode};
                         delete $scope.barcode;
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;

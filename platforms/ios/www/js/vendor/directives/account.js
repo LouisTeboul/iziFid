@@ -242,6 +242,7 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.reset = function () {
+                        $scope.client = { barcode: $scope.form.barcode };
                         delete $scope.barcode;
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;
