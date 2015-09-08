@@ -214,7 +214,9 @@ angular.module('APIServiceApp')
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
-                                if (data.AllowAnonymous) {
+                                if (data === "login error - #1003")
+                                    $window.alert('Cette adresse email est déjà utilisée');
+                                else if (data.AllowAnonymous) {
                                     $scope.data = APIService.get.registerAnonymous({Barcode: $scope.client.barcode});
                                     $scope.data.Offers = APIService.get.formattedOffers(data);
                                     $scope.selectedAction = data.CustomActions[0].Id;
@@ -286,6 +288,7 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.reset = function () {
+                        $scope.client = { barcode: $scope.form.barcode };
                         delete $scope.barcode;
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;
