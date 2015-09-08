@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cantine Des Gourmets</title>
+    <title>IZIPASS</title>
 
     <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
     <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
@@ -20,12 +20,13 @@
         }
     </style>
 </head>
-<body ng-app="starter" class="platform-ios platform-cordova platform-webview">
-<div class="ionic" ng-controller="HeaderCtrl">
+<body ng-app="starter" class="platform-ios platform-cordova platform-webview" ng-cloak>
+<div class="ionic" ng-controller="HeaderCtrl" ng-show="isReady">
     <div class="bar bar-header bar-dark expanded push-down" style="height: 50px;">
         <h1 class="title"
             style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em; color: #fbfbfb;">
             IZIPASS</h1>
+        <small class="pull-right" style="font-size: 0.8em;" ng-if="deviceName"><i>{{deviceName}}</i></small>
     </div>
     <button class="button button-fab button-fab-top-right button-balanced icon ion-qr-scanner waves-effect waves-button waves-light"
             style="z-index:999; top: 22px; background: #2ebbd0; border-color: #333"

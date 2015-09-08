@@ -26,13 +26,38 @@ angular.module('APIServiceApp')
                 '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService',
                 function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService) {
 
+                    $scope.isReady = false;
+                    $rootScope.isReady = false;
+
+                    function generateUUID() {
+                        var d = new Date().getTime();
+                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function(c) {
+                            var r = (d + Math.random()*16)%16 | 0;
+                            d = Math.floor(d/16);
+                            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+                        });
+                        return uuid + "-browser";
+                    };
+
+                    if (!window.device) {
+                        var storedUUID = localStorage.getItem('deviceUUID');
+                        if (!storedUUID) {
+                            $scope.randomUUID = generateUUID();
+                            localStorage.setItem('deviceUUID', $scope.randomUUID);
+                            storedUUID = $scope.randomUUID;
+                        }
+                        window.device = {uuid: storedUUID};
+                        window.phonegap = true;
+                        onDeviceReady();
+                    }
+
                     function blackOrWhite(hexcolor) {
                         var color = hexcolor.substring(1);
                         hexcolor = color.length < 5 ? color + color : color;
-                        var r = parseInt(hexcolor.substr(0,2),16);
-                        var g = parseInt(hexcolor.substr(2,2),16);
-                        var b = parseInt(hexcolor.substr(4,2),16);
-                        var yiq = ((r*299)+(g*587)+(b*114))/1000;
+                        var r = parseInt(hexcolor.substr(0, 2), 16);
+                        var g = parseInt(hexcolor.substr(2, 2), 16);
+                        var b = parseInt(hexcolor.substr(4, 2), 16);
+                        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
                         return (yiq >= 125) ? '#333' : '#eee';
                     }
 
@@ -43,24 +68,24 @@ angular.module('APIServiceApp')
                             else APIService.set.clientUrl($scope.clientUrl);
                             $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
                                 $log.info('getServerUrl', data);
-                                if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
+                                $scope.deviceName = data.AppName;
+                                $rootScope.deviceName = data.AppName;
+                                if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
                                 APIService.set.clientUrl(data.Server_Url);
                                 $scope.clientUrl = data.Server_Url;
                                 var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
                                 var confTable = $firebaseArray(confTableRef);
                                 confTable.$loaded().then(function (data) {
                                     $scope.configuration = data;
-                                    console.log("CONFIG!", data);
-                                    console.log('clientUrl', $scope.clientUrl);
+                                    $log.info("CONFIG!", data);
+                                    $log.info('clientUrl', $scope.clientUrl);
 
                                     var result = $.grep(data, function (e) {
-                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : false;
+                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
                                     });
-                                    console.log('RESULT', result);
+
                                     if (result[0]) {
                                         $scope.firebase = result[result.length - 1].firebase;
-
-                                        console.log('firebase', $scope.firebase);
                                         var ref = new Firebase($scope.firebase); //jshint ignore:line
 
                                         $scope.data = $firebaseObject(ref);
@@ -68,11 +93,11 @@ angular.module('APIServiceApp')
                                         $scope.data.$loaded()
                                             .then(function (data) {
                                                 $scope.isReady = true;
+                                                $rootScope.isReady = true;
                                                 document.title = data.title;
                                                 var topHeader = $('.bar-header h1');
                                                 topHeader.text(data.title.replace('Fidélité', ''));
                                                 topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
-                                                console.log(stripNameOffGoogleFonts(data.styling.mainFont));
                                                 $('.bar-header').css('background-color', data.styling.primaryColor);
                                                 $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
                                                 var body = $('body');
@@ -84,9 +109,7 @@ angular.module('APIServiceApp')
 
                                                 body.css('color', properColor + ' !important');
                                                 $('h4').css('color', properColor + ' !important');
-
                                                 $scope.customization = data;
-
                                                 /** Get the customization data from firebase and build css style from it */
                                                 angular.element(document).find('head').append("<style type='text/css'>" +
                                                     buildStyleFromData($scope.customization) +
@@ -111,10 +134,6 @@ angular.module('APIServiceApp')
                     document.addEventListener("deviceready", onDeviceReady, false);
 
                     /** Initial setup */
-//                    APIService.set.clientUrl($scope.clientUrl);
-                    $scope.isReady = false;
-
-
                     $timeout(function () {
                         if (!window.phonegap) {
                             !APIService.get.debugState() ?
@@ -192,7 +211,6 @@ angular.module('APIServiceApp')
 
                     function displayData() {
                         $scope.isReady = false;
-
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
                             $scope.isReady = true;
@@ -221,7 +239,6 @@ angular.module('APIServiceApp')
                                 $scope.hideData = false;
                             }
                         }, displayData);
-//                        }
                     }
 
                     $scope.getDate = function (date) {
@@ -473,31 +490,6 @@ angular.module('APIServiceApp')
                             var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
                             if (doUse) $scope.useOffer(offer);
                         }
-//                        $scope.currentOffer = offer;
-//                        $mdDialog.show({
-//                            scope: $scope,
-//                            preserveScope: true,
-//                            clickOutsideToClose: true,
-//                            targetEvent: ev,
-//                            template: '<md-dialog aria-label="Utiliser Offre"> \
-//                                <md-dialog-content class="sticky-container clearfix"> \
-//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Utiliser Cette Offre ?</h3></md-subheader> \
-//                                    <p style="padding-left: 16px;">Confirmez-vous l\'utilisation de cette offre ?</p> \
-//                                </md-dialog-content> \
-//                                <div class="md-actions" layout="row"> \
-//                                 <div class="clearfix">\
-//                                    <md-button class="md-accent md-hue-3" ng-click="useOffer(currentOffer)"> \
-//                                    VALIDER \
-//                                    </md-button> \
-//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-//                                    ANNULER \
-//                                    </md-button> \
-//                                 </div> \
-//                                </div> \
-//                            </md-dialog>'
-//                        }).then(function () {
-//                        }, function () {
-//                        });
                     };
 
                     $scope.showAddPassageConfirm = function (ev) {
@@ -509,33 +501,6 @@ angular.module('APIServiceApp')
                             var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
                             if (doUse) $scope.addPassage();
                         }
-
-//                        $mdDialog.show({
-//                            scope: $scope,
-//                            preserveScope: true,
-//                            clickOutsideToClose: true,
-//                            targetEvent: ev,
-//                            template: '<md-dialog aria-label="Ajouter un Passage"> \
-//                                <md-dialog-content class="sticky-container clearfix"> \
-//                                    <md-subheader class="md-sticky-no-effect"><h3 style="margin-bottom: 0">Ajouter un Passage ?</h3></md-subheader> \
-//                                    <p style="padding-left: 16px;">Confirmez-vous que ce client est passé en caisse sans utiliser d\'offre et/ou d\'avoir fidélité ?</p> \
-//                                </md-dialog-content> \
-//                                <div class="md-actions" layout="row"> \
-//                                 <div class="clearfix">\
-//                                    <md-button class="md-accent md-hue-3" ng-click="addPassage()"> \
-//                                    VALIDER \
-//                                    </md-button> \
-//                                    <md-button class="md-warn" ng-click="hideDialog()"> \
-//                                    ANNULER \
-//                                    </md-button> \
-//                                 </div> \
-//                                </div> \
-//                            </md-dialog>'
-//                        }).then(function () {
-//
-//                        }, function () {
-//
-//                        });
                     };
 
                     $scope.showAdvanced = function (ev, balance) {
