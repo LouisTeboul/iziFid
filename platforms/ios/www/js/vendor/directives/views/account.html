@@ -381,12 +381,13 @@
 
                 <div class="form-group col-sm-9">
                     <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                           placeholder="Code Postal&#8230;" ng-minlength="5" maxlength="5"
+                           placeholder="Code Postal&#8230;" ng-minlength="{{data.zipcodeLength}}"
+                           maxlength="{{data.zipcodeLength}}"
                            required=""/>
 
                     <div class="alert alert-danger"
                          ng-if="registerForm.zipcode.$invalid && !registerForm.zipcode.$pristine">
-                        <p class="text-center">Ce champ doit comporter au moins 6 caractères</p>
+                        <p class="text-center">Ce champ doit comporter au moins {{data.zipcodeLength}} caractères</p>
                     </div>
                 </div>
             </div>
@@ -445,6 +446,8 @@
     </div>
 </div>
 </div>
-<p class="text-center" ng-show="!isReady"><small><i>{{deviceName}}</i></small></p>
+<p class="text-center" ng-show="!isReady">
+    <small><i>{{deviceName}}</i></small>
+</p>
 </div>
 
