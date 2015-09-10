@@ -73,6 +73,7 @@ angular.module('APIServiceApp')
                                 $scope.isReady = true;
                                 $scope.customization = data;
                                 /** Get the customization data from firebase and build css style from it */
+                                $('h1.title').css('font-family', stripNameOffGoogleFonts(data.styling.mainFont) + ', Arial, sans-serif');
                                 angular.element(document).find('head').append("<style type='text/css'>" +
                                     buildStyleFromData($scope.customization) +
                                     angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor) + "</style>");
@@ -95,7 +96,8 @@ angular.module('APIServiceApp')
 
                         return "@import url(" + data.styling.mainFont + ");" +
                             "@import url(" + data.styling.secondaryFont + ");" +
-                            ".izi-account h1, .izi-account h2, .izi-account h3:not(.fid-item-title) { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account h1.title { font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account h1, .izi-account h2, .izi-account h3 { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account div { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; }";
                     }
@@ -171,7 +173,7 @@ angular.module('APIServiceApp')
                             $scope.isReady = true;
                             if (data === false) {
                                 $scope.reset();
-                                navigator.notification.alert('Carte inconnue !', null, "Miga", "OK");
+                                navigator.notification.alert('Carte inconnue !', null, "Poulet Cent Façons", "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
@@ -197,7 +199,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm('Êtes-vous sûr de vouloir vous déconnecter ?', function () {
                                 $scope.reset();
-                            }, "Miga");
+                            }, "Poulet Cent Façons");
                         } else {
                             $window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?") ? (function () {
                                 $scope.reset();
@@ -219,7 +221,7 @@ angular.module('APIServiceApp')
                     $scope.login = function () {
                         checkBarcode($scope.form.barcode);
                         if (navigator.notification) {
-                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Miga", "OK");
+                            $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Poulet Cent Façons", "OK");
                         } else {
                             $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                         }
@@ -229,7 +231,7 @@ angular.module('APIServiceApp')
                         if ($scope.auto) {
                             checkBarcode($scope.form.barcode);
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Miga", "OK");
+                                $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, "Poulet Cent Façons", "OK");
                             } else {
                                 $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                             }
@@ -284,7 +286,7 @@ angular.module('APIServiceApp')
                     $scope.useBalanceToPay = function (val, balance) {
                         if (~~balance.Value < ~~val) {
                             if (navigator.notification) {
-                               navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Miga", "OK");
+                               navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Poulet Cent Façons", "OK");
                             } else {
                                $window.alert('Ce montant est supérieur au total de la cagnotte');
                             }
@@ -431,7 +433,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function () {
                                 $scope.useOffer(offer);
-                            }, "Miga");
+                            }, "Poulet Cent Façons");
                         } else {
                             var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
                             if (doUse) $scope.useOffer(offer);
@@ -467,7 +469,7 @@ angular.module('APIServiceApp')
                         if (navigator.notification) {
                             navigator.notification.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", function () {
                                 $scope.addPassage();
-                            }, "Miga");
+                            }, "Poulet Cent Façons");
                         } else {
                             var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
                             if (doUse) $scope.addPassage();
