@@ -107,17 +107,17 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
              * Returns true if debugging is enabled
              * @returns {boolean}
              */
-            debugState: function() {
+            debugState: function () {
                 return vars.debug;
             },
 
-            serverUrl: function(uuid) {
+            serverUrl: function (uuid) {
                 if (!vars.clientUrl) vars.clientUrl = 'http://ffpizza.izipass.pro';
                 $http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
                     $log.info('getServerUrl', data);
                     if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
                     methods.set.clientUrl(data['Server_Url']);
-                }).error(function(e) {
+                }).error(function (e) {
                     vars.debug ? $log.error(e) : 0;
                 });
             },
@@ -128,7 +128,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
              * The barcode we want to retrieve data from
              * @param func [type: function]
              * A callback function to which we pass the data */
-            loyaltyObject: function (barcode, func, loginFunc) {
+            loyaltyObject: function (barcode, func) {
                 return $timeout(function () {
                     var isBarcodeValid = methods.validate.barcode(barcode),
                         isClientUrlValid = methods.validate.clientUrl();
@@ -140,15 +140,15 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                             $http.get(methods.get.callableUrl("GetloyaltyObject?barcode=" + barcode)).success(function (data) {
 //                                $log.info('DATA: ', data.Offers);
                                 vars.currLoyaltyObject = data;
-                                if (data.AllowAnonymous && !data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
-                                    $log.info('Anonymous user & Anonymous login allowed');
-                                    $http.post(methods.get.callableUrl("RegisterAnonymous"), JSON.stringify(JSON.stringify({ "Barcode" : barcode }))).success(function (data) {
-                                        console.log(data);
-                                        loginFunc();
-                                    });
-                                }
+                                /* if (data.AllowAnonymous && !data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
+                                 $log.info('Anonymous user & Anonymous login allowed');
+                                 $http.post(methods.get.callableUrl("RegisterAnonymous"), JSON.stringify(JSON.stringify({ "Barcode" : barcode }))).success(function (data) {
+                                 console.log(data);
+                                 loginFunc();
+                                 });
+                                 }*/
                                 return func(data);
-                            }).error(function(e) {
+                            }).error(function (e) {
                                 vars.debug ? $log.error(e) : 0;
                                 return func(false);
                             });
@@ -159,14 +159,40 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 }, 0);
             },
 
+            /** @function methods.get.loyaltyObjectWithPassword(@param barcode)
+             *  Get the data associated with a particular barcode
+             * @param barcode [type: number]
+             * The barcode we want to retrieve data from
+             * @param func [type: function]
+             * @param password The user's password
+             * A callback function to which we pass the data */
+            loyaltyObjectWithPassword: function (barcode, password, func) {
+                return $timeout(function () {
+                    var isBarcodeValid = methods.validate.barcode(barcode),
+                        isClientUrlValid = methods.validate.clientUrl();
+                    if (isBarcodeValid && isClientUrlValid) {
+                        $http.get(methods.get.callableUrl("GetloyaltyObject?login=" + barcode + "&password=" + password)).success(function (data) {
+                            $log.info('DATA: ', data.Offers);
+                            vars.currLoyaltyObject = data;
+                            return func(data);
+                        }).error(function (e) {
+                            vars.debug ? $log.error(e) : 0;
+                            return func(false);
+                        });
+                    } else return isBarcodeValid ? errors.missingClientUrl() : errors.invalidBarcode(barcode);
+
+                }, 0);
+            },
+
             formattedOffers: function (loyaltyObj) {
                 var offers = loyaltyObj.Offers;
                 $log.info('offers', offers);
 //                var types = [];
                 var offersTypes = [];
 
-                /** Group valid offers by OfferTypeId */
-                for (var i = 0; i < offers.length; i++) {
+                if (offers) {
+                    /** Group valid offers by OfferTypeId */
+                    for (var i = 0; i < offers.length; i++) {
 //                    var next = i + 1;
 //                    if (next >= offers.length) next = i - 1;
 //                    if (offers[i].isValid) {
@@ -186,8 +212,9 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 //                            offersTypes[last] ? offersTypes[last].counter++ : 0;
 //                        }
 //                    }
-                    if (offers[i].isValid)
-                        offersTypes.push(offers[i]);
+                        if (offers[i].isValid)
+                            offersTypes.push(offers[i]);
+                    }
                 }
                 return offersTypes;
             },
@@ -246,6 +273,17 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 passagePromise = null;
                 if (!passagePromise) {
                     passagePromise = $http.post(methods.get.callableUrl("AddPassage"), JSON.stringify(JSON.stringify(obj))).success(function (data) {
+                        return data;
+                    });
+                    return passagePromise;
+                }
+            },
+
+            addOrder: function (obj) {
+                console.log(obj);
+                passagePromise = null;
+                if (!passagePromise) {
+                    passagePromise = $http.post(methods.get.callableUrl("AddOrder"), JSON.stringify(JSON.stringify(obj))).success(function (data) {
                         return data;
                     });
                     return passagePromise;

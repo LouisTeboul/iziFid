@@ -1,10 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=Bevan);
-@import url(http://fonts.googleapis.com/css?family=Kameron:400,700);
-
 $blanc: #fdfdfd;
 $accent: #7ac143;
-$primaryFont: "Bevan", Helvetica, sans-serif !important;
-$secondaryFont: "Kameron", Helvetica, sans-serif !important;
+$primaryFont: Helvetica, sans-serif !important;
+$secondaryFont: Helvetica, sans-serif !important;
 
 .izi-account {
   background-color: transparent !important;
@@ -137,7 +134,7 @@ $secondaryFont: "Kameron", Helvetica, sans-serif !important;
     height: 192px;
     border-radius: 100%;
     -webkit-animation: rotateScale .6s ease-out;
-    animation: rotate .6s ease-out
+    animation: rotate .6s ease-out;
   }
 
   [id=loginView] {

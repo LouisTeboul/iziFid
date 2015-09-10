@@ -31,10 +31,10 @@ angular.module('APIServiceApp')
 
                     function generateUUID() {
                         var d = new Date().getTime();
-                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function(c) {
-                            var r = (d + Math.random()*16)%16 | 0;
-                            d = Math.floor(d/16);
-                            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function (c) {
+                            var r = (d + Math.random() * 16) % 16 | 0;
+                            d = Math.floor(d / 16);
+                            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
                         });
                         return uuid + "-browser";
                     };
@@ -67,7 +67,7 @@ angular.module('APIServiceApp')
                             if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
                             $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
-                                $log.info('getServerUrl', data);
+//                                $log.info('getServerUrl', data);
                                 $scope.deviceName = data.AppName;
                                 $rootScope.deviceName = data.AppName;
                                 if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
@@ -77,14 +77,13 @@ angular.module('APIServiceApp')
                                 var confTable = $firebaseArray(confTableRef);
                                 confTable.$loaded().then(function (data) {
                                     $scope.configuration = data;
-                                    $log.info("CONFIG!", data);
-                                    $log.info('clientUrl', $scope.clientUrl);
+                                    /*$log.info("CONFIG!", data);
+                                     $log.info('clientUrl', $scope.clientUrl);*/
 
                                     var result = $.grep(data, function (e) {
                                         return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
                                     });
 
-                                    console.log('result', result);
                                     if (result[0]) {
                                         $scope.firebase = result[result.length - 1].firebase;
                                         var ref = new Firebase($scope.firebase); //jshint ignore:line
@@ -156,8 +155,9 @@ angular.module('APIServiceApp')
                         return "@import url(" + data.styling.mainFont + ");" +
                             "@import url(" + data.styling.secondaryFont + ");" +
                             ".izi-account h1, .izi-account h2, .izi-account h3 { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account div { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; }";
+                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account div, .izi-account input { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; }" +
+                            ".izi-account button { font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif; }";
                     }
 
                     $scope.toastPosition = {
@@ -222,13 +222,23 @@ angular.module('APIServiceApp')
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
-                                if (data === "login error - #1003")
-                                    $window.alert('Cette adresse email est déjà utilisée');
-                                else if (data.AllowAnonymous) {
-                                    $scope.data = APIService.get.registerAnonymous({Barcode: $scope.client.barcode});
-                                    $scope.data.Offers = APIService.get.formattedOffers(data);
-                                    $scope.selectedAction = data.CustomActions[0].Id;
-                                    $scope.hideData = false;
+                                if (data.AllowAnonymous && data.AnonymousCustomer) {
+                                    if (data.CustomerId) {
+                                        $scope.data = data;
+                                        $scope.data.Offers = APIService.get.formattedOffers(data);
+                                        $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                        $scope.hideData = false;
+                                    } else {
+                                        APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
+                                            console.log('registerAnonymousData', data);
+                                            $scope.data = data.data;
+                                            $scope.data.Offers = APIService.get.formattedOffers(data);
+                                            $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                            $scope.hideData = false;
+                                        }).catch(function (error) {
+                                            console.log('error', error);
+                                        });
+                                    }
                                 } else {
                                     $scope.reset();
                                     $scope.goRegister();
@@ -236,10 +246,10 @@ angular.module('APIServiceApp')
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
-                                $scope.selectedAction = data.CustomActions[0].Id;
+                                $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                 $scope.hideData = false;
                             }
-                        }, displayData);
+                        });
                     }
 
                     $scope.getDate = function (date) {
@@ -432,6 +442,10 @@ angular.module('APIServiceApp')
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
                             displayData();
+                        }).catch(function(error) {
+                            if (error.status === 500)
+                                $window.alert('Cette carte est déjà enregistrée !');
+                            else $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
 

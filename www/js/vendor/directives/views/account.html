@@ -56,7 +56,9 @@
         color: #fdfdfd;
         padding: 7px 20px;
         margin-bottom: 12px;
-        width: 100%;
+        width: 97.75%;
+        margin-left: auto;
+        margin-right: auto;
         background-color: #123456;
         -webkit-box-shadow: 2px 4px 3px #cdcdcd;
         -moz-box-shadow: 2px 4px 3px #cdcdcd;
@@ -141,6 +143,17 @@
                 <h4 class="no-mg-vert" ng-if="data.CustomerEmail"><b>Email</b> :
                     <a data-ng-href="mailto:{{data.CustomerEmail}}">{{data.CustomerEmail}}</a>
                 </h4>
+                <h2 class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur Anonyme</h2>
+                <div class="barcode-container visible-xs" ng-if="data.AllowAnonymous && data.AnonymousCustomer">
+                    <img class="img-responsive barcode-img"
+                         data-ng-src="{{clientUrl}}/{{data.Barcodes[0].BarcodeUrl}}"
+                         alt=""
+                         onerror="$('.barcode-container').slideUp(); $('.onMissingQR').fadeIn('slow')"/>
+
+                    <div style="padding-left: 5px;">
+                        <small class="blanc">Carte n° {{barcode}}</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -226,20 +239,20 @@
         <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
     </div>
 
-    <!--<div class="text-center" ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">-->
-        <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount(orderAmountInput.value)">-->
-            <!--<i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :-->
-            <!--'MONTANT D\'ACHAT'}}-->
-        <!--</button>-->
-    <!--</div>-->
+    <div class="text-center" ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount(orderAmountInput.value)">
+            <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :
+            'Montant d\'Achat'}}
+        </button>
+    </div>
 
-    <!--<div class="text-center" ng-if="data.CustomerEmail" style="margin-top: 16px;">-->
-        <!--<button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">-->
-            <!--<i class="icon ion-plus"></i> AJOUTER UN PASSAGE-->
-        <!--</button>-->
-    <!--</div>-->
+    <div class="text-center" ng-if="data.CustomerEmail || data.AnonymousCustomer" style="margin-top: 16px;">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
+            <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
+        </button>
+    </div>
 
-    <h5 class="text-center light" ng-if="data.CustomerEmail"
+    <h5 class="text-center light" ng-if="data.CustomerEmail || data.AnonymousCustomer"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
         <small>Dernier passage le: {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
             bipDate.getFullYear()}}
