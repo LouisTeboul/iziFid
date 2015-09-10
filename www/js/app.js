@@ -48,26 +48,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                         controller: 'DashCtrl'
                     }
                 }
-            })
-
-            .state('tab.chats', {
-                url: '/chats',
-                views: {
-                    'tab-chats': {
-                        templateUrl: 'templates/tab-history.html',
-                        controller: 'ChatsCtrl'
-                    }
-                }
-            })
-
-            .state('tab.account', {
-                url: '/account',
-                views: {
-                    'tab-account': {
-                        templateUrl: 'templates/tab-settings.html',
-                        controller: 'AccountCtrl'
-                    }
-                }
             });
 
         $urlRouterProvider.otherwise('/tab/dash');
