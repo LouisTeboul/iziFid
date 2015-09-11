@@ -242,6 +242,7 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.reset = function () {
+                        $scope.client = { barcode: $scope.form.barcode };
                         delete $scope.barcode;
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;
@@ -287,9 +288,9 @@ angular.module('APIServiceApp')
 
                         if (~~balance.Value < ~~val) {
                             if (navigator.notification) {
-                                $scope.barcodeValid ? displayData() : navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Vidici", "OK");
+                                navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, "Vidici", "OK");
                             } else {
-                                $scope.barcodeValid ? displayData() : $window.alert('Ce montant est supérieur au total de la cagnotte');
+                                $window.alert('Ce montant est supérieur au total de la cagnotte');
                             }
                             return false;
                         } else {
@@ -372,11 +373,15 @@ angular.module('APIServiceApp')
                         };
 
                         APIService.actions.register(obj).then(function () {
-                            $log.info('Retour API register ', obj);
                             $scope.barcode = $scope.client.barcode;
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
                             displayData();
+                        }).catch(function (error) {
+                            if (error.status === 500)
+                                $window.alert('Cette carte est déjà enregistrée !');
+                            else
+                                $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
 
