@@ -13,4 +13,8 @@ p, a, b, label, input, li, span, small {
     }
 }
 
+input::-webkit-input-placeholder {
+    padding-left: 5px;
+}
+
 .izi-account h2 {font-weight: 700 !important;}

@@ -222,8 +222,8 @@ angular.module('APIServiceApp')
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
-                                if (data.AllowAnonymous && data.AnonymousCustomer) {
-                                    if (data.CustomerId) {
+                                if (data.AllowAnonymous) {
+                                    if (data.AnonymousCustomer) {
                                         $scope.data = data;
                                         $scope.data.Offers = APIService.get.formattedOffers(data);
                                         $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
