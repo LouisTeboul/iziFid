@@ -337,23 +337,27 @@ angular.module('APIServiceApp')
 
                     $scope.orderAmount = function (amount) {
                         if (amount) {
-                            var passageObj = APIService.get.emptyPassageObj();
-                            passageObj.OrderTotalIncludeTaxes = amount;
-                            passageObj.OrderTotalExcludeTaxes = amount;
-                            if ($scope.data.CustomActions) {
-                                passageObj.CustomAction = {
-                                    "CustomActionId": $('#actionSelect').val()
+                            if (amount >= 5.9) {
+                                var passageObj = APIService.get.emptyPassageObj();
+                                passageObj.OrderTotalIncludeTaxes = amount;
+                                passageObj.OrderTotalExcludeTaxes = amount;
+                                if ($scope.data.CustomActions) {
+                                    passageObj.CustomAction = {
+                                        "CustomActionId": $('#actionSelect').val()
+                                    }
                                 }
+                                APIService.actions.addPassage(passageObj).success(function () {
+                                    $scope.hideDialog();
+                                    $scope.toast("Un passage a bien été ajouté à cette carte");
+                                    $scope.reset();
+                                    $timeout(function () {
+                                        $rootScope.scan();
+                                    }, 1600);
+                                    return true;
+                                });
+                            } else {
+                                $window.alert('Ce montant est inférieur à 5,90€ et ne donne donc pas droit à un passage !');
                             }
-                            APIService.actions.addPassage(passageObj).success(function () {
-                                $scope.hideDialog();
-                                $scope.toast("Un passage a bien été ajouté à cette carte");
-                                $scope.reset();
-                                $timeout(function () {
-                                    $rootScope.scan();
-                                }, 1600);
-                                return true;
-                            });
                         }
                     };
 

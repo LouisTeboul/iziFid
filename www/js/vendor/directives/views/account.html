@@ -198,12 +198,17 @@
                            style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
                            ng-model="orderAmountInput.value"
                            placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
+                           ng-change="orderAmountInput.value < 5.9 ? showMinAmountError = true : showMinAmountError = false"
                            required>
+
 
                     <div class="input-group-addon wave-effect"
                          ng-click="orderAmount(orderAmountInput.value)"
                             >VALIDER
                     </div>
+                </div>
+                <div class="center-block" style="background-color: #f45341; padding: 4px; max-width: 76%;" ng-if="showMinAmountError">
+                    <p class="text-center" style="color: #fff !important; margin-bottom: 0">Ce montant est inférieur à 5,90€ et ne donne pas droit à un passage</p>
                 </div>
             </div>
         </li>
