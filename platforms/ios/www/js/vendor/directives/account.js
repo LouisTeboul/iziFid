@@ -158,12 +158,26 @@ angular.module('APIServiceApp')
                     function buildStyleFromData(data) {
                         var mainFontName = stripNameOffGoogleFonts(data.styling.mainFont);
                         var secondaryFontName = stripNameOffGoogleFonts(data.styling.secondaryFont);
+                        var fidItemColor, fidItemStyle = "";
+                        if (data.styling.bgColor) {
+                            $('html, body').css('background', data.styling.bgColor);
+                            if (data.styling.bgColor !== "transparent" && data.styling.bgColor !== "#ffffff" && data.styling.bgColor !== "#fff") {
+                                fidItemColor = data.styling.bgColor;
+                                fidItemStyle = ".izi-account .fid-item-title," +
+                                    ".izi-account .fid-item-title + div b," +
+                                    ".izi-account .fid-item-title + input { color: " + fidItemColor + " !important; }"
+                            }
+                        }
 
                         return "@import url(" + data.styling.mainFont + ");" +
                             "@import url(" + data.styling.secondaryFont + ");" +
-                            ".izi-account h1, .izi-account h2, .izi-account h3 { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account div, .izi-account input { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; }";
+                            ".izi-account h1, .izi-account h2, .izi-account h3:not(.fid-item-title) { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account p, .izi-account input, .izi-account label { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account .fid-item-title { font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
+                            ".izi-account button { color: " + invertColor(data.styling.secondaryColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            fidItemStyle;
                     }
 
                     $scope.toastPosition = {
