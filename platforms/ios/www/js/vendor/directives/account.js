@@ -399,15 +399,19 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useVoucherOffer = function(offer) {
+                    $scope.useVoucherOffer = function (offer) {
                         APIService.actions.useVoucherOffer(offer.OfferClassId).then(function(data) {
-                            $scope.toast("L'offre a bien été utilisée");
-                            $scope.reset();
-                            $timeout(function () {
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
-                            }, 1600);
-                            return true;
-                        }).catch(function(error){
+                            if (data) {
+                                $scope.toast("L'offre a bien été utilisée");
+                                $scope.reset();
+                                $timeout(function () {
+                                    !$scope.isBrowser ? $rootScope.scan() : 0;
+                                }, 1600);
+                                return true;
+                            } else {
+                                $window.alert('Une erreur est survenue, l\'offre n\'a pas été utilisée !');
+                            }
+                        }).catch(function (error) {
                             console.log(error);
                             $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
