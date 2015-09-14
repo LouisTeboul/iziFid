@@ -1,4 +1,4 @@
-<div>
+<div style="padding: 8px;">
 <style id="izi-style">
     .izi-account {
         min-height: 210px;
@@ -44,12 +44,23 @@
         border-radius: 0;
         background-color: #123456;
         color: #fdfdfd;
-        text-transform: uppercase;
         font-weight: 600;
+        text-transform: uppercase;
+        white-space: normal;
     }
 
     .izi-account button:hover, .izi-account button:focus {
         color: #fff;
+    }
+
+    .izi-account .space-above-xs {
+        margin-top: 0;
+    }
+
+    @media (max-width: 400px) {
+        .izi-account .space-above-xs {
+            margin-top: 32px;
+        }
     }
 
     .izi-account .bg-warn {
@@ -147,7 +158,9 @@
                 <h4 class="no-mg-vert" ng-if="data.CustomerEmail"><b>Email</b> :
                     <a data-ng-href="mailto:{{data.CustomerEmail}}">{{data.CustomerEmail}}</a>
                 </h4>
+
                 <h2 class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur Anonyme</h2>
+
                 <div class="barcode-container visible-xs" ng-if="data.AllowAnonymous && data.AnonymousCustomer">
                     <img class="img-responsive barcode-img"
                          data-ng-src="{{clientUrl}}/{{data.Barcodes[0].BarcodeUrl}}"
@@ -244,7 +257,8 @@
     </div>
 
     <div class="text-center" ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
-        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="orderAmount(orderAmountInput.value)">
+        <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect"
+                ng-click="orderAmount(orderAmountInput.value)">
             <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :
             'Montant d\'Achat'}}
         </button>
@@ -399,7 +413,8 @@
 
                 <div class="form-group col-sm-9">
                     <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                           placeholder="Code Postal&#8230;" ng-minlength="{{data.zipcodeLength}}" maxlength="{{data.zipcodeLength}}"
+                           placeholder="Code Postal&#8230;" ng-minlength="{{data.zipcodeLength}}"
+                           maxlength="{{data.zipcodeLength}}"
                            required=""/>
 
                     <div class="alert alert-danger"
@@ -467,7 +482,7 @@
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
            ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px"></i>
 
-        <h3 class="text-center">{{voucher.OfferParam.Value ? voucher.OfferParam.Value : voucher.OfferParam}}</h3>
+        <h3 class="text-center space-above-xs">{{voucher.OfferParam.Value ? voucher.OfferParam.Value : voucher.OfferParam}}</h3>
 
 
         <div class="barcode-container center-block" style="margin-bottom: 24px">
@@ -477,7 +492,9 @@
                  onerror="$('.barcode-container').slideUp(); $('.onMissingQR').fadeIn('slow')"/>
         </div>
 
-        <button class="btn bg-{{voucher.isValid ? 'accent' : 'warn'}} btn-lg center-block text-center no-radius ink" ng-disabled="!voucher.isValid" ng-click="useVoucherOffer(voucher)">
+        <button class="btn bg-{{voucher.isValid ? 'accent' : 'warn'}} btn-lg center-block text-center no-radius ink"
+                ng-disabled="!voucher.isValid" ng-click="useVoucherOffer(voucher)"
+                style="margin-bottom: 6px;">
             {{voucher.isValid ? 'Utiliser cette Offre' : 'Cette offre a déjà été utilisée'}}
         </button>
     </div>

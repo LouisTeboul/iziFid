@@ -66,19 +66,23 @@ angular.module('APIServiceApp')
                             $scope.isBrowser = false;
                             if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
+
+                            // On appelle GetServerUrl pour récupérer l'url attachée au device
                             $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
-//                                $log.info('getServerUrl', data);
                                 $scope.deviceName = data.AppName;
                                 $rootScope.deviceName = data.AppName;
+
+                                // Si réponse vide le device n'est pas configuré
                                 if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
+
                                 APIService.set.clientUrl(data.Server_Url);
                                 $scope.clientUrl = data.Server_Url;
                                 var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
                                 var confTable = $firebaseArray(confTableRef);
+
+                                // On charge la config
                                 confTable.$loaded().then(function (data) {
                                     $scope.configuration = data;
-                                    /*$log.info("CONFIG!", data);
-                                     $log.info('clientUrl', $scope.clientUrl);*/
 
                                     var result = $.grep(data, function (e) {
                                         return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
@@ -94,6 +98,8 @@ angular.module('APIServiceApp')
                                             .then(function (data) {
                                                 $scope.isReady = true;
                                                 $rootScope.isReady = true;
+
+                                                // On customize en fonction du data
                                                 document.title = data.title;
                                                 var topHeader = $('.bar-header h1');
                                                 topHeader.text(data.title.replace('Fidélité', ''));
@@ -109,6 +115,7 @@ angular.module('APIServiceApp')
 
                                                 body.css('color', properColor + ' !important');
                                                 $('h4').css('color', properColor + ' !important');
+
                                                 $scope.customization = data;
                                                 /** Get the customization data from firebase and build css style from it */
                                                 angular.element(document).find('head').append("<style type='text/css'>" +

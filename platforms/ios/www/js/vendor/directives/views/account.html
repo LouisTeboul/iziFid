@@ -1,4 +1,4 @@
-<div>
+<div style="padding: 8px;">
 <style id="izi-style">
     .izi-account {
         min-height: 210px;
@@ -44,12 +44,23 @@
         border-radius: 0;
         background-color: #123456;
         color: #fdfdfd;
-        text-transform: uppercase;
         font-weight: 600;
+        text-transform: uppercase;
+        white-space: normal;
     }
 
     .izi-account button:hover, .izi-account button:focus {
         color: #fff;
+    }
+
+    .izi-account .space-above-xs {
+        margin-top: 0;
+    }
+
+    @media (max-width: 400px) {
+        .izi-account .space-above-xs {
+            margin-top: 32px;
+        }
     }
 
     .izi-account.bg-warn {
