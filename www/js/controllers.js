@@ -23,7 +23,7 @@ angular.module('starter.controllers', [])
                             }
                         }
                         else {
-                            $log.error('Erreur: ' + result);
+                            $log.warn('Erreur: ' + result);
                         }
                     }
                 );

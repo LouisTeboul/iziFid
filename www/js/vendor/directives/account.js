@@ -448,7 +448,6 @@ angular.module('APIServiceApp')
                         };
 
                         APIService.actions.register(obj).then(function () {
-                            $log.info('Retour API register ', obj);
                             $scope.barcode = $scope.client.barcode;
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
