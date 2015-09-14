@@ -334,22 +334,6 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.addOrder = function (amount) {
-                        var passageObj = APIService.get.emptyPassageObj();
-                        passageObj.barcode = $scope.barcode;
-                        passageObj.OrderTotalIncludeTaxes = amount;
-                        passageObj.OrderTotalExcludeTaxes = amount;
-                        APIService.actions.addOrder(passageObj).success(function () {
-//                            $scope.hideDialog();
-                            $scope.toast("Le montant d'achat a bien été enregistré");
-//                            $scope.reset();
-//                            $timeout(function () {
-//                                !$scope.isBrowser ? $rootScope.scan() : 0;
-//                            }, 1600);
-                            return true;
-                        });
-                    };
-
                     /**
                      * @function $scope.useBalanceToPay
                      * @param {number} val The amount of the balance to use for payment

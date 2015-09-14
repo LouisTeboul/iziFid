@@ -278,17 +278,6 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 }
             },
 
-            addOrder: function (obj) {
-                console.log(obj);
-                passagePromise = null;
-                if (!passagePromise) {
-                    passagePromise = $http.post(methods.get.callableUrl("AddOrder"), JSON.stringify(JSON.stringify(obj))).success(function (data) {
-                        return data;
-                    });
-                    return passagePromise;
-                }
-            },
-
             register: function (formObj) {
                 return $timeout(function () {
                     return $http.post(methods.get.callableUrl("Register"), JSON.stringify(JSON.stringify(formObj))).success(function (data) {

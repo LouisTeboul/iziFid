@@ -333,23 +333,7 @@ angular.module('APIServiceApp')
                             }, 1600);
                             return true;
                         });
-                    };
-
-                    $scope.addOrder = function (amount) {
-                        var passageObj = APIService.get.emptyPassageObj();
-                        passageObj.barcode = $scope.barcode;
-                        passageObj.OrderTotalIncludeTaxes = amount;
-                        passageObj.OrderTotalExcludeTaxes = amount;
-                        APIService.actions.addOrder(passageObj).success(function () {
-//                            $scope.hideDialog();
-                            $scope.toast("Le montant d'achat a bien été enregistré");
-//                            $scope.reset();
-//                            $timeout(function () {
-//                                !$scope.isBrowser ? $rootScope.scan() : 0;
-//                            }, 1600);
-                            return true;
-                        });
-                    };
+                     };
 
                     /**
                      * @function $scope.useBalanceToPay
@@ -409,16 +393,16 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useVoucherOffer = function(offer) {
-                        APIService.actions.useVoucherOffer(offer.OfferClassId).then(function(data) {
+                    $scope.useVoucherOffer = function (offer) {
+                        APIService.actions.useVoucherOffer(offer.OfferClassId).then(function() {
                             $scope.toast("L'offre a bien été utilisée");
                             $scope.reset();
-                            $timeout(function () {
+                            $timeout(function() {
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             }, 1600);
                             return true;
-                        }).catch(function(error){
-                           console.log(error);
+                        }).catch(function (error) {
+                            console.log(error);
                             $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
@@ -465,7 +449,7 @@ angular.module('APIServiceApp')
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
                             displayData();
-                        }).catch(function(error) {
+                        }).catch(function (error) {
                             if (error.status === 500)
                                 $window.alert('Cette carte est déjà enregistrée !');
                             else $window.alert('Une erreur ' + error.status + ' est survenue !');
