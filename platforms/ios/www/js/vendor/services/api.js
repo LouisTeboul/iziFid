@@ -250,7 +250,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             useVoucherOffer: function (offer_class_id) {
                 passagePromise = null;
                 if (!passagePromise) {
-                    passagePromise = $http.post(methods.get.callableUrl("UseOffer"), JSON.stringify(JSON.stringify({OfferClassId: offer_class_id}))).success(function (data) {
+                    passagePromise = $http.post(methods.get.callableUrl("UseOffer"), JSON.stringify(JSON.stringify({"OfferClassId": offer_class_id}))).success(function (data) {
                         return data;
                     });
                     return passagePromise;

@@ -14,18 +14,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
         clientUrl: "",
         fake: false,
         debug: true,
-        currLoyaltyObject: {},
-        validClientUrls: [
-            "http://pitapit.fr",
-            "http://urbun.fr",
-            "http://beautyburger.com",
-            "http://madamecroque.fr",
-            "http://planetalis.com",
-            "http://cooking.bigsister.biz",
-            "http://ffpizza.izipass.pro",
-            "http://le-b.izipass.pro",
-            "http://bellacci.izipass.pro"
-        ]
+        currLoyaltyObject: {}
     };
 
     /** Shortcut functions for throwing the various possible errors */
@@ -255,6 +244,16 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                     return methods.actions.addPassage(passageObj);
                 } else {
                     return false;
+                }
+            },
+
+            useVoucherOffer: function (offer_class_id) {
+                passagePromise = null;
+                if (!passagePromise) {
+                    passagePromise = $http.post(methods.get.callableUrl("UseOffer"), JSON.stringify(JSON.stringify({"OfferClassId": offer_class_id}))).success(function (data) {
+                        return data;
+                    });
+                    return passagePromise;
                 }
             },
 

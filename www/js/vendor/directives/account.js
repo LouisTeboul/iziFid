@@ -220,6 +220,13 @@ angular.module('APIServiceApp')
                                 navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
+                            } else if (data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
+                                //Voucher
+                                console.log('voucher');
+                                if (data.Offers !== []) {
+                                    $scope.showVoucherView = true;
+                                    $scope.voucher = data.Offers[0];
+                                }
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
                                 if (data.AllowAnonymous) {
@@ -307,7 +314,9 @@ angular.module('APIServiceApp')
 
                     $scope.reset = function () {
                         $scope.client = { barcode: $scope.form.barcode };
+                        $scope.showVoucherView = false;
                         delete $scope.barcode;
+                        delete $scope.voucher;
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;
                         delete $scope.form.password;
@@ -397,6 +406,20 @@ angular.module('APIServiceApp')
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                             }, 1600);
                             return true;
+                        });
+                    };
+
+                    $scope.useVoucherOffer = function(offer) {
+                        APIService.actions.useVoucherOffer(offer.OfferClassId).then(function(data) {
+                            $scope.toast("L'offre a bien été utilisée");
+                            $scope.reset();
+                            $timeout(function () {
+                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                            }, 1600);
+                            return true;
+                        }).catch(function(error){
+                           console.log(error);
+                            $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
 

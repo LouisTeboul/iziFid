@@ -52,6 +52,10 @@
         color: #fff;
     }
 
+    .izi-account.bg-warn {
+        background-color: #F44336;
+    }
+
     .izi-account .izi-offers li, .izi-account .izi-balances li {
         color: #fdfdfd;
         padding: 7px 20px;
@@ -112,7 +116,7 @@
 
 <div class="izi-account center-block" style="margin-top: 16px;">
 <md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
-<div ng-if="isReady && barcode && !register">
+<div ng-if="isReady && barcode && !register && !voucher">
     <div class="card">
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
            ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px"></i>
@@ -451,17 +455,17 @@
         <i class="glyphicon glyphicon-remove pull-right hvr-grow"
            ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px"></i>
 
-        <h3 class="text-center">{{voucher.OfferParam.Value}}</h3>
+        <h3 class="text-center">{{voucher.OfferParam.Value ? voucher.OfferParam.Value : voucher.OfferParam}}</h3>
 
 
-        <div class="barcode-container center-block">
+        <div class="barcode-container center-block" style="margin-bottom: 24px;">
             <img class="img-responsive center-block barcode-img"
                  data-ng-src="{{voucher.OfferImageUrl}}"
                  alt=""
                  onerror="$('.barcode-container').slideUp(); $('.onMissingQR').fadeIn('slow')"/>
         </div>
 
-        <button class="btn bg-{{voucher.isValid ? 'accent' : 'rouge'}} btn-lg center-block text-center no-radius ink" ng-disabled="!voucher.isValid">
+        <button class="btn bg-{{voucher.isValid ? 'accent' : 'rouge'}} btn-lg center-block text-center no-radius ink" ng-disabled="!voucher.isValid" ng-click="useVoucherOffer(voucher)">
             {{voucher.isValid ? 'Utiliser cette Offre' : 'Cette offre a déjà été utilisée'}}
         </button>
     </div>
