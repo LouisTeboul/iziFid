@@ -169,7 +169,7 @@ angular.module('APIServiceApp')
                             ".izi-account .fid-item-title { font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
-                            ".izi-account button { color: " + invertColor(data.styling.secondaryColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account button { color: " + blackOrWhite(data.styling.secondaryColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             fidItemStyle;
                     }
 
@@ -233,7 +233,7 @@ angular.module('APIServiceApp')
                                 navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
-                            } else if (data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
+                            } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
                                 //Voucher
                                 console.log('voucher');
                                 if (data.Offers !== []) {

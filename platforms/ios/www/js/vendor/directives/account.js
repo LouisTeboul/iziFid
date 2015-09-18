@@ -240,13 +240,12 @@ angular.module('APIServiceApp')
                                 navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
-                            } else if (data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
+                            } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
                                 //Voucher
                                 if (data.Offers !== []) {
                                     $scope.showVoucherView = true;
                                     $scope.voucher = data.Offers[0];
                                 }
-
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
                                 if (data.AllowAnonymous) {
