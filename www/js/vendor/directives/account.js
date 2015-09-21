@@ -37,7 +37,7 @@ angular.module('APIServiceApp')
                             return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
                         });
                         return uuid + "-browser";
-                    };
+                    }
 
                     if (!window.device) {
                         var storedUUID = localStorage.getItem('deviceUUID');
@@ -58,7 +58,7 @@ angular.module('APIServiceApp')
                         var g = parseInt(hexcolor.substr(2, 2), 16);
                         var b = parseInt(hexcolor.substr(4, 2), 16);
                         var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-                        return (yiq >= 125) ? '#333' : '#eee';
+                        return (yiq >= 125) ? '#333' : '#fefefe';
                     }
 
                     function onDeviceReady() {
@@ -108,12 +108,12 @@ angular.module('APIServiceApp')
                                                 var properColor = blackOrWhite(bgColor);
 
                                                 body.css('color', properColor + ' !important');
-                                                $('h4').css('color', properColor + ' !important');
+//                                                $('h4').css('color', properColor + ' !important');
                                                 $scope.customization = data;
                                                 /** Get the customization data from firebase and build css style from it */
                                                 angular.element(document).find('head').append("<style type='text/css'>" +
                                                     buildStyleFromData($scope.customization) +
-                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor) + "</style>");
+                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') +  "</style>");
                                                 angular.element('#izi-style').remove();
 
                                             })
@@ -153,12 +153,14 @@ angular.module('APIServiceApp')
                         var secondaryFontName = stripNameOffGoogleFonts(data.styling.secondaryFont);
                         var fidItemColor, fidItemStyle = "";
                         if (data.styling.bgColor) {
-                            $('html, body').css('background', data.styling.bgColor);
+                            $('html, body, ion-view').css('background', data.styling.bgColor);
+                            $('.izi-account input').css('background-color', data.styling.bgColor + ' !important');
                             if (data.styling.bgColor !== "transparent" && data.styling.bgColor !== "#ffffff" && data.styling.bgColor !== "#fff") {
                                 fidItemColor = data.styling.bgColor;
                                 fidItemStyle = ".izi-account .fid-item-title," +
                                     ".izi-account .fid-item-title + div b," +
-                                    ".izi-account .fid-item-title + input { color: " + fidItemColor + " !important; }"
+                                    ".izi-account .fid-item-title + input { color: " + fidItemColor + " !important; }" +
+                                    ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
                         }
 
@@ -169,7 +171,7 @@ angular.module('APIServiceApp')
                             ".izi-account .fid-item-title { font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
-                            ".izi-account button { color: " + blackOrWhite(data.styling.secondaryColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account button { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             fidItemStyle;
                     }
 
