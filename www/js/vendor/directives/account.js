@@ -105,7 +105,6 @@ angular.module('APIServiceApp')
 
                                 /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
                                 if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
-                                else {
                                     /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
                                     APIService.set.clientUrl(data.Server_Url);
                                     $scope.clientUrl = data.Server_Url;
@@ -163,7 +162,7 @@ angular.module('APIServiceApp')
                                             );
                                         }
                                     });
-                                }
+
 
                             }).error(function (e) {
                                 $scope.debug ? $log.error(e) : 0;
