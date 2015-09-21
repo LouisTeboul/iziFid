@@ -29,111 +29,6 @@ angular.module('APIServiceApp')
                     $scope.isReady = false;
                     $rootScope.isReady = false;
 
-                    function generateUUID() {
-                        var d = new Date().getTime();
-                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function (c) {
-                            var r = (d + Math.random() * 16) % 16 | 0;
-                            d = Math.floor(d / 16);
-                            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-                        });
-                        return uuid + "-browser";
-                    }
-
-                    if (!window.device) {
-                        var storedUUID = localStorage.getItem('deviceUUID');
-                        if (!storedUUID) {
-                            $scope.randomUUID = generateUUID();
-                            localStorage.setItem('deviceUUID', $scope.randomUUID);
-                            storedUUID = $scope.randomUUID;
-                        }
-                        window.device = {uuid: storedUUID};
-                        window.phonegap = true;
-                        onDeviceReady();
-                    }
-
-                    function blackOrWhite(hexcolor) {
-                        var color = hexcolor.substring(1);
-                        hexcolor = color.length < 5 ? color + color : color;
-                        var r = parseInt(hexcolor.substr(0, 2), 16);
-                        var g = parseInt(hexcolor.substr(2, 2), 16);
-                        var b = parseInt(hexcolor.substr(4, 2), 16);
-                        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-                        return (yiq >= 125) ? '#333' : '#eee';
-                    }
-
-                    function onDeviceReady() {
-                        if (window.device) {
-                            $scope.isBrowser = false;
-                            if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
-                            else APIService.set.clientUrl($scope.clientUrl);
-
-                            // On appelle GetServerUrl pour récupérer l'url attachée au device
-                            $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
-                                $scope.deviceName = data.AppName;
-                                $rootScope.deviceName = data.AppName;
-
-                                // Si réponse vide le device n'est pas configuré
-                                if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
-
-                                APIService.set.clientUrl(data.Server_Url);
-                                $scope.clientUrl = data.Server_Url;
-                                var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
-                                var confTable = $firebaseArray(confTableRef);
-
-                                // On charge la config
-                                confTable.$loaded().then(function (data) {
-                                    $scope.configuration = data;
-
-                                    var result = $.grep(data, function (e) {
-                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
-                                    });
-
-                                    if (result[0]) {
-                                        $scope.firebase = result[result.length - 1].firebase;
-                                        var ref = new Firebase($scope.firebase); //jshint ignore:line
-
-                                        $scope.data = $firebaseObject(ref);
-
-                                        $scope.data.$loaded()
-                                            .then(function (data) {
-                                                $scope.isReady = true;
-                                                $rootScope.isReady = true;
-                                                document.title = data.title;
-                                                var topHeader = $('.bar-header h1');
-                                                topHeader.text(data.title.replace('Fidélité', ''));
-                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
-                                                $('.bar-header').css('background-color', data.styling.primaryColor);
-                                                $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
-                                                var body = $('body');
-                                                var bgColor = body.css('background-color');
-                                                if (bgColor === "rgb(255, 255, 255)") {
-                                                    bgColor = "#ffffff";
-                                                }
-                                                var properColor = blackOrWhite(bgColor);
-
-                                                body.css('color', properColor + ' !important');
-//                                                $('h4').css('color', properColor + ' !important');
-                                                $scope.customization = data;
-                                                /** Get the customization data from firebase and build css style from it */
-                                                angular.element(document).find('head').append("<style type='text/css'>" +
-                                                    buildStyleFromData($scope.customization) +
-                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') +  "</style>");
-                                                angular.element('#izi-style').remove();
-
-                                            })
-                                            .catch(function (error) {
-                                                console.error("Error:", error);
-                                            }
-                                        );
-                                    }
-                                });
-
-                            }).error(function (e) {
-                                $scope.debug ? $log.error(e) : 0;
-                            });
-                        }
-                    }
-
                     document.addEventListener("deviceready", onDeviceReady, false);
 
                     /** Initial setup */
@@ -146,23 +41,166 @@ angular.module('APIServiceApp')
                         }
                     }, 0);
 
+                    /**
+                     * @function generateUUID
+                     * Permet de générer un UUID aléatoire pour la version navigateur de l'appli (l'uuid est fourni par phonegap si l'app tourne sur un device).
+                     * @returns {string} l'UUID qui sera enregistré dans le BO et dans le localStorage pour qu'il reste le même.
+                     */
+                    function generateUUID() {
+                        var d = new Date().getTime();
+                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function (c) {
+                            var r = (d + Math.random() * 16) % 16 | 0;
+                            d = Math.floor(d / 16);
+                            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                        });
+                        return uuid + "-browser";
+                    }
 
+                    /** Si l'app tourne dans un navigateur, on récupère l'UUID stocké dans le localStorage ou on en génère un si c'est la 1ere visite du client */
+                    if (!window.device) {
+                        var storedUUID = localStorage.getItem('deviceUUID');
+                        if (!storedUUID) {
+                            $scope.randomUUID = generateUUID();
+                            localStorage.setItem('deviceUUID', $scope.randomUUID);
+                            storedUUID = $scope.randomUUID;
+                        }
+                        window.device = {uuid: storedUUID};
+                        window.phonegap = true;
+                        onDeviceReady();
+                    }
+
+                    /**
+                     * @function blackOrWhite
+                     * Cette fonction retourne blanc ou noir en fonction de la couleur passée en paramètre pour la meilleure visibilité.
+                     * Si la couleur passée est trop sombre pour que du noir (#333) soit visible dessus, la fonction retournera blanc (#fefefe), et inversement.
+                     * @param hexcolor la couleur à comparer (en général la couleur du fond)
+                     * @returns {string} soit '#333' soit '#fefefe'
+                     */
+                    function blackOrWhite(hexcolor) {
+                        var color = hexcolor.substring(1);
+                        hexcolor = color.length < 5 ? color + color : color;
+                        var r = parseInt(hexcolor.substr(0, 2), 16);
+                        var g = parseInt(hexcolor.substr(2, 2), 16);
+                        var b = parseInt(hexcolor.substr(4, 2), 16);
+                        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+                        return (yiq >= 125) ? '#333' : '#fefefe';
+                    }
+
+                    /**
+                     * @function onDeviceReady
+                     * Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48)
+                     */
+                    function onDeviceReady() {
+                        if (window.device) {
+                            $scope.isBrowser = false;
+                            /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
+                             *  Sinon, on applique l'url déjà présente. */
+                            if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
+                            else APIService.set.clientUrl($scope.clientUrl);
+
+                            /** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
+                            $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
+                                $scope.deviceName = data.AppName;
+                                $rootScope.deviceName = data.AppName;
+
+                                /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
+                                if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
+                                else {
+                                    /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
+                                    APIService.set.clientUrl(data.Server_Url);
+                                    $scope.clientUrl = data.Server_Url;
+                                    var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
+                                    var confTable = $firebaseArray(confTableRef);
+
+                                    confTable.$loaded().then(function (data) {
+                                        $scope.configuration = data;
+
+                                        /** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats*/
+                                        var result = $.grep(data, function (e) {
+                                            return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
+                                        });
+
+                                        /** TODO: prévoir le cas où plusieurs configs existent avec la même url
+                                         * Pour l'instant, on prends le 1er resultat et on utilise son url de firebase pour récupérer les données de personalisation */
+                                        if (result[0]) {
+                                            $scope.firebase = result[result.length - 1].firebase;
+                                            var ref = new Firebase($scope.firebase); //jshint ignore:line
+
+                                            $scope.data = $firebaseObject(ref);
+
+                                            $scope.data.$loaded()
+                                                .then(function (data) {
+                                                    /** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
+                                                    $scope.isReady = true;
+                                                    $rootScope.isReady = true;
+
+                                                    document.title = data.title;
+                                                    var topHeader = $('.bar-header h1');
+                                                    topHeader.text(data.title.replace('Fidélité', ''));
+
+                                                    topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
+                                                    $('.bar-header').css('background-color', data.styling.primaryColor);
+                                                    $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
+                                                    var body = $('body');
+                                                    var bgColor = body.css('background-color');
+                                                    if (bgColor === "rgb(255, 255, 255)") {
+                                                        bgColor = "#ffffff";
+                                                    }
+                                                    var properColor = blackOrWhite(bgColor);
+                                                    body.css('color', properColor + ' !important');
+
+                                                    $scope.customization = data;
+                                                    /** Get the customization data from firebase and build css style from it */
+                                                    angular.element(document).find('head').append("<style type='text/css'>" +
+                                                        buildStyleFromData($scope.customization) +
+                                                        angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
+                                                    angular.element('#izi-style').remove();
+
+                                                })
+                                                .catch(function (error) {
+                                                    console.error("Error:", error);
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+
+                            }).error(function (e) {
+                                $scope.debug ? $log.error(e) : 0;
+                            });
+
+                        }
+                    }
+
+                    /**
+                     * @function stripNameOffGoogleFonts
+                     * Récupère juste le nom d'une police à partir d'une url Google Fonts
+                     * @param gfontsUrl l'url Google Fonts
+                     * @returns {string} le nom de la police
+                     */
                     function stripNameOffGoogleFonts(gfontsUrl) {
                         return gfontsUrl.replace("http://fonts.googleapis.com/css?family=", "").replace(/:.+/, "").replace("+", " ");
                     }
 
+                    /**
+                     * @function buildStyleFromData
+                     * Génère tout le css nécéssaire à la personalisation des vues en fonction du data retourné par firebase
+                     * @param data l'objet contenant les données de personalisation, retourné par firebase plus haut.
+                     * @returns {string} le CSS à appliquer
+                     */
                     function buildStyleFromData(data) {
                         var mainFontName = stripNameOffGoogleFonts(data.styling.mainFont);
                         var secondaryFontName = stripNameOffGoogleFonts(data.styling.secondaryFont);
-                        var fidItemColor, fidItemStyle = "";
+                        var fidItemStyle = "";
                         if (data.styling.bgColor) {
                             $('html, body, ion-view').css('background', data.styling.bgColor);
+                            $('.izi-account input').css('background-color', data.styling.bgColor + ' !important');
+
                             if (data.styling.bgColor !== "transparent" && data.styling.bgColor !== "#ffffff" && data.styling.bgColor !== "#fff") {
-                                fidItemColor = data.styling.bgColor;
                                 fidItemStyle = ".izi-account .fid-item-title," +
                                     ".izi-account .fid-item-title + div b," +
-                                    ".izi-account .fid-item-title + input { color: " + fidItemColor + " !important; }" +
-                                    ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
+                                    ".izi-account .fid-item-title + input { color: " + data.styling.bgColor + " !important; }" +
+                                    ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
                         }
 
@@ -222,29 +260,43 @@ angular.module('APIServiceApp')
 
                     $scope.customStyle ? angular.element(document).find('head').prepend("<style type='text/css'>" + $scope.customStyle + "</style>") : 0;
 
-                    /** If the barcode to check is valid we assign it to $scope.barcode, otherwise we delete $scope.barcode altogether */
+                    /**
+                     * @function checkBarcode
+                     * Si le barcode semble valide, on l'affecte à $scope.barcode, sinon on supprime $scope.barcode
+                     * @param barcode
+                     */
                     function checkBarcode(barcode) {
                         ($scope.barcodeValid = !!(barcode && APIService.validate.barcode(barcode))) ? $scope.barcode = barcode : delete $scope.barcode;
                     }
 
+                    /**
+                     * @function displayData
+                     * Fonction permettant d'identifier un client ou un QR de type offre
+                     */
                     function displayData() {
                         $scope.isReady = false;
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
                             $scope.isReady = true;
+                            // Si l'API retourne false, la carte est inconnue
                             if (data === false) {
                                 $scope.reset();
                                 navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
+
+                                // Si l'API ne retourne pas de Barcode, ce QR est une offre
                             } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
-                                //Voucher
                                 if (data.Offers !== []) {
                                     $scope.showVoucherView = true;
                                     $scope.voucher = data.Offers[0];
                                 }
+
+                                // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
+
+                                // Si cette url accepte le login anonyme, on identifie le client en tant que client anonyme
                                 if (data.AllowAnonymous) {
                                     if (data.AnonymousCustomer) {
                                         $scope.data = data;
@@ -262,10 +314,13 @@ angular.module('APIServiceApp')
                                             console.log('error', error);
                                         });
                                     }
+
+                                    // Sinon, on envoie le client vers le formulaire d'enregistrement
                                 } else {
                                     $scope.reset();
                                     $scope.goRegister();
                                 }
+                                // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
@@ -279,7 +334,10 @@ angular.module('APIServiceApp')
                         return new Date(date);
                     };
 
-                    /** Disconnect function */
+                    /**
+                     * @function disconnect
+                     * Fait confirmer à l'user qu'il veut se déconnecter
+                     */
                     $scope.disconnect = function () {
                         if (navigator.notification) {
                             navigator.notification.confirm('Êtes-vous sûr de vouloir vous déconnecter ?', function () {
@@ -292,10 +350,17 @@ angular.module('APIServiceApp')
                         }
                     };
 
+                    /**
+                     * @function goRegister
+                     * Affiche la vue du formulaire d'enregistrement
+                     */
                     $scope.goRegister = function () {
                         $scope.register = true;
                     };
 
+                    /**
+                     * Retourne à l'écran d'accueil depuis le formulaire d'enregistrement
+                     */
                     $scope.backToLogin = function () {
                         $scope.register = false;
                         $scope.reset();
@@ -328,6 +393,10 @@ angular.module('APIServiceApp')
                         $('md-backdrop, .md-dialog-container').remove(); //jshint ignore:line
                     };
 
+                    /**
+                     * @function $scope.reset
+                     * réinitialise l'appli en supprimant les variables de $scope créées jusque là, utilisé pour la déconnexion client
+                     */
                     $scope.reset = function () {
                         $scope.client = { barcode: $scope.form.barcode };
                         $scope.showVoucherView = false;
@@ -410,7 +479,7 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.useVoucherOffer = function (offer) {
-                        APIService.actions.useVoucherOffer(offer.OfferClassId).then(function(data) {
+                        APIService.actions.useVoucherOffer(offer.OfferClassId).then(function (data) {
                             if (data) {
                                 $scope.toast("L'offre a bien été utilisée");
                                 $scope.reset();
@@ -464,16 +533,14 @@ angular.module('APIServiceApp')
                         };
 
                         APIService.actions.register(obj).then(function () {
-                            $log.info('Retour API register ', obj);
                             $scope.barcode = $scope.client.barcode;
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
                             displayData();
-                        }).catch(function(error) {
+                        }).catch(function (error) {
                             if (error.status === 500)
                                 $window.alert('Cette carte est déjà enregistrée !');
-                            else
-                                $window.alert('Une erreur ' + error.status + ' est survenue !');
+                            else $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
 
@@ -577,12 +644,8 @@ angular.module('APIServiceApp')
                                      </div> \
                                     </div> \
                                 </md-dialog>'
-                            }).then(function () {
+                            }).then(function () { }, function () { });
 
-                            }, function () {
-
-                            });
-                            $log.info('dialog then');
                             $timeout(function () {
                                 $('#balancePaymentInput').focus(); //jshint ignore:line
                             }, 500);
@@ -591,14 +654,12 @@ angular.module('APIServiceApp')
                         }
                     };
 
-
                     /** Check barcode */
                     checkBarcode($scope.barcode);
 
                     /** If the barcode defined in the parameters is valid,*/
                     $scope.barcodeValid ? displayData() : $scope.hideData = true;
                 }
-
             ]
         };
     })
