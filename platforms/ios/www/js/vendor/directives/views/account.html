@@ -127,9 +127,17 @@
             padding-top: 13px;
         }
 
-        input[placeholder] { text-overflow: ellipsis; }
-        ::-moz-placeholder { text-overflow: ellipsis; }
-        input:-moz-placeholder { text-overflow: ellipsis; }
+        input[placeholder] {
+            text-overflow: ellipsis;
+        }
+
+        ::-moz-placeholder {
+            text-overflow: ellipsis;
+        }
+
+        input:-moz-placeholder {
+            text-overflow: ellipsis;
+        }
     </style>
 
 
@@ -164,7 +172,8 @@
                             <a data-ng-href="mailto:{{data.CustomerEmail}}">{{data.CustomerEmail}}</a>
                         </h4>
 
-                        <h2 class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur Anonyme</h2>
+                        <h2 class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur
+                            Anonyme</h2>
 
                         <div class="barcode-container visible-xs" ng-if="data.AllowAnonymous && data.AnonymousCustomer">
                             <img class="img-responsive barcode-img"
@@ -198,31 +207,6 @@
 
             <!-- Balances -->
             <ul class="izi-balances list-unstyled">
-                <li data-ng-repeat="balance in data.Balances"
-                    class="{{balance.Value > 0 ? 'bg-accent' : 'bg-rouge'}}">
-                    <h3 class="text-center no-mg-vert fid-item-title">{{balance.BalanceName}}</h3>
-
-                    <div class="text-center">
-                        <b>Solde: {{balance.Value}} {{balance.BalanceType === 'Dollar' ? '$' :
-                            balance.BalanceType}}</b>
-                    </div>
-
-                    <div ng-if="balance.UseToPay">
-                        <div class="input-group" style="width: 100%;">
-                            <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                                   type="number"
-                                   ng-model="balancePayment.value"
-                                   style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
-                                   placeholder="Paiement en avoir..." required>
-
-                            <div class="input-group-addon wave-effect" style="width: 40%;"
-                                 ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
-                                    >VALIDER
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
                 <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
                     <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
                         data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
@@ -237,7 +221,33 @@
                                    required>
 
                             <div class="input-group-addon wave-effect" style="width: 40%"
-                                 ng-click="useAction(orderAmountInput.value * 0.12, orderAmountInput.value >= 1000 ? 2 : 1)"
+                                 ng-click="useAction(orderAmountInput.value * 0.12, orderAmountInput.value >= 1000 ? 2 : 1)">
+                                VALIDER
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li data-ng-repeat="balance in data.Balances"
+                    class="{{balance.Value > 0 ? 'bg-accent' : 'bg-rouge'}}">
+                    <h3 class="text-center no-mg-vert fid-item-title">{{balance.BalanceName}}</h3>
+
+                    <div class="text-center">
+                        <b>Solde: {{balance.Value}} {{balance.BalanceType === 'Dollar' ? '$' :
+                            balance.BalanceType}}</b>
+                    </div>
+
+                    <div ng-if="balance.UseToPay">
+                        <div class="input-group" style="width: 100%;">
+                            <input id="balancePaymentInput" class="form-control" ng-minlength="1"
+                                   ng-pattern="/^[0-9.,]+$/"
+                                   type="number"
+                                   ng-model="balancePayment.value"
+                                   style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
+                                   placeholder="Paiement en avoir..." required>
+
+                            <div class="input-group-addon wave-effect" style="width: 40%;"
+                                 ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
                                     >VALIDER
                             </div>
                         </div>
@@ -321,7 +331,8 @@
 
         <!-- REGISTER VIEW -->
         <div id="registerView" ng-if="register">
-            <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;" ng-click="backToLogin()"></i>
+            <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;"
+               ng-click="backToLogin()"></i>
 
             <div class="container" style="max-width: 600px; margin: auto;">
                 <h2 class="blanc text-center">Enregistrer Ma Carte<br>
@@ -333,7 +344,8 @@
                         <label for="barcode" class="col-sm-3">N° de carte</label>
 
                         <div class="form-group col-sm-9">
-                            <input id="barcode" name="barcode" class="form-control" type="text" ng-model="client.barcode"
+                            <input id="barcode" name="barcode" class="form-control" type="text"
+                                   ng-model="client.barcode"
                                    placeholder="N° de carte&#8230;" ng-minlength="8" required/>
 
                             <div class="alert alert-danger"
@@ -347,7 +359,8 @@
                         <label for="firstname" class="col-sm-3">Prénom</label>
 
                         <div class="form-group col-sm-9">
-                            <input id="firstname" name="firstname" class="form-control" type="text" ng-model="client.firstname"
+                            <input id="firstname" name="firstname" class="form-control" type="text"
+                                   ng-model="client.firstname"
                                    placeholder="Prénom&#8230;" ng-minlength="1"
                                    ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
@@ -363,7 +376,8 @@
                         <label for="lastname" class="col-sm-3">Nom</label>
 
                         <div class="form-group col-sm-9">
-                            <input id="lastname" name="lastname" class="form-control" type="text" ng-model="client.lastname"
+                            <input id="lastname" name="lastname" class="form-control" type="text"
+                                   ng-model="client.lastname"
                                    placeholder="Nom&#8230;" ng-minlength="1"
                                    ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
@@ -400,7 +414,8 @@
                                    ng-minlength="6"
                                    required=""/>
 
-                            <div class="alert alert-danger" ng-if="registerForm.tel.$invalid && !registerForm.tel.$pristine">
+                            <div class="alert alert-danger"
+                                 ng-if="registerForm.tel.$invalid && !registerForm.tel.$pristine">
                                 <p class="text-center">Ce numéro de téléphone ne semble pas être valide</p>
                             </div>
                         </div>
@@ -410,7 +425,8 @@
                         <label for="email" class="col-sm-3">Adresse</label>
 
                         <div class="form-group col-sm-9">
-                            <input id="address" name="address" class="form-control" type="text" ng-model="client.address"
+                            <input id="address" name="address" class="form-control" type="text"
+                                   ng-model="client.address"
                                    placeholder="Adresse&#8230;" ng-minlength="8" required=""/>
 
                             <div class="alert alert-danger"
@@ -430,7 +446,8 @@
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.zipcode.$invalid && !registerForm.zipcode.$pristine">
-                                <p class="text-center">Ce champ doit comporter au moins {{data.zipcodeLength}} caractères</p>
+                                <p class="text-center">Ce champ doit comporter au moins {{data.zipcodeLength}}
+                                    caractères</p>
                             </div>
                         </div>
                     </div>
@@ -443,7 +460,8 @@
                                    ng-minlength="2"
                                    required=""/>
 
-                            <div class="alert alert-danger" ng-if="registerForm.city.$invalid && !registerForm.city.$pristine">
+                            <div class="alert alert-danger"
+                                 ng-if="registerForm.city.$invalid && !registerForm.city.$pristine">
                                 <p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
                             </div>
                         </div>
@@ -452,7 +470,8 @@
                         <label for="password" class="col-sm-3">Mot de Passe</label>
 
                         <div class="form-group col-sm-9">
-                            <input id="password" name="password" class="form-control" type="password" ng-model="client.password"
+                            <input id="password" name="password" class="form-control" type="password"
+                                   ng-model="client.password"
                                    placeholder="Mot de passe&#8230;" ng-minlength="8" required=""/>
 
                             <div class="alert alert-danger"
@@ -493,7 +512,8 @@
                 <i class="glyphicon glyphicon-remove pull-right hvr-grow"
                    ng-click="disconnect()" style="font-size: 2em; margin-bottom: -30px"></i>
 
-                <h3 class="text-center space-above-xs">{{voucher.OfferParam.Value ? voucher.OfferParam.Value : voucher.OfferParam}}</h3>
+                <h3 class="text-center space-above-xs">{{voucher.OfferParam.Value ? voucher.OfferParam.Value :
+                    voucher.OfferParam}}</h3>
 
 
                 <div class="barcode-container center-block" style="margin-bottom: 24px">

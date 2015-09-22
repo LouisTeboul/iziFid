@@ -198,6 +198,28 @@
 
     <!-- Balances -->
     <ul class="izi-balances list-unstyled">
+
+        <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+            <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
+                data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
+
+            <div>
+                <div class="input-group" style="width: 100%">
+                    <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
+                           type="tel"
+                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
+                           ng-model="orderAmountInput.value"
+                           placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString + '...' : 'Montant d\'achat...'}}"
+                           required>
+
+                    <div class="input-group-addon wave-effect" style="width: 40%"
+                         ng-click="useAction(orderAmountInput.value * 0.12, orderAmountInput.value >= 1000 ? 2 : 1)"
+                            >VALIDER
+                    </div>
+                </div>
+            </div>
+        </li>
+
         <li data-ng-repeat="balance in data.Balances"
             class="{{balance.Value > 0 ? 'bg-accent' : 'bg-rouge'}}">
             <h3 class="text-center no-mg-vert fid-item-title">{{balance.BalanceName}}</h3>
@@ -217,27 +239,6 @@
 
                     <div class="input-group-addon wave-effect" style="width: 40%;"
                          ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
-                            >VALIDER
-                    </div>
-                </div>
-            </div>
-        </li>
-
-        <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
-            <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
-                data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
-
-            <div>
-                <div class="input-group" style="width: 100%">
-                    <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                           type="tel"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
-                           ng-model="orderAmountInput.value"
-                           placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString + '...' : 'Montant d\'achat...'}}"
-                           required>
-
-                    <div class="input-group-addon wave-effect" style="width: 40%"
-                         ng-click="useAction(orderAmountInput.value * 0.12, orderAmountInput.value >= 1000 ? 2 : 1)"
                             >VALIDER
                     </div>
                 </div>
