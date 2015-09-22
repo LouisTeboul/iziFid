@@ -541,15 +541,14 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useAction = function () {
+                    $scope.useAction = function (amount, actionId) {
                         if (navigator.notification) {
                             navigator.notification.alert("L'action a bien été effectuée", function () {
                                 var passageObj = APIService.get.emptyPassageObj();
-                                var amount = $('#orderAmountInput').val();
                                 passageObj.OrderTotalIncludeTaxes = amount;
                                 passageObj.OrderTotalExcludeTaxes = amount;
                                 passageObj.CustomAction = {
-                                    "CustomActionId": $('#actionSelect').val()
+                                    "CustomActionId": actionId
                                 };
                                 $log.info(passageObj);
 
@@ -565,13 +564,12 @@ angular.module('APIServiceApp')
                                 $scope.backToLogin();
                             });
                         } else {
-                            alert("L'action a bien été effectuée :\n");
+                            alert("L'action a bien été effectuée");
                             var passageObj = APIService.get.emptyPassageObj();
-                            var amount = $('#orderAmountInput').val();
                             passageObj.OrderTotalIncludeTaxes = amount;
                             passageObj.OrderTotalExcludeTaxes = amount;
                             passageObj.CustomAction = {
-                                "CustomActionId": $('#actionSelect').val()
+                                "CustomActionId": actionId
                             };
                             $log.info(passageObj);
 

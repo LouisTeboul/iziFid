@@ -204,14 +204,14 @@
             </div>
 
             <div ng-if="balance.UseToPay">
-                <div class="input-group">
+                <div class="input-group" style="width: 100%;">
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="tel"
                            ng-model="balancePayment.value"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
                            placeholder="Paiement en avoir..." required>
 
-                    <div class="input-group-addon wave-effect"
+                    <div class="input-group-addon wave-effect" style="width: 40%;"
                          ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
                             >VALIDER
                     </div>
@@ -224,16 +224,16 @@
                 data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
 
             <div>
-                <div class="input-group">
+                <div class="input-group" style="width: 100%">
                     <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                            type="tel"
-                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                           style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
                            ng-model="orderAmountInput.value"
                            placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
                            required>
 
-                    <div class="input-group-addon wave-effect"
-                         ng-click="orderAmount(orderAmountInput.value)"
+                    <div class="input-group-addon wave-effect" style="width: 40%"
+                         ng-click="useAction(orderAmountInput.value * 0.12, orderAmountInput.value >= 1000 ? 2 : 1)"
                             >VALIDER
                     </div>
                 </div>
@@ -241,7 +241,7 @@
         </li>
     </ul>
 
-    <div ng-if="data.CustomActions && data.CustomActions[0].Name">
+    <!--<div ng-if="data.CustomActions && data.CustomActions[0].Name">
         <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
         <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
             <div class="input-label">&nbsp;</div>
@@ -256,7 +256,6 @@
 
         <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
     </div>
-
     <div class="text-center" ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
         <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect"
                 ng-click="orderAmount(orderAmountInput.value)">
@@ -264,12 +263,15 @@
             'Montant d\'Achat'}}
         </button>
     </div>
+-->
 
+<!--
     <div class="text-center" ng-if="data.CustomerEmail || data.AnonymousCustomer" style="margin-top: 16px;">
         <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
             <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
         </button>
     </div>
+-->
 
     <h5 class="text-center light" ng-if="data.CustomerEmail || data.AnonymousCustomer"
         ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">

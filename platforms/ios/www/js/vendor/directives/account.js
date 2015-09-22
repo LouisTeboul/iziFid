@@ -164,7 +164,6 @@ angular.module('APIServiceApp')
                                 });
 
 
-
                             }).error(function (e) {
                                 $scope.debug ? $log.error(e) : 0;
                             });
@@ -253,7 +252,6 @@ angular.module('APIServiceApp')
                     var balanceInUse;
 
                     $attrs.$observe('barcode', function (passedBarcode) {
-                        console.log(passedBarcode);
                         checkBarcode(passedBarcode);
                         $scope.barcodeValid ? displayData() : 0;
                     });
@@ -305,13 +303,12 @@ angular.module('APIServiceApp')
                                         $scope.hideData = false;
                                     } else {
                                         APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
-                                            console.log('registerAnonymousData', data);
                                             $scope.data = data.data;
                                             $scope.data.Offers = APIService.get.formattedOffers(data);
                                             $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                             $scope.hideData = false;
                                         }).catch(function (error) {
-                                            console.log('error', error);
+                                            $log.error('registerAnonymous error', error);
                                         });
                                     }
 
@@ -320,6 +317,7 @@ angular.module('APIServiceApp')
                                     $scope.reset();
                                     $scope.goRegister();
                                 }
+
                                 // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
                                 $scope.data = data;
@@ -398,7 +396,7 @@ angular.module('APIServiceApp')
                      * réinitialise l'appli en supprimant les variables de $scope créées jusque là, utilisé pour la déconnexion client
                      */
                     $scope.reset = function () {
-                        $scope.client = {barcode: $scope.form.barcode};
+                        $scope.client = { barcode: $scope.form.barcode };
                         $scope.showVoucherView = false;
                         delete $scope.barcode;
                         delete $scope.voucher;
@@ -465,7 +463,6 @@ angular.module('APIServiceApp')
                             "Date": new Date() + ""
                         };
 
-                        $log.info('using offer...', JSON.stringify(passageObj));
                         APIService.actions.addPassage(passageObj).success(function () {
                             $mdDialog.hide();
                             $scope.hideDialog();
@@ -491,7 +488,7 @@ angular.module('APIServiceApp')
                                 $window.alert('Une erreur est survenue, l\'offre n\'a pas été utilisée !');
                             }
                         }).catch(function (error) {
-                            console.log(error);
+                            $log.error(error);
                             $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
@@ -544,15 +541,14 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useAction = function () {
+                    $scope.useAction = function (amount, actionId) {
                         if (navigator.notification) {
                             navigator.notification.alert("L'action a bien été effectuée", function () {
                                 var passageObj = APIService.get.emptyPassageObj();
-                                var amount = $('#orderAmountInput').val();
                                 passageObj.OrderTotalIncludeTaxes = amount;
                                 passageObj.OrderTotalExcludeTaxes = amount;
                                 passageObj.CustomAction = {
-                                    "CustomActionId": $('#actionSelect').val()
+                                    "CustomActionId": actionId
                                 };
                                 $log.info(passageObj);
 
@@ -568,13 +564,12 @@ angular.module('APIServiceApp')
                                 $scope.backToLogin();
                             });
                         } else {
-                            alert("L'action a bien été effectuée :\n");
+                            alert("L'action a bien été effectuée");
                             var passageObj = APIService.get.emptyPassageObj();
-                            var amount = $('#orderAmountInput').val();
                             passageObj.OrderTotalIncludeTaxes = amount;
                             passageObj.OrderTotalExcludeTaxes = amount;
                             passageObj.CustomAction = {
-                                "CustomActionId": $('#actionSelect').val()
+                                "CustomActionId": actionId
                             };
                             $log.info(passageObj);
 
@@ -645,7 +640,9 @@ angular.module('APIServiceApp')
                                     </div> \
                                 </md-dialog>'
                             }).then(function () {
+
                             }, function () {
+
                             });
 
                             $timeout(function () {
