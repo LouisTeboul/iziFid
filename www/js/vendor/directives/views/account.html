@@ -206,7 +206,7 @@
             <div ng-if="balance.UseToPay">
                 <div class="input-group" style="width: 100%;">
                     <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                           type="tel"
+                           type="number"
                            ng-model="balancePayment.value"
                            style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
                            placeholder="Paiement en avoir..." required>
