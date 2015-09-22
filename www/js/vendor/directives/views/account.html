@@ -126,6 +126,10 @@
     .izi-account [id=balancePaymentInput] {
         padding-top: 13px;
     }
+
+    input[placeholder] { text-overflow: ellipsis; }
+    ::-moz-placeholder { text-overflow: ellipsis; }
+    input:-moz-placeholder { text-overflow: ellipsis; }
 </style>
 
 
@@ -229,7 +233,7 @@
                            type="tel"
                            style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important; color: #fefefe !important"
                            ng-model="orderAmountInput.value"
-                           placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
+                           placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString + '...' : 'Montant d\'achat...'}}"
                            required>
 
                     <div class="input-group-addon wave-effect" style="width: 40%"
