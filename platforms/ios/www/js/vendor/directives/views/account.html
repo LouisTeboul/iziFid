@@ -341,6 +341,17 @@
                         </div>
                     </div>
 
+                    <div class="clearfix" style="padding-bottom: 16px;">
+                        <label for="sex" class="col-sm-3">Sexe</label>
+
+                        <div class="form-group col-sm-9">
+                            <select class="form-control" id="sex" ng-model="client.gender" ng-init="client.gender = 'M'" name="gender" required>
+                                <option value="M">Homme</option>
+                                <option value="F">Femme</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="clearfix">
                         <label for="firstname" class="col-sm-3">Prénom</label>
 
@@ -370,6 +381,14 @@
                                  ng-if="registerForm.lastname.$invalid && !registerForm.lastname.$pristine">
                                 <p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" style="padding-bottom: 16px;">
+                        <label for="sex" class="col-sm-3">Date de naissance</label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="birthDate" name="birthDate" ng-model="client.birthdate" type="date"/>
                         </div>
                     </div>
 

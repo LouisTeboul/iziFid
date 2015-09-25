@@ -105,63 +105,63 @@ angular.module('APIServiceApp')
 
                                 /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
                                 if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
-                                    /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
-                                    APIService.set.clientUrl(data.Server_Url);
-                                    $scope.clientUrl = data.Server_Url;
-                                    var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
-                                    var confTable = $firebaseArray(confTableRef);
+                                /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
+                                APIService.set.clientUrl(data.Server_Url);
+                                $scope.clientUrl = data.Server_Url;
+                                var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
+                                var confTable = $firebaseArray(confTableRef);
 
-                                    confTable.$loaded().then(function (data) {
-                                        $scope.configuration = data;
+                                confTable.$loaded().then(function (data) {
+                                    $scope.configuration = data;
 
-                                        /** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats*/
-                                        var result = $.grep(data, function (e) {
-                                            return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
-                                        });
-
-                                        /** TODO: prévoir le cas où plusieurs configs existent avec la même url
-                                         * Pour l'instant, on prends le 1er resultat et on utilise son url de firebase pour récupérer les données de personalisation */
-                                        if (result[0]) {
-                                            $scope.firebase = result[result.length - 1].firebase;
-                                            var ref = new Firebase($scope.firebase); //jshint ignore:line
-
-                                            $scope.data = $firebaseObject(ref);
-
-                                            $scope.data.$loaded()
-                                                .then(function (data) {
-                                                    /** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
-                                                    $scope.isReady = true;
-                                                    $rootScope.isReady = true;
-
-                                                    document.title = data.title;
-                                                    var topHeader = $('.bar-header h1');
-                                                    topHeader.text(data.title.replace('Fidélité', ''));
-
-                                                    topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
-                                                    $('.bar-header').css('background-color', data.styling.primaryColor);
-                                                    $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
-                                                    var body = $('body');
-                                                    var bgColor = body.css('background-color');
-                                                    if (bgColor === "rgb(255, 255, 255)") {
-                                                        bgColor = "#ffffff";
-                                                    }
-                                                    var properColor = blackOrWhite(bgColor);
-                                                    body.css('color', properColor + ' !important');
-
-                                                    $scope.customization = data;
-                                                    /** Get the customization data from firebase and build css style from it */
-                                                    angular.element(document).find('head').append("<style type='text/css'>" +
-                                                        buildStyleFromData($scope.customization) +
-                                                        angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
-                                                    angular.element('#izi-style').remove();
-
-                                                })
-                                                .catch(function (error) {
-                                                    console.error("Error:", error);
-                                                }
-                                            );
-                                        }
+                                    /** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats*/
+                                    var result = $.grep(data, function (e) {
+                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
                                     });
+
+                                    /** TODO: prévoir le cas où plusieurs configs existent avec la même url
+                                     * Pour l'instant, on prends le 1er resultat et on utilise son url de firebase pour récupérer les données de personalisation */
+                                    if (result[0]) {
+                                        $scope.firebase = result[result.length - 1].firebase;
+                                        var ref = new Firebase($scope.firebase); //jshint ignore:line
+
+                                        $scope.data = $firebaseObject(ref);
+
+                                        $scope.data.$loaded()
+                                            .then(function (data) {
+                                                /** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
+                                                $scope.isReady = true;
+                                                $rootScope.isReady = true;
+
+                                                document.title = data.title;
+                                                var topHeader = $('.bar-header h1');
+                                                topHeader.text(data.title.replace('Fidélité', ''));
+
+                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
+                                                $('.bar-header').css('background-color', data.styling.primaryColor);
+                                                $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
+                                                var body = $('body');
+                                                var bgColor = body.css('background-color');
+                                                if (bgColor === "rgb(255, 255, 255)") {
+                                                    bgColor = "#ffffff";
+                                                }
+                                                var properColor = blackOrWhite(bgColor);
+                                                body.css('color', properColor + ' !important');
+
+                                                $scope.customization = data;
+                                                /** Get the customization data from firebase and build css style from it */
+                                                angular.element(document).find('head').append("<style type='text/css'>" +
+                                                    buildStyleFromData($scope.customization) +
+                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
+                                                angular.element('#izi-style').remove();
+
+                                            })
+                                            .catch(function (error) {
+                                                console.error("Error:", error);
+                                            }
+                                        );
+                                    }
+                                });
 
 
                             }).error(function (e) {
@@ -283,14 +283,14 @@ angular.module('APIServiceApp')
 //                                $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
 
-                            // Si l'API ne retourne pas de Barcode, ce QR est une offre
+                                // Si l'API ne retourne pas de Barcode, ce QR est une offre
                             } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
                                 if (data.Offers !== []) {
                                     $scope.showVoucherView = true;
                                     $scope.voucher = data.Offers[0];
                                 }
 
-                            // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
+                                // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
 
@@ -312,13 +312,13 @@ angular.module('APIServiceApp')
                                         });
                                     }
 
-                                // Sinon, on envoie le client vers le formulaire d'enregistrement
+                                    // Sinon, on envoie le client vers le formulaire d'enregistrement
                                 } else {
                                     $scope.reset();
                                     $scope.goRegister();
                                 }
 
-                            // Sinon, le client a bien été identifié, on affiche la vue
+                                // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
@@ -396,7 +396,7 @@ angular.module('APIServiceApp')
                      * réinitialise l'appli en supprimant les variables de $scope créées jusque là, utilisé pour la déconnexion client
                      */
                     $scope.reset = function () {
-                        $scope.client = { barcode: $scope.form.barcode };
+                        $scope.client = {barcode: $scope.form.barcode};
                         $scope.showVoucherView = false;
                         delete $scope.barcode;
                         delete $scope.voucher;
@@ -520,6 +520,10 @@ angular.module('APIServiceApp')
                             Barcode: $scope.client.barcode,
                             FirstName: $scope.client.firstname,
                             LastName: $scope.client.lastname,
+                            Gender: $scope.client.gender,
+                            DateOfBirthMonth: $scope.client.birthdate ? $scope.client.birthdate.getMonth() + 1 : "",
+                            DateOfBirthDay: $scope.client.birthdate ? $scope.client.birthdate.getDay() : "",
+                            DateOfBirthYear: $scope.client.birthdate ? $scope.client.birthdate.getFullYear() : "",
                             Email: $scope.client.email,
                             Phone: $scope.client.tel,
                             StreetAddress: $scope.client.address,
