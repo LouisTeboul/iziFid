@@ -360,8 +360,10 @@ angular.module('APIServiceApp')
                      * Retourne à l'écran d'accueil depuis le formulaire d'enregistrement
                      */
                     $scope.backToLogin = function () {
-                        $scope.register = false;
                         $scope.reset();
+                        $scope.$apply(function() {
+                            $scope.register = false;
+                        });
                         window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
                     };
