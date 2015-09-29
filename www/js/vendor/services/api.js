@@ -294,6 +294,22 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                         return data;
                     });
                 }, 0);
+            },
+
+            resetPassword: function (barcode) {
+                return $http.get(methods.get.callableUrl("GetNewPassword") + "?barcode=" + barcode).then(function (data) {
+                    return data;
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            },
+
+            searchForCustomer: function (query) {
+                return $http.get(methods.get.callableUrl("GetSearchCustomer") + "?searchString=" + query).then(function (data) {
+                    return data;
+                }).catch(function (err) {
+                    console.log(err);
+                });
             }
         },
 

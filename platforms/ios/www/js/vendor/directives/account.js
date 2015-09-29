@@ -252,7 +252,6 @@ angular.module('APIServiceApp')
                     var balanceInUse;
 
                     $attrs.$observe('barcode', function (passedBarcode) {
-                        console.log(passedBarcode);
                         checkBarcode(passedBarcode);
                         $scope.barcodeValid ? displayData() : 0;
                     });
@@ -274,6 +273,7 @@ angular.module('APIServiceApp')
                      */
                     function displayData() {
                         $scope.isReady = false;
+                        $scope.showSearchView = false;
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
                             $scope.isReady = true;
@@ -304,13 +304,12 @@ angular.module('APIServiceApp')
                                         $scope.hideData = false;
                                     } else {
                                         APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
-                                            console.log('registerAnonymousData', data);
                                             $scope.data = data.data;
                                             $scope.data.Offers = APIService.get.formattedOffers(data);
                                             $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                             $scope.hideData = false;
                                         }).catch(function (error) {
-                                            console.log('error', error);
+                                            $log.error('registerAnonymous error', error);
                                         });
                                     }
 
@@ -319,6 +318,7 @@ angular.module('APIServiceApp')
                                     $scope.reset();
                                     $scope.goRegister();
                                 }
+
                                 // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
                                 $scope.data = data;
@@ -364,14 +364,18 @@ angular.module('APIServiceApp')
                         $scope.reset();
                         $scope.$apply(function () {
                             $scope.register = false;
-
                         });
                         window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
                     };
 
-                    $scope.login = function () {
-                        checkBarcode($scope.form.barcode);
+                    $scope.login = function (barcode) {
+                        var bc;
+
+                        if (barcode) bc = barcode;
+                        else if ($scope.form.barcode) bc = $scope.form.barcode;
+
+                        checkBarcode(bc);
                         if (navigator.notification) {
                             $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, document.title, "OK");
                         } else {
@@ -422,6 +426,23 @@ angular.module('APIServiceApp')
                         });
                     };
 
+                    $scope.resetPassword = function (barcode) {
+                        APIService.actions.resetPassword(barcode).then(function (data) {
+                            console.log(data);
+                        });
+                    };
+
+                    $scope.searchForCustomer = function (query) {
+                        APIService.actions.searchForCustomer(query).then(function (data) {
+                            console.log(data);
+                            $scope.searchResults = data.data;
+                        });
+                    };
+
+                    $scope.launchClientSearch = function() {
+                        $scope.showSearchView = true;
+                    };
+
                     /**
                      * @function $scope.useBalanceToPay
                      * @param {number} val The amount of the balance to use for payment
@@ -467,7 +488,6 @@ angular.module('APIServiceApp')
                             "Date": new Date() + ""
                         };
 
-                        $log.info('using offer...', JSON.stringify(passageObj));
                         APIService.actions.addPassage(passageObj).success(function () {
                             $mdDialog.hide();
                             $scope.hideDialog();
@@ -493,7 +513,7 @@ angular.module('APIServiceApp')
                                 $window.alert('Une erreur est survenue, l\'offre n\'a pas été utilisée !');
                             }
                         }).catch(function (error) {
-                            console.log(error);
+                            $log.error(error);
                             $window.alert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
@@ -651,7 +671,54 @@ angular.module('APIServiceApp')
                                     </div> \
                                 </md-dialog>'
                             }).then(function () {
+
                             }, function () {
+
+                            });
+
+                            $timeout(function () {
+                                $('#balancePaymentInput').focus(); //jshint ignore:line
+                            }, 500);
+                        } else {
+                            return false;
+                        }
+                    };
+
+                    $scope.showClientSearch = function (ev, balance) {
+                        if (balance.UseToPay === true) {
+                            balanceInUse = balance;
+
+                            $mdDialog.show({
+                                clickOutsideToClose: true,
+                                targetEvent: ev,
+                                controller: 'DialogCtrl',
+                                template: '<md-dialog aria-label="Paiement En Avoir"> \
+                                <md-dialog-content class="sticky-container clearfix"> \
+                                    <md-subheader class="md-sticky-no-effect">PAIEMENT EN AVOIR</md-subheader> \
+                                    <div> \
+                                        <form action="" name="balancePaymentForm" novalidate>\
+                                            <md-input-container> \
+                                                <label>Montant</label> \
+                                                <input id="balancePaymentInput" ng-minlength="1" ng-pattern="/^[0-9.,]+$/" type="tel" ng-model="balancePayment.value" required> \
+                                            </md-input-container> \
+                                        </form> \
+                                    </div> \
+                                    </md-dialog-content> \
+                                    <div class="md-actions" layout="row"> \
+                                     <div class="clearfix"> \
+                                        <md-button class="md-accent md-hue-3" ng-disabled="balancePaymentForm.$invalid || balancePaymentForm.$pristine" ng-click="useBalanceToPay(balancePayment.value)"> \
+                                        VALIDER \
+                                        </md-button> \
+                                        <md-button class="md-warn" ng-click="cancel()"> \
+                                        ANNULER \
+                                        </md-button> \
+                                     </div> \
+                                    </div> \
+                                </md-dialog>'
+                            }).then(function () {
+
+                            }, function () {
+
                             });
 
                             $timeout(function () {

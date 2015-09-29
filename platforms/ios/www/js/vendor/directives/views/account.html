@@ -135,7 +135,7 @@
 
     <div class="izi-account center-block" style="margin-top: 16px;">
         <md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
-        <div ng-if="isReady && barcode && !register && !voucher" style="padding-top: 24px;">
+        <div ng-if="isReady && barcode && !register && !voucher && !showSearchView" style="padding-top: 24px;">
 
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="disconnect()" style="font-size: 2em; margin-top: -44px"></i>
@@ -287,7 +287,7 @@
         </div>
 
         <!-- LOGIN VIEW -->
-        <div id="loginView" ng-if="isReady && !barcode && !register" style="margin-top: 30px;">
+        <div id="loginView" ng-if="isReady && !barcode && !register && !showSearchView" style="margin-top: 30px;">
             <h2 class="title text-center">{{firebase ? customization.title : 'FIDÉLITÉ'}}</h2>
 
             <h4 class="blanc text-center subtitle">
@@ -316,7 +316,7 @@
                         ng-click="login()">Valider
                 </button>
                 <br/>
-                <!--<a href="" class="blanc cursor-pointer pull-right" ng-click="goRegister()">Enregistrer ma carte</a>-->
+                <a href="" class="blanc cursor-pointer pull-right" ng-click="launchClientSearch()">Rechercher un client&#8230;</a>
             </div>
         </div>
 
@@ -528,6 +528,19 @@
                         style="margin-bottom: 6px;">
                     {{voucher.isValid ? 'Utiliser cette Offre' : 'Cette offre a déjà été utilisée'}}
                 </button>
+            </div>
+        </div>
+
+        <!-- CLIENT SEARCH VIEW -->
+        <div id="searchView" ng-if="isReady && !barcode && !register && showSearchView" style="margin-top: 30px;">
+            <h2 class="text-center">Rechercher un client</h2>
+            <input type="text" class="center-block form-control" ng-model="search.query" ng-init="search = {query: ''}" ng-enter="searchForCustomer(search.query)"/>
+            <br/>
+
+            <div class="card" ng-click="login(client.Barcode)" ng-repeat="client in searchResults" style="cursor:pointer;">
+                <h4 style="margin-top: 0">{{client.FirstName}} {{client.LastName}}</h4>
+                <h4><a href="mailto:{{client.Email}}">{{client.Email}}</a></h4>
+                <h4 style="margin-bottom: 0"><small>N° de carte:</small> {{client.Barcode}}</h4>
             </div>
         </div>
     </div>

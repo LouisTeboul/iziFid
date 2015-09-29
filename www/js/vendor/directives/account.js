@@ -273,6 +273,7 @@ angular.module('APIServiceApp')
                      */
                     function displayData() {
                         $scope.isReady = false;
+                        $scope.showSearchView = false;
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
                             $scope.isReady = true;
@@ -361,15 +362,20 @@ angular.module('APIServiceApp')
                      */
                     $scope.backToLogin = function () {
                         $scope.reset();
-                        $scope.$apply(function() {
+                        $scope.$apply(function () {
                             $scope.register = false;
                         });
                         window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
                     };
 
-                    $scope.login = function () {
-                        checkBarcode($scope.form.barcode);
+                    $scope.login = function (barcode) {
+                        var bc;
+
+                        if (barcode) bc = barcode;
+                        else if ($scope.form.barcode) bc = $scope.form.barcode;
+
+                        checkBarcode(bc);
                         if (navigator.notification) {
                             $scope.barcodeValid ? displayData() : navigator.notification.alert("Ce n° de carte n'est pas valide !", null, document.title, "OK");
                         } else {
@@ -418,6 +424,23 @@ angular.module('APIServiceApp')
                             }, 1600);
                             return true;
                         });
+                    };
+
+                    $scope.resetPassword = function (barcode) {
+                        APIService.actions.resetPassword(barcode).then(function (data) {
+                            console.log(data);
+                        });
+                    };
+
+                    $scope.searchForCustomer = function (query) {
+                        APIService.actions.searchForCustomer(query).then(function (data) {
+                            console.log(data);
+                            $scope.searchResults = data.data;
+                        });
+                    };
+
+                    $scope.launchClientSearch = function() {
+                        $scope.showSearchView = true;
                     };
 
                     /**
@@ -617,6 +640,51 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.showAdvanced = function (ev, balance) {
+                        if (balance.UseToPay === true) {
+                            balanceInUse = balance;
+
+                            $mdDialog.show({
+                                clickOutsideToClose: true,
+                                targetEvent: ev,
+                                controller: 'DialogCtrl',
+                                template: '<md-dialog aria-label="Paiement En Avoir"> \
+                                <md-dialog-content class="sticky-container clearfix"> \
+                                    <md-subheader class="md-sticky-no-effect">PAIEMENT EN AVOIR</md-subheader> \
+                                    <div> \
+                                        <form action="" name="balancePaymentForm" novalidate>\
+                                            <md-input-container> \
+                                                <label>Montant</label> \
+                                                <input id="balancePaymentInput" ng-minlength="1" ng-pattern="/^[0-9.,]+$/" type="tel" ng-model="balancePayment.value" required> \
+                                            </md-input-container> \
+                                        </form> \
+                                    </div> \
+                                    </md-dialog-content> \
+                                    <div class="md-actions" layout="row"> \
+                                     <div class="clearfix"> \
+                                        <md-button class="md-accent md-hue-3" ng-disabled="balancePaymentForm.$invalid || balancePaymentForm.$pristine" ng-click="useBalanceToPay(balancePayment.value)"> \
+                                        VALIDER \
+                                        </md-button> \
+                                        <md-button class="md-warn" ng-click="cancel()"> \
+                                        ANNULER \
+                                        </md-button> \
+                                     </div> \
+                                    </div> \
+                                </md-dialog>'
+                            }).then(function () {
+
+                            }, function () {
+
+                            });
+
+                            $timeout(function () {
+                                $('#balancePaymentInput').focus(); //jshint ignore:line
+                            }, 500);
+                        } else {
+                            return false;
+                        }
+                    };
+
+                    $scope.showClientSearch = function (ev, balance) {
                         if (balance.UseToPay === true) {
                             balanceInUse = balance;
 
