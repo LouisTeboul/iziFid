@@ -2,3 +2,4 @@
 # http://git-scm.com/docs/gitignore
 .idea
 node_modules/
+www/js/vendor/directives/account-compiled.js*
