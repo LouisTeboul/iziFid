@@ -553,22 +553,22 @@
     },
     "installed_plugins": {
         "com.ionic.keyboard": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+            "PACKAGE_NAME": "com.izipass.miga"
         },
         "com.phonegap.plugins.barcodescanner": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+            "PACKAGE_NAME": "com.izipass.miga"
         },
         "org.apache.cordova.console": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+            "PACKAGE_NAME": "com.izipass.miga"
         },
         "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+            "PACKAGE_NAME": "com.izipass.miga"
         },
         "org.apache.cordova.dialogs": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+            "PACKAGE_NAME": "com.izipass.miga"
         },
         "org.apache.cordova.vibration": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+            "PACKAGE_NAME": "com.izipass.miga"
         }
     },
     "dependent_plugins": {}
