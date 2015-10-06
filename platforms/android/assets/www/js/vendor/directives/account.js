@@ -95,7 +95,7 @@ angular.module('APIServiceApp')
                             $scope.isBrowser = false;
                             /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
                              *  Sinon, on applique l'url déjà présente. */
-                            if (!$scope.clientUrl) APIService.set.clientUrl('http://izi-resto.izipass.pro');
+                            if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
 
                             /** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
