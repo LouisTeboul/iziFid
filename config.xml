@@ -62,4 +62,5 @@
     <gap:plugin name="org.apache.cordova.device" version="0.2.12"/>
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
+<preference name="android-build-tool" value="ant" />
 </widget>
