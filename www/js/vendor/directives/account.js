@@ -199,7 +199,7 @@ angular.module('APIServiceApp')
                                 fidItemStyle = ".izi-account .fid-item-title," +
                                     ".izi-account .fid-item-title + div b," +
                                     ".izi-account .fid-item-title + input { color: " + data.styling.bgColor + " !important; }" +
-                                    ".izi-account .card h4 small { color: " + data.styling.primaryColor + " !important; }" +
+                                        ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
                                     ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
                         }
@@ -267,6 +267,10 @@ angular.module('APIServiceApp')
                     function checkBarcode(barcode) {
                         ($scope.barcodeValid = !!(barcode && APIService.validate.barcode(barcode))) ? $scope.barcode = barcode : delete $scope.barcode;
                     }
+
+                    $scope.hideSearchView = function() {
+                        $scope.showSearchView = false;
+                    };
 
                     /**
                      * @function displayData
@@ -434,9 +438,11 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.searchForCustomer = function (query) {
+                        $scope.isSearching = true;
                         APIService.actions.searchForCustomer(query).then(function (data) {
                             console.log(data);
                             $scope.searchResults = data.data;
+                            $scope.isSearching = false;
                         });
                     };
 

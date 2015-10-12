@@ -76,9 +76,9 @@
             margin-left: auto;
             margin-right: auto;
             background-color: #123456;
-            -webkit-box-shadow: 2px 4px 3px #cdcdcd;
-            -moz-box-shadow: 2px 4px 3px #cdcdcd;
-            box-shadow: 2px 4px 3px #cdcdcd;
+            -webkit-box-shadow: 0 1px 8px #cdcdcd;
+            -moz-box-shadow: 0 1px 8px #cdcdcd;
+            box-shadow: 0 1px 8px #cdcdcd;
         }
 
         .izi-account .izi-offers li h3, .izi-account .izi-balances li h3, .izi-account li b {
@@ -533,6 +533,8 @@
 
         <!-- CLIENT SEARCH VIEW -->
         <div id="searchView" ng-if="isReady && !barcode && !register && showSearchView" style="margin-top: 30px;">
+            <i class="glyphicon glyphicon-remove pull-left hvr-grow"
+               ng-click="hideSearchView()" style="font-size: 2em; margin-top: -44px"></i>
             <h2 class="text-center">Rechercher un client</h2>
             <input type="text" class="center-block form-control" ng-model="search.query" placeholder="Nom, prénom ou email&#8230;" ng-init="search = {query: ''}" ng-enter="searchForCustomer(search.query)"/>
             <button class="btn btn-lg center-block text-center no-radius ink" ng-click="searchForCustomer(search.query)">
@@ -540,10 +542,16 @@
             </button>
             <br/>
 
+            <md-progress-circular md-mode="indeterminate" class="md-warn" ng-show="isSearching"></md-progress-circular>
+
             <div class="card" ng-click="login(client.Barcode)" ng-repeat="client in searchResults" style="cursor:pointer;">
                 <h4 style="margin-top: 0">{{client.FirstName}} {{client.LastName}}</h4>
-                <h4><a href="mailto:{{client.Email}}">{{client.Email}}</a></h4>
+                <h4>{{client.Email}}</h4>
                 <h4 style="margin-bottom: 0"><small>N° de carte:</small> {{client.Barcode}}</h4>
+            </div>
+
+            <div class="card error" ng-if="searchResults.length === 0">
+                <h4 style="margin-top: 8px; text-align: center">Aucun résultat&#8230;</h4>
             </div>
         </div>
     </div>
