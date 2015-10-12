@@ -536,7 +536,10 @@
         <!-- CLIENT SEARCH VIEW -->
         <div id="searchView" ng-if="isReady && !barcode && !register && showSearchView" style="margin-top: 30px;">
             <h2 class="text-center">Rechercher un client</h2>
-            <input type="text" class="center-block form-control" ng-model="search.query" ng-init="search = {query: ''}" ng-enter="searchForCustomer(search.query)"/>
+            <input type="text" class="center-block form-control" ng-model="search.query" placeholder="Nom, prénom ou email&#8230;" ng-init="search = {query: ''}" ng-enter="searchForCustomer(search.query)"/>
+            <button class="btn btn-lg center-block text-center no-radius ink" ng-click="searchForCustomer(search.query)">
+                Rechercher
+            </button>
             <br/>
 
             <div class="card" ng-click="login(client.Barcode)" ng-repeat="client in searchResults" style="cursor:pointer;">
