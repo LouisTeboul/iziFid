@@ -416,6 +416,7 @@ angular.module('APIServiceApp')
                         delete $rootScope.cardNum;
                         delete $scope.form.barcode;
                         delete $scope.form.password;
+                        $scope.$apply();
                     };
 
                     $scope.addPassage = function () {
