@@ -207,8 +207,9 @@ angular.module('APIServiceApp')
                         return "@import url(" + data.styling.mainFont + ");" +
                             "@import url(" + data.styling.secondaryFont + ");" +
                             ".izi-account h1, .izi-account h2, .izi-account h3:not(.fid-item-title) { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account p, .izi-account input, .izi-account label { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account p, .izi-account label { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title { font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                                ".izi-account input { color: " + blackOrWhite(blackOrWhite(data.styling.mainColor)) + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
                             ".izi-account button { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
@@ -420,10 +421,12 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.addPassage = function () {
+                        $scope.isAddingPassage = true;
                         var passageObj = APIService.get.emptyPassageObj();
                         APIService.actions.addPassage(passageObj).success(function () {
                             $scope.hideDialog();
                             $scope.toast("Un passage a bien été ajouté à cette carte");
+                            $scope.isAddingPassage = false;
                             $scope.reset();
                             $timeout(function () {
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -456,6 +459,7 @@ angular.module('APIServiceApp')
                      * @param {number} val The amount of the balance to use for payment
                      * @param {object} balance The balance object to use */
                     $scope.useBalanceToPay = function (val, balance) {
+                        $scope.isUsingBalance = true;
                         var passageObj = APIService.get.emptyPassageObj();
 
                         if (~~balance.Value < ~~val) {
@@ -477,6 +481,7 @@ angular.module('APIServiceApp')
                                 $mdDialog.hide();
                                 $scope.hideDialog();
                                 $scope.toast("Le paiement en avoir a bien été effectué");
+                                $scope.isUsingBalance = false;
                                 $scope.reset();
                                 $timeout(function () {
                                     $scope.hasUsedBalance = false;
@@ -518,7 +523,7 @@ angular.module('APIServiceApp')
                                 }, 1600);
                                 return true;
                             } else {
-                                $window.alert('Une erreur est survenue, l\'offre n\'a pas été utilisée !');
+                                $window.alert("Une erreur est survenue, l'offre n'a pas été utilisée !");
                             }
                         }).catch(function (error) {
                             $log.error(error);
@@ -528,6 +533,7 @@ angular.module('APIServiceApp')
 
                     $scope.orderAmount = function (amount) {
                         if (amount) {
+                            $scope.isOrderingAmount = true;
                             var passageObj = APIService.get.emptyPassageObj();
                             passageObj.OrderTotalIncludeTaxes = amount;
                             passageObj.OrderTotalExcludeTaxes = amount;
@@ -539,6 +545,7 @@ angular.module('APIServiceApp')
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
                                 $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.isOrderingAmount = false;
                                 $scope.reset();
                                 $timeout(function () {
                                     $rootScope.scan();
@@ -580,6 +587,7 @@ angular.module('APIServiceApp')
 
                     $scope.useAction = function () {
                         if (navigator.notification) {
+                            $scope.isUsingAction = true;
                             navigator.notification.alert("L'action a bien été effectuée", function () {
                                 var passageObj = APIService.get.emptyPassageObj();
                                 var amount = $('#orderAmountInput').val();
@@ -593,6 +601,7 @@ angular.module('APIServiceApp')
                                 APIService.actions.addPassage(passageObj).success(function () {
                                     $scope.hideDialog();
                                     $scope.toast("Un passage a bien été ajouté à cette carte");
+                                    $scope.isUsingAction = false;
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -602,6 +611,7 @@ angular.module('APIServiceApp')
                                 $scope.backToLogin();
                             });
                         } else {
+                            $scope.isUsingAction = true;
                             alert("L'action a bien été effectuée :\n");
                             var passageObj = APIService.get.emptyPassageObj();
                             var amount = $('#orderAmountInput').val();
@@ -615,6 +625,7 @@ angular.module('APIServiceApp')
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
                                 $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.isUsingAction = false;
                                 $scope.reset();
                                 $timeout(function () {
                                     !$scope.isBrowser ? $rootScope.scan() : 0;

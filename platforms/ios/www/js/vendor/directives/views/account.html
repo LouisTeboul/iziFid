@@ -174,8 +174,8 @@
                                    style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
                                    placeholder="Paiement en avoir..." required>
 
-                            <div class="input-group-addon wave-effect" style="width: 40%;;"
-                                 ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
+                            <div class="input-group-addon wave-effect" style="width: 40%;"
+                                 ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance && !isUsingBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
                                     >VALIDER
                             </div>
                         </div>
@@ -197,7 +197,7 @@
 
                             <div class="input-group-addon wave-effect"
                                  style="width:40%;"
-                                 ng-click="orderAmount(orderAmountInput.value)"
+                                 ng-click="!isOrderingAmount ? orderAmount(orderAmountInput.value) : 0"
                                     >VALIDER
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                     </select>
                 </label>
 
-                <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="useAction()">Valider</button>
+                <button class="btn btn-lg center-block hvr-grow no-radius ink" ng-click="!isUsingAction ? useAction() : 0">Valider</button>
             </div>
 
             <!--    <div class="text-center" ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
