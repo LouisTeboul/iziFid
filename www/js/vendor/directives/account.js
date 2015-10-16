@@ -198,7 +198,7 @@ angular.module('APIServiceApp')
                             if (data.styling.bgColor !== "transparent" && data.styling.bgColor !== "#ffffff" && data.styling.bgColor !== "#fff") {
                                 fidItemStyle = ".izi-account .fid-item-title," +
                                     ".izi-account .fid-item-title + div b," +
-                                    ".izi-account .fid-item-title + input { color: " + data.styling.bgColor + " !important; }" +
+                                    ".izi-account .fid-item-title + input { color: " + blackOrWhite(data.styling.bgColor) + " !important; }" +
                                         ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
                                     ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }

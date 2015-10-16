@@ -48,7 +48,7 @@ angular.module('APIServiceApp')
                      */
                     function generateUUID() {
                         var d = new Date().getTime();
-                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function (c) {
+                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                             var r = (d + Math.random() * 16) % 16 | 0;
                             d = Math.floor(d / 16);
                             return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -86,10 +86,8 @@ angular.module('APIServiceApp')
                         return (yiq >= 125) ? '#333' : '#fefefe';
                     }
 
-                    /**
-                     * @function onDeviceReady
-                     * Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48)
-                     */
+                    /** @function onDeviceReady
+                     *  Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48) */
                     function onDeviceReady() {
                         if (window.device) {
                             $scope.isBrowser = false;
@@ -163,11 +161,9 @@ angular.module('APIServiceApp')
                                     }
                                 });
 
-
                             }).error(function (e) {
                                 $scope.debug ? $log.error(e) : 0;
                             });
-
                         }
                     }
 
@@ -198,7 +194,7 @@ angular.module('APIServiceApp')
                             if (data.styling.bgColor !== "transparent" && data.styling.bgColor !== "#ffffff" && data.styling.bgColor !== "#fff") {
                                 fidItemStyle = ".izi-account .fid-item-title," +
                                     ".izi-account .fid-item-title + div b," +
-                                    ".izi-account .fid-item-title + input { color: " + data.styling.bgColor + " !important; }" +
+                                    ".izi-account .fid-item-title + input { color: " + blackOrWhite(data.styling.bgColor) + " !important; }" +
                                     ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
                                     ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
@@ -796,8 +792,8 @@ angular.module('APIServiceApp')
             scope: {
                 otherModelValue: "=compareTo"
             },
-            link: function (scope, element, attributes, ngModel) {
 
+            link: function (scope, element, attributes, ngModel) {
                 ngModel.$validators.compareTo = function (modelValue) {
                     return modelValue === scope.otherModelValue;
                 };
