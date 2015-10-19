@@ -51,7 +51,7 @@ module.exports = [
         ]
     }
 ];
-module.exports.metadata =
+module.exports.metadata = 
 // TOP OF METADATA
 {
     "com.ionic.keyboard": "1.0.4",

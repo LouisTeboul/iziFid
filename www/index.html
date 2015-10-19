@@ -54,9 +54,8 @@
 <script src="lib/waves/dist/waves.min.js"></script>
 
 <!-- Firebase -->
-<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-<!-- AngularFire -->
-<script src="https://cdn.firebase.com/libs/angularfire/1.1.1/angularfire.min.js"></script>
+<script src="lib/firebase/firebase.js"></script>
+<script src="lib/angularfire/dist/angularfire.min-compiled.js"></script>
 
 <!--<script src="lib/smoothscroll/dist/smoothscroll.raf.js"></script>-->
 <script src="lib/angular-aria/angular-aria.min.js"></script>
@@ -71,9 +70,9 @@
 
 <script>
     Waves.init();
-    //    window.onerror = function (e) {
-    //        alert(e);
-    //    };
+        window.onerror = function (e) {
+            alert(e);
+        };
 
     setTimeout(function () {
         $('.expand').addClass('expanded');

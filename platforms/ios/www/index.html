@@ -20,16 +20,19 @@
         }
     </style>
 </head>
-<body ng-app="starter" class="platform-ios platform-cordova platform-webview" ng-cloak>
+<body ng-app="starter" class="platform-ios platform-cordova platform-webview">
 <div class="ionic" ng-controller="HeaderCtrl" ng-show="isReady">
     <div class="bar bar-header bar-dark expanded push-down" style="height: 50px;">
         <h1 class="title"
             style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em; color: #fbfbfb;">
             IZIPASS</h1>
-        <small class="pull-right" style="font-size: 0.8em;" ng-if="deviceName"><i>{{deviceName}}</i></small>
+
+        <p class="text-right" style="width: 100%; padding-right: 12px;">
+            <small style="font-size: 0.7em;"><i>{{deviceName}}</i></small>
+        </p>
     </div>
     <button class="button button-fab button-fab-top-right button-balanced icon ion-qr-scanner waves-effect waves-button waves-light"
-            style="z-index:999; top: 22px; background: #2ebbd0; border-color: #333"
+            style="z-index:999; top: 29px; background: #2ebbd0; border-color: #333"
             ng-click="scan()"></button>
 </div>
 
@@ -51,9 +54,8 @@
 <script src="lib/waves/dist/waves.min.js"></script>
 
 <!-- Firebase -->
-<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-<!-- AngularFire -->
-<script src="https://cdn.firebase.com/libs/angularfire/1.1.1/angularfire.min.js"></script>
+<script src="lib/firebase/firebase.js"></script>
+<script src="lib/angularfire/dist/angularfire.min-compiled.js"></script>
 
 <!--<script src="lib/smoothscroll/dist/smoothscroll.raf.js"></script>-->
 <script src="lib/angular-aria/angular-aria.min.js"></script>
@@ -68,9 +70,9 @@
 
 <script>
     Waves.init();
-    //    window.onerror = function (e) {
-    //        alert(e);
-    //    };
+        window.onerror = function (e) {
+            alert(e);
+        };
 
     setTimeout(function () {
         $('.expand').addClass('expanded');

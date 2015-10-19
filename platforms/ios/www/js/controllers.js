@@ -38,23 +38,5 @@ angular.module('starter.controllers', [])
         $rootScope.scan = $scope.scan;
 
         $scope.scan();
-    }])
-
-    .controller('DashCtrl', ['$scope', '$rootScope', '$window', '$log', function ($scope, $rootScope, $window, $log) {
-        $log.info('DashCtrl');
-        $scope.autoLogin = $rootScope.autoLogin;
-    }])
-
-    .controller('ChatsCtrl', function ($scope) {
-        $scope.prevPassages = localStorage.getItem('prevPassages');
-    })
-
-    .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-        $scope.chat = Chats.get($stateParams.chatId);
-    })
-
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
-        };
-    });
+    }]
+);

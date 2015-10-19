@@ -11,7 +11,9 @@
         IZIPASS
     </author>
     <content src="index.html"/>
-    <access origin="*"/>
+    <access origin="*" />
+    <allow-intent href="*" />
+    <allow-navigation href="*" />
     <preference name="webviewbounce" value="false"/>
     <preference name="UIWebViewBounce" value="false"/>
     <preference name="DisallowOverscroll" value="true"/>
@@ -62,4 +64,6 @@
     <gap:plugin name="org.apache.cordova.device" version="0.2.12"/>
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
+    <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
+    <gap:plugin name="cordova-plugin-whitelist" source="npm" />
 </widget>

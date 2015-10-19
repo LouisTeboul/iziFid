@@ -182,7 +182,7 @@
                     </div>
                 </li>
 
-                <li ng-if="data.CustomerEmail && data.OneRuleWithOrderAmount">
+                <li ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
                     <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
                         data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
 

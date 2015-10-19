@@ -48,7 +48,7 @@ angular.module('APIServiceApp')
                      */
                     function generateUUID() {
                         var d = new Date().getTime();
-                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function (c) {
                             var r = (d + Math.random() * 16) % 16 | 0;
                             d = Math.floor(d / 16);
                             return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -86,8 +86,10 @@ angular.module('APIServiceApp')
                         return (yiq >= 125) ? '#333' : '#fefefe';
                     }
 
-                    /** @function onDeviceReady
-                     *  Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48) */
+                    /**
+                     * @function onDeviceReady
+                     * Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48)
+                     */
                     function onDeviceReady() {
                         if (window.device) {
                             $scope.isBrowser = false;
@@ -195,7 +197,7 @@ angular.module('APIServiceApp')
                                 fidItemStyle = ".izi-account .fid-item-title," +
                                     ".izi-account .fid-item-title + div b," +
                                     ".izi-account .fid-item-title + input { color: " + blackOrWhite(data.styling.bgColor) + " !important; }" +
-                                    ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
+                                        ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
                                     ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
                         }
@@ -205,7 +207,7 @@ angular.module('APIServiceApp')
                             ".izi-account h1, .izi-account h2, .izi-account h3:not(.fid-item-title) { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account p, .izi-account label { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title { font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                            ".izi-account input { color: " + blackOrWhite(blackOrWhite(data.styling.mainColor)) + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account input { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
                             ".izi-account button { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
@@ -283,7 +285,7 @@ angular.module('APIServiceApp')
                             if (data === false) {
                                 $scope.reset();
                                 navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
-//                                $window.alert('Carte inconnue !');
+//   $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
 
                                 // Si l'API ne retourne pas de Barcode, ce QR est une offre
@@ -792,8 +794,8 @@ angular.module('APIServiceApp')
             scope: {
                 otherModelValue: "=compareTo"
             },
-
             link: function (scope, element, attributes, ngModel) {
+
                 ngModel.$validators.compareTo = function (modelValue) {
                     return modelValue === scope.otherModelValue;
                 };

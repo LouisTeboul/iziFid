@@ -19,10 +19,13 @@
     "org.apache.cordova.console",
     "com.ionic.keyboard",
     "org.apache.cordova.dialogs",
-    "org.apache.cordova.vibration"
+    "org.apache.cordova.vibration",
+    {
+      "locator": "https://github.com/apache/cordova-plugin-whitelist",
+      "id": "cordova-plugin-whitelist"
+    }
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "ios"
   ]
 }

@@ -163,11 +163,9 @@ angular.module('APIServiceApp')
                                     }
                                 });
 
-
                             }).error(function (e) {
                                 $scope.debug ? $log.error(e) : 0;
                             });
-
                         }
                     }
 
@@ -209,7 +207,7 @@ angular.module('APIServiceApp')
                             ".izi-account h1, .izi-account h2, .izi-account h3:not(.fid-item-title) { color: " + data.styling.mainColor + " !important; font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account h4, .izi-account h5, .izi-account p, .izi-account a, .izi-account small, .izi-account p, .izi-account label { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title { font-family:" + mainFontName + ", Helvetica, Arial, sans-serif !important; }" +
-                                ".izi-account input { color: " + blackOrWhite(blackOrWhite(data.styling.mainColor)) + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account input { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
                             ".izi-account button { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
@@ -287,7 +285,7 @@ angular.module('APIServiceApp')
                             if (data === false) {
                                 $scope.reset();
                                 navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
-//                                $window.alert('Carte inconnue !');
+//   $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
 
                                 // Si l'API ne retourne pas de Barcode, ce QR est une offre
