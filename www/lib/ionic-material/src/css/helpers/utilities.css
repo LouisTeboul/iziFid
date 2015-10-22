@@ -47,7 +47,6 @@
     -webkit-box-shadow: none;
 }
 
-
 /* Utilities : Padding
 ==================================*/
 
@@ -92,9 +91,8 @@
 ==================================*/
 
 .z1 {
-    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
-
 
 /* Utilities : Color
 ==================================*/

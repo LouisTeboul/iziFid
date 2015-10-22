@@ -169,9 +169,9 @@
                     <div ng-if="balance.UseToPay">
                         <div class="input-group" style="width: 100%;">
                             <input id="balancePaymentInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
-                                   type="tel"
+                                   type="number"
                                    ng-model="balancePayment.value"
-                                   style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                                   style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
                                    placeholder="Paiement en avoir..." required>
 
                             <div class="input-group-addon wave-effect" style="width: 40%;"
@@ -190,7 +190,7 @@
                         <div class="input-group" style="width: 100%;">
                             <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                                    type="number"
-                                   style="padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
+                                   style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 20px; max-width: 100% !important"
                                    ng-model="orderAmountInput.value"
                                    placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
                                    required>
@@ -417,7 +417,7 @@
                         <div class="form-group col-sm-9">
                             <input id="tel" name="tel" class="form-control" type="tel" ng-model="client.tel"
                                    placeholder="N° de téléphone&#8230;"
-                                   ng-minlength="6"
+                                   ng-pattern="/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/"
                                    required=""/>
 
                             <div class="alert alert-danger" ng-if="registerForm.tel.$invalid && !registerForm.tel.$pristine">
