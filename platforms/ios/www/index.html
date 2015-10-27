@@ -38,6 +38,13 @@
 
 <ion-nav-view></ion-nav-view>
 
+<div id="offline-alert" ng-controller="OfflineCtrl" style="display: none;">
+    <i class="glyphicon glyphicon-warning-sign"></i>&nbsp; <span style="font-size: 1.1em;">Vous êtes hors-ligne !<br></span><small>Veuillez vous connecter à internet</small>
+</div>
+<div id="online-alert" ng-controller="OfflineCtrl" style="display: none;">
+    <i class="glyphicon glyphicon-thumbs-up"></i>&nbsp; <span style="font-size: 1.1em;">Vous êtes à nouveau en ligne !<br></span><small>Vous êtes connecté à internet</small>
+</div>
+
 <script src="lib/jquery/dist/jquery.min.js"></script>
 <script src="lib/jquery-easing/jquery.easing.min.js"></script>
 

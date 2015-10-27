@@ -23,3 +23,21 @@
 input::-webkit-input-placeholder {
     padding-left: 5px;
 }
+
+[id=offline-alert], [id=online-alert] {
+    position: fixed;
+    bottom: 0;
+    color: #fefefe;
+    padding: 16px;
+    width: 100%;
+    text-align: center;
+    z-index: 99999;
+}
+
+[id=offline-alert] {
+    background: #D32F2F;
+}
+
+[id=online-alert] {
+    background: #388E3C;
+}

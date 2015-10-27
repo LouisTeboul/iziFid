@@ -39,4 +39,36 @@ angular.module('starter.controllers', [])
 
         $scope.scan();
     }]
+)
+    .controller('OfflineCtrl', ['$scope', '$http', '$log', '$timeout', function ($scope, $http, $log, $timeout) {
+        var connectedRef = "https://izigenerator.firebaseio.com/.info/connected";
+        var isOffline = false;
+        var poll = function() {
+            $timeout(function() {
+                $http.get(connectedRef).then(function(data) {
+                    $('#offline-alert').fadeOut();
+                    if (isOffline) {
+                        isOffline = false;
+                        $('#online-alert').fadeIn();
+                        $timeout(function () {
+                            $('#online-alert').fadeOut();
+                        }, 3000);
+                    }
+                    poll();
+                }).catch(function(err) {
+                    $('#offline-alert').fadeIn();
+                    isOffline = true;
+                    poll();
+                });
+            }, 2500);
+        };
+
+        $http.get(connectedRef).then(function(data) {
+            $('#offline-alert').fadeOut();
+            poll();
+        }).catch(function(err) {
+            $('#offline-alert').fadeIn();
+            poll();
+        });
+    }]
 );
