@@ -10,6 +10,10 @@ angular.module('starter.controllers', [])
             if (scanCounter === 0) {
                 var scp = angular.element('.izi-account').scope();
                 if (scp && scp.reset) scp.reset();
+                if (scp && scp.register) {
+                    scp.reset();
+                    scp.register = false;
+                }
 
                 var promise = appServices.scanBarcode();
                 promise.then(
@@ -17,9 +21,11 @@ angular.module('starter.controllers', [])
                         if (result.error == false) {
                             if (result.result.text) {
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
+/*                                var scp = angular.element('.izi-account').scope();
+                                scp.client.barcode = $rootScope.cardNum;*/
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $scope.$apply(function() {
+                                $scope.$apply(function () {
                                     $('input[name=barcodeId]').val("");
                                     $('input[name=barcodeId]').val($rootScope.cardNum);
                                 });
@@ -33,7 +39,7 @@ angular.module('starter.controllers', [])
 
                 $timeout(function () {
                     scanCounter = 0;
-                }, 2500)
+                }, 2000)
             }
             scanCounter++;
         };
@@ -46,9 +52,9 @@ angular.module('starter.controllers', [])
     .controller('OfflineCtrl', ['$scope', '$http', '$log', '$timeout', function ($scope, $http, $log, $timeout) {
         var connectedRef = "https://izigenerator.firebaseio.com/.info/connected";
         var isOffline = false;
-        var poll = function() {
-            $timeout(function() {
-                $http.get(connectedRef).then(function(data) {
+        var poll = function () {
+            $timeout(function () {
+                $http.get(connectedRef).then(function (data) {
                     $('#offline-alert').fadeOut();
                     if (isOffline) {
                         isOffline = false;
@@ -58,7 +64,7 @@ angular.module('starter.controllers', [])
                         }, 3000);
                     }
                     poll();
-                }).catch(function(err) {
+                }).catch(function (err) {
                     $('#offline-alert').fadeIn();
                     isOffline = true;
                     poll();
@@ -66,10 +72,10 @@ angular.module('starter.controllers', [])
             }, 2500);
         };
 
-        $http.get(connectedRef).then(function(data) {
+        $http.get(connectedRef).then(function (data) {
             $('#offline-alert').fadeOut();
             poll();
-        }).catch(function(err) {
+        }).catch(function (err) {
             $('#offline-alert').fadeIn();
             poll();
         });

@@ -39,7 +39,7 @@
             padding-left: 0;
         }
 
-        .izi-account button {
+        .izi-account button, .izi-account .input-group-addon {
             -webkit-border-radius: 0;
             -moz-border-radius: 0;
             border-radius: 0;
@@ -72,7 +72,7 @@
             color: #fdfdfd;
             padding: 7px 20px;
             margin-bottom: 12px;
-            width: 99.5%;
+            width: 97.75%;
             margin-left: auto;
             margin-right: auto;
             background-color: #123456;
@@ -191,7 +191,7 @@
                 </button>
             </div>
 
-            <div ng-if="data.CustomActions && data.CustomActions[0].Name">
+            <div ng-if="data.CustomActions && data.CustomActions[0].Name && !customization.showActionsAsButtons">
                 <h3 class="text-center light" style="margin-bottom: 0; margin-top: 28px;">Actions</h3>
                 <label class="item item-input item-select" style="border: 0; margin-bottom: 10px;">
                     <div class="input-label">&nbsp;</div>
@@ -207,6 +207,20 @@
 
                 <button class="btn btn-lg center-block hvr-grow no-radius ink"
                         ng-click="!isUsingAction ? useAction() : 0">Valider
+                </button>
+            </div>
+
+            <div ng-if="data.CustomActions && data.CustomActions[0].Name && customization.showActionsAsButtons">
+                <md-radio-group ng-model="data.customAction">
+                    <md-radio-button class="md-warn" ng-repeat="action in data.CustomActions"
+                                     ng-value="action.Id"
+                                     aria-label="{{action.Name}}">
+                        <span>{{action.Name}}</span>
+                    </md-radio-button>
+                </md-radio-group>
+
+                <button class="btn btn-lg center-block hvr-grow no-radius ink"
+                        ng-click="!isUsingAction ? useAction(true) : 0">Valider
                 </button>
             </div>
 
@@ -232,7 +246,7 @@
                     <h3 class="text-center no-mg-vert fid-item-title">{{balance.BalanceName}}</h3>
 
                     <div class="text-center">
-                        <b style="font-size: 1.4em;">Solde: {{balance.Value}} {{balance.BalanceType === 'Dollar' ? '$' :
+                        <b style="font-size: 1.6em;">Solde disponible: {{balance.Value}} {{balance.BalanceType === 'Dollar' ? '$' :
                             balance.BalanceType}}</b>
                     </div>
 
@@ -246,7 +260,7 @@
                                    placeholder="Paiement en avoir..." required>
 
                             <div class="input-group-addon wave-effect" style="width: 50%; font-size: 1.5em;"
-                                 ng-click="(balancePayment.value && +balancePayment.value > 0) && !hasUsedBalance && !isUsingBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
+                                 ng-click="(balancePayment.value && +balancePayment.value > 0) && !isUsingBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
                                     >VALIDER
                             </div>
                         </div>
@@ -254,12 +268,12 @@
                 </li>
             </ul>
 
-            <!--<h5 class="text-center light" ng-if="data.CustomerEmail || data.AnonymousCustomer"
-                ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
-                Dernier passage le: {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
-                bipDate.getFullYear()}}
-            </h5>
--->
+            <!-- <h5 class="text-center light" ng-if="data.CustomerEmail || data.AnonymousCustomer"
+                 ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)">
+                 Dernier passage le: {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
+                 bipDate.getFullYear()}}
+             </h5>
+ -->
             <div class="card">
                 <!--<h2 class="text-center">{{data.LoyaltyClass}}</h2>-->
 
@@ -287,14 +301,14 @@
                         <h4 class="no-mg-vert" ng-if="data.CustomerPhone"><b>Téléphone</b> :
                             <a data-ng-href="tel:{{data.CustomerPhone}}">{{data.CustomerPhone}}</a>
                         </h4>
-                        <h4 class="no-mg-vert" ng-if="data.Barcodes[0].LastBipDate" ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)"><b>Dernier passage </b>: {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
+                        <h4 class="no-mg-vert" ng-if="data.Barcodes[0].LastBipDate"
+                            ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)"><b>Dernier passage </b>:
+                            {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
                             bipDate.getFullYear()}}
                         </h4>
-                        <h4 class="no-mg-vert" ng-if="data.Barcodes[0].CreationDate" ng-init="creationDate = getDate(data.Barcodes[0].CreationDate)"><b>Date de création</b> :
-                            {{creationDate.getDate() + '/' + (creationDate.getMonth() + 1) + '/' + creationDate.getFullYear()}}
-                        </h4>
-                        <h4 class="no-mg-vert" ng-if="data.History"><b>Total de cagnotte</b> :
-                            {{getTotalPositiveHistory(data.History)}} {{data.Balances[0].BalanceType === 'Dollar' ? '$' :
+                        <h4 class="no-mg-vert" ng-if="data.History"><b>Cumul depuis la création</b> :
+                            {{getTotalPositiveHistory(data.History)}} {{data.Balances[0].BalanceType === 'Dollar' ? '$'
+                            :
                             data.Balances[0].BalanceType}}
                         </h4>
 
@@ -367,6 +381,7 @@
                         <div class="form-group col-sm-9">
                             <input id="barcode" name="barcode" class="form-control" type="text"
                                    ng-model="client.barcode"
+                                   ng-init="client.barcode = scannedBarcode"
                                    placeholder="N° de carte&#8230;" ng-minlength="8" required/>
 
                             <div class="alert alert-danger"
@@ -376,7 +391,7 @@
                         </div>
                     </div>
 
-                    <div class="clearfix" style="padding-bottom: 16px;">
+                    <div class="clearfix" ng-if="data.form.gender" style="padding-bottom: 16px;">
                         <label for="sex" class="col-sm-3">Sexe</label>
 
                         <div class="form-group col-sm-9">
@@ -422,7 +437,7 @@
                         </div>
                     </div>
 
-                    <div class="clearfix" style="padding-bottom: 16px;">
+                    <div class="clearfix" ng-if="data.form.dob" style="padding-bottom: 16px;">
                         <label for="sex" class="col-sm-3">Date de naissance</label>
 
                         <div class="form-group col-sm-9">
@@ -446,7 +461,7 @@
                         </div>
                     </div>
 
-                    <div class="clearfix">
+                    <div class="clearfix" ng-if="data.form.phone">
                         <label for="tel" class="col-sm-3">Tél.</label>
 
                         <div class="form-group col-sm-9">
@@ -462,8 +477,8 @@
                         </div>
                     </div>
 
-                    <div class="clearfix">
-                        <label for="email" class="col-sm-3">Adresse</label>
+                    <div class="clearfix" ng-if="data.form.address">
+                        <label for="address" class="col-sm-3">Adresse</label>
 
                         <div class="form-group col-sm-9">
                             <input id="address" name="address" class="form-control" type="text"
@@ -476,7 +491,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix">
+
+                    <div class="clearfix" ng-if="data.form.zipcode">
                         <label for="zipcode" class="col-sm-3">Code Postal</label>
 
                         <div class="form-group col-sm-9">
@@ -492,7 +508,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix">
+
+                    <div class="clearfix" ng-if="data.form.city">
                         <label for="email" class="col-sm-3">Ville</label>
 
                         <div class="form-group col-sm-9">
@@ -507,6 +524,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="clearfix" ng-if="data.form.company">
+                        <label for="society" class="col-sm-3">Société</label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="society" name="society" class="form-control" type="text"
+                                   ng-model="client.society"
+                                   placeholder="Société&#8230;"/>
+                        </div>
+                    </div>
+
                     <div class="clearfix">
                         <label for="password" class="col-sm-3">Mot de Passe</label>
 

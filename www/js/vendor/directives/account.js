@@ -200,7 +200,8 @@ angular.module('APIServiceApp')
                             ".izi-account input { color: " + data.styling.secondaryColor + " !important; font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
-                            ".izi-account button, .izi-account .input-group-addon { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account md-radio-button{ background: " + data.styling.mainColor + "; padding: 16px; }" +
+                            ".izi-account button, .izi-account .input-group-addon, .izi-account md-radio-button { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             fidItemStyle;
                     }
 
@@ -239,6 +240,7 @@ angular.module('APIServiceApp')
 
                     $attrs.$observe('barcode', function (passedBarcode) {
                         checkBarcode(passedBarcode);
+                        $scope.scannedBarcode = passedBarcode;
                         $scope.barcodeValid ? displayData() : 0;
                     });
 
@@ -259,6 +261,7 @@ angular.module('APIServiceApp')
                      *  Fonction permettant d'identifier un client ou un QR de type offre */
                     function displayData() {
                         $scope.isReady = false;
+                        $scope.scannedBarcode = $scope.barcode;
                         $scope.showSearchView = false;
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
@@ -270,14 +273,14 @@ angular.module('APIServiceApp')
                                 // $window.alert('Carte inconnue !');
                                 !$scope.isBrowser ? $rootScope.scan() : 0;
 
-                            // Si l'API ne retourne pas de Barcode, ce QR est une offre
+                                // Si l'API ne retourne pas de Barcode, ce QR est une offre
                             } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
                                 if (data.Offers !== []) {
                                     $scope.showVoucherView = true;
                                     $scope.voucher = data.Offers[0];
                                 }
 
-                            // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
+                                // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
 
@@ -299,13 +302,13 @@ angular.module('APIServiceApp')
                                         });
                                     }
 
-                                // Sinon, on envoie le client vers le formulaire d'enregistrement
+                                    // Sinon, on envoie le client vers le formulaire d'enregistrement
                                 } else {
                                     $scope.reset();
                                     $scope.goRegister();
                                 }
 
-                            // Sinon, le client a bien été identifié, on affiche la vue
+                                // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
                                 $scope.data = data;
                                 $scope.data.Offers = APIService.get.formattedOffers(data);
@@ -403,12 +406,15 @@ angular.module('APIServiceApp')
                             $scope.hideDialog();
                             $scope.isAddingPassage = false;
                             if ($scope.customization.hasPopup) {
-                                var quit = $window.confirm("Un passage a bien été ajouté à cette carte, voulez-vous quitter le compte du client ?");
+                                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nvar quit quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                 if (quit) {
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
                                     }, 1600);
+                                } else {
+                                    $('#orderAmountInput').val('');
+                                    displayData();
                                 }
                             } else {
                                 $scope.toast("Un passage a bien été ajouté à cette carte");
@@ -456,6 +462,8 @@ angular.module('APIServiceApp')
                         var passageObj = APIService.get.emptyPassageObj();
 
                         if (~~balance.Value < ~~val) {
+                            $scope.hasUsedBalance = false;
+                            $scope.isUsingBalance = false;
                             if (navigator.notification) {
                                 navigator.notification.alert('Ce montant est supérieur au total de la cagnotte', null, document.title, "OK");
                             } else {
@@ -475,13 +483,16 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isUsingBalance = false;
                                 if ($scope.customization.hasPopup) {
-                                    var quit = $window.confirm("Le paiement en avoir a bien été effectué, voulez-vous quitter le compte du client ?");
+                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
                                             $scope.hasUsedBalance = false;
                                             !$scope.isBrowser ? $rootScope.scan() : 0;
                                         }, 1600);
+                                    } else {
+                                        $('#orderAmountInput').val('');
+                                        displayData();
                                     }
                                 } else {
                                     $scope.toast("Le paiement en avoir a bien été effectué");
@@ -510,12 +521,14 @@ angular.module('APIServiceApp')
                             $mdDialog.hide();
                             $scope.hideDialog();
                             if ($scope.customization.hasPopup) {
-                                var quit = $window.confirm("L'offre a bien été utilisée, voulez-vous quitter le compte du client ?");
+                                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                 if (quit) {
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
                                     }, 1600);
+                                } else {
+                                    displayData();
                                 }
                             } else {
                                 $scope.toast("L'offre a bien été utilisée");
@@ -533,12 +546,14 @@ angular.module('APIServiceApp')
                         APIService.actions.useVoucherOffer(offer.OfferClassId).then(function (data) {
                             if (data) {
                                 if ($scope.customization.hasPopup) {
-                                    var quit = $window.confirm("L'offre a bien été utilisée, voulez-vous quitter le compte du client ?");
+                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
                                             !$scope.isBrowser ? $rootScope.scan() : 0;
                                         }, 1600);
+                                    } else {
+                                        displayData();
                                     }
                                 } else {
                                     $scope.toast("L'offre a bien été utilisée");
@@ -572,12 +587,14 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isOrderingAmount = false;
                                 if ($scope.customization.hasPopup) {
-                                    var quit = $window.confirm("Un passage a bien été ajouté à cette carte, voulez-vous quitter le compte du client ?");
+                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
                                             !$scope.isBrowser ? $rootScope.scan() : 0;
                                         }, 1600);
+                                    } else {
+                                        displayData();
                                     }
                                 } else {
                                     $scope.toast("Un passage a bien été ajouté à cette carte");
@@ -621,7 +638,7 @@ angular.module('APIServiceApp')
                         });
                     };
 
-                    $scope.useAction = function () {
+                    $scope.useAction = function (isTiles) {
                         if (navigator.notification) {
                             $scope.isUsingAction = true;
                             navigator.notification.alert("L'action a bien été effectuée", function () {
@@ -629,21 +646,31 @@ angular.module('APIServiceApp')
                                 var amount = $('#orderAmountInput').val();
                                 passageObj.OrderTotalIncludeTaxes = amount;
                                 passageObj.OrderTotalExcludeTaxes = amount;
-                                passageObj.CustomAction = {
-                                    "CustomActionId": $('#actionSelect').val()
-                                };
+
+                                if (isTiles) {
+                                    passageObj.CustomAction = {
+                                        "CustomActionId": $scope.data.customAction
+                                    };
+                                } else {
+                                    passageObj.CustomAction = {
+                                        "CustomActionId": $('#actionSelect').val()
+                                    };
+                                }
                                 $log.info(passageObj);
 
                                 APIService.actions.addPassage(passageObj).success(function () {
                                     $scope.hideDialog();
                                     $scope.isUsingAction = false;
                                     if ($scope.customization.hasPopup) {
-                                        var quit = $window.confirm("Un passage a bien été ajouté à cette carte, voulez-vous quitter le compte du client ?");
+                                        var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                         if (quit) {
                                             $scope.reset();
                                             $timeout(function () {
                                                 !$scope.isBrowser ? $rootScope.scan() : 0;
                                             }, 1600);
+                                        } else {
+                                            $('#orderAmountInput').val('');
+                                            displayData();
                                         }
                                     } else {
                                         $scope.toast("Un passage a bien été ajouté à cette carte");
@@ -654,30 +681,37 @@ angular.module('APIServiceApp')
                                     }
                                     return true;
                                 });
-                                $scope.backToLogin();
                             });
                         } else {
                             $scope.isUsingAction = true;
-                            alert("L'action a bien été effectuée :\n");
+                            alert("L'action a bien été effectuée");
                             var passageObj = APIService.get.emptyPassageObj();
                             var amount = $('#orderAmountInput').val();
                             passageObj.OrderTotalIncludeTaxes = amount;
                             passageObj.OrderTotalExcludeTaxes = amount;
-                            passageObj.CustomAction = {
-                                "CustomActionId": $('#actionSelect').val()
-                            };
+                            if (isTiles) {
+                                passageObj.CustomAction = {
+                                    "CustomActionId": $scope.data.customAction
+                                };
+                            } else {
+                                passageObj.CustomAction = {
+                                    "CustomActionId": $('#actionSelect').val()
+                                };
+                            }
                             $log.info(passageObj);
 
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
                                 $scope.isUsingAction = false;
                                 if ($scope.customization.hasPopup) {
-                                    var quit = $window.confirm("Un passage a bien été ajouté à cette carte, voulez-vous quitter le compte du client ?");
+                                    var quit = navigator ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
                                             !$scope.isBrowser ? $rootScope.scan() : 0;
                                         }, 1600);
+                                    } else {
+                                        displayData();
                                     }
                                 } else {
                                     $scope.toast("Un passage a bien été ajouté à cette carte");
@@ -688,7 +722,6 @@ angular.module('APIServiceApp')
                                 }
                                 return true;
                             });
-                            $scope.backToLogin();
                         }
                     };
 
