@@ -8,6 +8,9 @@ angular.module('starter.controllers', [])
 
         $scope.scan = function () {
             if (scanCounter === 0) {
+                var scp = angular.element('.izi-account').scope();
+                if (scp && scp.reset) scp.reset();
+
                 var promise = appServices.scanBarcode();
                 promise.then(
                     function (result) {

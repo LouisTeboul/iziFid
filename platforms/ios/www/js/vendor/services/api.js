@@ -127,15 +127,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                             return func(fakeData);
                         } else {
                             $http.get(methods.get.callableUrl("GetloyaltyObject?barcode=" + barcode)).success(function (data) {
-//                                $log.info('DATA: ', data.Offers);
                                 vars.currLoyaltyObject = data;
-                                /* if (data.AllowAnonymous && !data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
-                                 $log.info('Anonymous user & Anonymous login allowed');
-                                 $http.post(methods.get.callableUrl("RegisterAnonymous"), JSON.stringify(JSON.stringify({ "Barcode" : barcode }))).success(function (data) {
-                                 console.log(data);
-                                 loginFunc();
-                                 });
-                                 }*/
                                 return func(data);
                             }).error(function (e) {
                                 vars.debug ? $log.error(e) : 0;
@@ -176,31 +168,11 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
             formattedOffers: function (loyaltyObj) {
                 var offers = loyaltyObj.Offers;
                 $log.info('offers', offers);
-//                var types = [];
                 var offersTypes = [];
 
                 if (offers) {
                     /** Group valid offers by OfferTypeId */
                     for (var i = 0; i < offers.length; i++) {
-//                    var next = i + 1;
-//                    if (next >= offers.length) next = i - 1;
-//                    if (offers[i].isValid) {
-//                        $log.info('offer is valid');
-//                        if (i === 0 || (offers[i].OfferTypeId !== offers[next].OfferTypeId)) {
-//                            $log.info('new offer type');
-//                            types.push(offers[i].OfferTypeId);
-//                            offersTypes.push(offers[i]);
-//                            offersTypes[offersTypes.length - 1].counter = 1;
-//                        } else if (types.indexOf(offers[i].OfferTypeId) > -1) {
-//                                $log.info('same offer type');
-//                                offersTypes[types.indexOf(offers[i].OfferTypeId)].counter++;
-//                        } else {
-//                            $log.info('last');
-//                            var last = offersTypes.length - 1;
-//                            last < 0 ? last = 0 : 0;
-//                            offersTypes[last] ? offersTypes[last].counter++ : 0;
-//                        }
-//                    }
                         if (offers[i].isValid)
                             offersTypes.push(offers[i]);
                     }
