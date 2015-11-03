@@ -326,8 +326,10 @@ angular.module('APIServiceApp')
                      *  Fait confirmer à l'user qu'il veut se déconnecter */
                     $scope.disconnect = function () {
                         if (navigator.notification) {
-                            navigator.notification.confirm("Voulez-vous vraiment quitter la fiche client ?", function () {
-                                $scope.reset();
+                            navigator.notification.confirm("Voulez-vous vraiment quitter la fiche client ?", function (btnIndex) {
+                                if (btnIndex === 1) {
+                                    $scope.reset();
+                                }
                             }, document.title);
                         } else {
                             $window.confirm("Voulez-vous vraiment quitter la fiche client ?") ? (function () {
@@ -406,7 +408,11 @@ angular.module('APIServiceApp')
                             $scope.hideDialog();
                             $scope.isAddingPassage = false;
                             if ($scope.customization.hasPopup) {
-                                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nvar quit quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nvar quit quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                    if (btnIndex === 1) {
+                                        $scope.reset();
+                                    }
+                                }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                 if (quit) {
                                     $scope.reset();
                                     $timeout(function () {
@@ -483,7 +489,11 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isUsingBalance = false;
                                 if ($scope.customization.hasPopup) {
-                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                        if (btnIndex === 1) {
+                                            $scope.reset();
+                                        }
+                                    }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -521,7 +531,11 @@ angular.module('APIServiceApp')
                             $mdDialog.hide();
                             $scope.hideDialog();
                             if ($scope.customization.hasPopup) {
-                                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                    if (btnIndex === 1) {
+                                        $scope.reset();
+                                    }
+                                }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                 if (quit) {
                                     $scope.reset();
                                     $timeout(function () {
@@ -546,7 +560,11 @@ angular.module('APIServiceApp')
                         APIService.actions.useVoucherOffer(offer.OfferClassId).then(function (data) {
                             if (data) {
                                 if ($scope.customization.hasPopup) {
-                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function() {
+                                        if (btnIndex === 1) {
+                                            $scope.reset();
+                                        }
+                                    }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -587,7 +605,11 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isOrderingAmount = false;
                                 if ($scope.customization.hasPopup) {
-                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                        if (btnIndex === 1) {
+                                            $scope.reset();
+                                        }
+                                    }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -662,7 +684,11 @@ angular.module('APIServiceApp')
                                     $scope.hideDialog();
                                     $scope.isUsingAction = false;
                                     if ($scope.customization.hasPopup) {
-                                        var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                        var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                            if (btnIndex === 1) {
+                                                $scope.reset();
+                                            }
+                                        }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                         if (quit) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -704,7 +730,11 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isUsingAction = false;
                                 if ($scope.customization.hasPopup) {
-                                    var quit = navigator ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    var quit = navigator ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                        if (btnIndex === 1) {
+                                            $scope.reset();
+                                        }
+                                    }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     if (quit) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -727,8 +757,10 @@ angular.module('APIServiceApp')
 
                     $scope.showConfirm = function (ev, offer) {
                         if (navigator.notification) {
-                            navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function () {
-                                $scope.useOffer(offer);
+                            navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function (btnIndex) {
+                                if (btnIndex === 1) {
+                                    $scope.useOffer(offer);
+                                }
                             }, document.title);
                         } else {
                             var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
@@ -738,8 +770,10 @@ angular.module('APIServiceApp')
 
                     $scope.showAddPassageConfirm = function (ev) {
                         if (navigator.notification) {
-                            navigator.notification.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", function () {
-                                $scope.addPassage();
+                            navigator.notification.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", function (btnIndex) {
+                                if (btnIndex === 1) {
+                                    $scope.addPassage();
+                                }
                             }, document.title);
                         } else {
                             var doUse = $window.confirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?");
