@@ -21,8 +21,8 @@ angular.module('starter.controllers', [])
                         if (result.error == false) {
                             if (result.result.text) {
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
-/*                                var scp = angular.element('.izi-account').scope();
-                                scp.client.barcode = $rootScope.cardNum;*/
+                                var scp = angular.element('.izi-account').scope();
+                                scp.client.barcode = $rootScope.cardNum;
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
                                 $scope.$apply(function () {

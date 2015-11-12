@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -14,6 +14,7 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/sweetalert.css" rel="stylesheet" />
     <style>
         h2 {
             font-weight: 700;
@@ -27,7 +28,7 @@
             style="text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em; color: #fbfbfb;">
             IZIPASS</h1>
 
-       <!-- <p class="text-right" style="width: 100%; padding-right: 12px;">
+        <!-- <p class="text-right" style="width: 100%; padding-right: 12px;">
             <small style="font-size: 0.7em;"><i>{{deviceName}}</i></small>
         </p>-->
     </div>
@@ -38,6 +39,8 @@
 
 <ion-nav-view></ion-nav-view>
 
+<script src="lib/jquery/dist/jquery.min.js"></script>
+
 <div id="offline-alert" ng-controller="OfflineCtrl" style="display: none;">
     <i class="glyphicon glyphicon-warning-sign"></i>&nbsp; <span style="font-size: 1.1em;">Vous êtes hors-ligne !<br></span><small>Veuillez vous connecter à internet</small>
 </div>
@@ -45,8 +48,9 @@
     <i class="glyphicon glyphicon-thumbs-up"></i>&nbsp; <span style="font-size: 1.1em;">Vous êtes à nouveau en ligne !<br></span><small>Vous êtes connecté à internet</small>
 </div>
 
-<script src="lib/jquery/dist/jquery.min.js"></script>
+<!-- lib -->
 <script src="lib/jquery-easing/jquery.easing.min.js"></script>
+<script src="lib/sweetalert/sweetalert.min.js"></script>
 
 <!-- ionic/angularjs js -->
 <script src="lib/ionic/js/ionic.bundle.js"></script>
