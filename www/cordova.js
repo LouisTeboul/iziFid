@@ -307,6 +307,7 @@ var cordova = {
             throw err;
         }
     },
+
     addConstructor: function(func) {
         channel.onCordovaReady.subscribe(function() {
             try {
