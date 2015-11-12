@@ -1,6 +1,6 @@
 {
   "name": "ionic-material",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "authors": [
     "Zach Fitzgerald"
   ],
@@ -35,14 +35,13 @@
   "dependencies": {
     "ionic": "~1.0.0"
   },
-  "_release": "0.2.1",
+  "_release": "0.2.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.1",
-    "commit": "5ba5ab01e3cbd909bbf0ea7b7a3dba5984eb8155"
+    "tag": "0.2.3",
+    "commit": "28e42e2f80ea78f8b99bbfdf358c839e800b6ebb"
   },
   "_source": "git://github.com/zachsoft/Ionic-Material.git",
   "_target": "~0.2.1",
-  "_originalSource": "ionic-material",
-  "_direct": true
+  "_originalSource": "ionic-material"
 }

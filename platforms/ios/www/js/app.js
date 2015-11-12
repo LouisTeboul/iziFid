@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'APIServiceApp'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'firebase', 'APIServiceApp'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -24,6 +24,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             .primaryPalette('green')
             .accentPalette('lime');
 
+        $ionicConfigProvider.scrolling.jsScrolling(true);
+
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.
@@ -31,43 +33,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         $stateProvider
 
             // setup an abstract state for the tabs directive
-            .state('tab', {
-                url: "/tab",
+            .state('app', {
+                url: "/app",
                 abstract: true,
                 templateUrl: "templates/tabs.html"
             })
 
             // Each tab has its own nav history stack:
-            .state('tab.dash', {
-                url: '/dash',
+            .state('app.home', {
+                url: '/home',
                 views: {
                     'tab-dash': {
-                        templateUrl: 'templates/tab-widget.html',
+                        templateUrl: 'templates/tabs.html',
                         controller: 'DashCtrl'
-                    }
-                }
-            })
-
-            .state('tab.chats', {
-                url: '/chats',
-                views: {
-                    'tab-chats': {
-                        templateUrl: 'templates/tab-history.html',
-                        controller: 'ChatsCtrl'
-                    }
-                }
-            })
-
-            .state('tab.account', {
-                url: '/account',
-                views: {
-                    'tab-account': {
-                        templateUrl: 'templates/tab-settings.html',
-                        controller: 'AccountCtrl'
                     }
                 }
             });
 
-        $urlRouterProvider.otherwise('/tab/dash');
+        $urlRouterProvider.otherwise('/app/home');
     }
 );

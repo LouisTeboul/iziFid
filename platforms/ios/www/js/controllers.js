@@ -8,22 +8,31 @@ angular.module('starter.controllers', [])
 
         $scope.scan = function () {
             if (scanCounter === 0) {
+                var scp = angular.element('.izi-account').scope();
+                if (scp && scp.reset) scp.reset();
+                if (scp && scp.register) {
+                    scp.reset();
+                    scp.register = false;
+                }
+
                 var promise = appServices.scanBarcode();
                 promise.then(
                     function (result) {
                         if (result.error == false) {
                             if (result.result.text) {
                                 $rootScope.cardNum = result.result.text.replace(/.+\//, '');
+/*                                var scp = angular.element('.izi-account').scope();
+                                scp.client.barcode = $rootScope.cardNum;*/
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $scope.$apply(function() {
+                                $scope.$apply(function () {
                                     $('input[name=barcodeId]').val("");
                                     $('input[name=barcodeId]').val($rootScope.cardNum);
                                 });
                             }
                         }
                         else {
-                            $log.error('Erreur: ' + result);
+                            $log.warn('Erreur: ' + result);
                         }
                     }
                 );
@@ -38,23 +47,37 @@ angular.module('starter.controllers', [])
         $rootScope.scan = $scope.scan;
 
         $scope.scan();
-    }])
-
-    .controller('DashCtrl', ['$scope', '$rootScope', '$window', '$log', function ($scope, $rootScope, $window, $log) {
-        $log.info('DashCtrl');
-        $scope.autoLogin = $rootScope.autoLogin;
-    }])
-
-    .controller('ChatsCtrl', function ($scope) {
-        $scope.prevPassages = localStorage.getItem('prevPassages');
-    })
-
-    .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-        $scope.chat = Chats.get($stateParams.chatId);
-    })
-
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
+    }]
+)
+    .controller('OfflineCtrl', ['$scope', '$http', '$log', '$timeout', function ($scope, $http, $log, $timeout) {
+        var connectedRef = "https://izigenerator.firebaseio.com/.info/connected";
+        var isOffline = false;
+        var poll = function () {
+            $timeout(function () {
+                $http.get(connectedRef).then(function (data) {
+                    $('#offline-alert').fadeOut();
+                    if (isOffline) {
+                        isOffline = false;
+                        $('#online-alert').fadeIn();
+                        $timeout(function () {
+                            $('#online-alert').fadeOut();
+                        }, 3000);
+                    }
+                    poll();
+                }).catch(function (err) {
+                    $('#offline-alert').fadeIn();
+                    isOffline = true;
+                    poll();
+                });
+            }, 2500);
         };
-    });
+
+        $http.get(connectedRef).then(function (data) {
+            $('#offline-alert').fadeOut();
+            poll();
+        }).catch(function (err) {
+            $('#offline-alert').fadeIn();
+            poll();
+        });
+    }]
+);
