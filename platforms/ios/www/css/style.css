@@ -1,0 +1,43 @@
+@media screen and (max-width: 420px) {
+    .barcode-container {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 299px) {
+    .barcode-container.visible-xs {
+        padding-left: 45px;
+    }
+}
+
+@media screen and (max-width: 298px) {
+    .barcode-container.visible-xs {
+        padding-left: 2px;
+    }
+}
+
+.izi-account h2 {
+    font-weight: 700 !important;
+}
+
+input::-webkit-input-placeholder {
+    padding-left: 5px;
+}
+
+[id=offline-alert], [id=online-alert] {
+    position: fixed;
+    bottom: 0;
+    color: #fefefe;
+    padding: 16px;
+    width: 100%;
+    text-align: center;
+    z-index: 99999;
+}
+
+[id=offline-alert] {
+    background: #D32F2F;
+}
+
+[id=online-alert] {
+    background: #388E3C;
+}
