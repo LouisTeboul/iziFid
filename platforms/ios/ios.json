@@ -1,0 +1,120 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Keyboard\"><param name=\"ios-package\" onload=\"true\" value=\"IonicKeyboard\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Console\"><param name=\"ios-package\" value=\"CDVLogger\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"ios-package\" value=\"CDVVibration\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "com.ionic.keyboard": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "com.phonegap.plugins.barcodescanner": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "file": "plugins/com.ionic.keyboard/www/keyboard.js",
+            "id": "com.ionic.keyboard.keyboard",
+            "pluginId": "com.ionic.keyboard",
+            "clobbers": [
+                "cordova.plugins.Keyboard"
+            ]
+        },
+        {
+            "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
+            "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
+            "pluginId": "com.phonegap.plugins.barcodescanner",
+            "clobbers": [
+                "cordova.plugins.barcodeScanner"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.console/www/console-via-logger.js",
+            "id": "org.apache.cordova.console.console",
+            "pluginId": "org.apache.cordova.console",
+            "clobbers": [
+                "console"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.console/www/logger.js",
+            "id": "org.apache.cordova.console.logger",
+            "pluginId": "org.apache.cordova.console",
+            "clobbers": [
+                "cordova.logger"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.device/www/device.js",
+            "id": "org.apache.cordova.device.device",
+            "pluginId": "org.apache.cordova.device",
+            "clobbers": [
+                "device"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.dialogs/www/notification.js",
+            "id": "org.apache.cordova.dialogs.notification",
+            "pluginId": "org.apache.cordova.dialogs",
+            "merges": [
+                "navigator.notification"
+            ]
+        },
+        {
+            "file": "plugins/org.apache.cordova.vibration/www/vibration.js",
+            "id": "org.apache.cordova.vibration.notification",
+            "pluginId": "org.apache.cordova.vibration",
+            "merges": [
+                "navigator.notification",
+                "navigator"
+            ]
+        }
+    ]
+}

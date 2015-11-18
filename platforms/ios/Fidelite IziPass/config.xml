@@ -14,24 +14,6 @@
     <feature name="LocalStorage">
         <param name="ios-package" value="CDVLocalStorage" />
     </feature>
-    <feature name="Keyboard">
-        <param name="ios-package" onload="true" value="IonicKeyboard" />
-    </feature>
-    <feature name="Device">
-        <param name="ios-package" value="CDVDevice" />
-    </feature>
-    <feature name="Console">
-        <param name="ios-package" value="CDVLogger" />
-    </feature>
-    <feature name="BarcodeScanner">
-        <param name="ios-package" value="CDVBarcodeScanner" />
-    </feature>
-    <feature name="Notification">
-        <param name="ios-package" value="CDVNotification" />
-    </feature>
-    <feature name="Vibration">
-        <param name="ios-package" value="CDVVibration" />
-    </feature>
     <icon gap:platform="ios" height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
     <icon gap:platform="ios" height="114" src="resources/ios/icon/icon@2x.png" width="114" />
     <icon gap:platform="ios" height="72" src="resources/ios/icon/icon-72.png" width="72" />
@@ -66,4 +48,22 @@
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11" />
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
+    <feature name="Keyboard">
+        <param name="ios-package" onload="true" value="IonicKeyboard" />
+    </feature>
+    <feature name="BarcodeScanner">
+        <param name="ios-package" value="CDVBarcodeScanner" />
+    </feature>
+    <feature name="Console">
+        <param name="ios-package" value="CDVLogger" />
+    </feature>
+    <feature name="Device">
+        <param name="ios-package" value="CDVDevice" />
+    </feature>
+    <feature name="Notification">
+        <param name="ios-package" value="CDVNotification" />
+    </feature>
+    <feature name="Vibration">
+        <param name="ios-package" value="CDVVibration" />
+    </feature>
 </widget>
