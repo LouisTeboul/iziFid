@@ -282,6 +282,20 @@ angular.module('APIServiceApp')
                         $scope.showSearchView = false;
                     };
 
+                	/** @function containsBalanceType
+					 * Retourne si les offres de fid contiennent le type de balance en paramètre */
+                    $scope.containsBalanceType = function (balanceType) {
+                    	var ret = false;
+
+                    	if ($scope.data && $scope.data.Balances && $scope.data.Balances.length > 0) {
+                    		ret = Enumerable.from($scope.data.Balances).any(function (balance) {
+                    			return balance.BalanceType == balanceType;
+                    		});
+                    	}
+
+                    	return ret;
+                    };
+
                     /** @function displayData
                      *  Fonction permettant d'identifier un client ou un QR de type offre */
                     function displayData() {
@@ -443,11 +457,11 @@ angular.module('APIServiceApp')
                             $scope.hideDialog();
                             $scope.isAddingPassage = false;
                             if ($scope.customization.hasPopup) {
-                                //var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nvar quit quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nvar quit quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                                 //    if (btnIndex === 1) {
                                 //        $scope.reset();
                                 //    }
-                                //}) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                 //if (quit) {
                                 //    $scope.reset();
                                 //    $timeout(function () {
@@ -457,7 +471,7 @@ angular.module('APIServiceApp')
                                 //    $('#orderAmountInput').val('');
                                 //    displayData();
                                 //}
-                                customConfirm("Un passage a bien été ajouté à cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
                                     if (isConfirm) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -469,7 +483,7 @@ angular.module('APIServiceApp')
                                     }
                                 });
                             } else {
-                                $scope.toast("Un passage a bien été ajouté à cette carte");
+                                $scope.toast("L'action a bien été effectuée sur cette carte");
                                 $scope.reset();
                                 $timeout(function () {
                                     !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -536,11 +550,11 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isUsingBalance = false;
                                 if ($scope.customization.hasPopup) {
-                                    //var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                    //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                                     //    if (btnIndex === 1) {
                                     //        $scope.reset();
                                     //    }
-                                    //}) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     //if (quit) {
                                     //    $scope.reset();
                                     //    $timeout(function () {
@@ -552,7 +566,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("Un passage a bien été ajouté à cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -591,11 +605,11 @@ angular.module('APIServiceApp')
                             $mdDialog.hide();
                             $scope.hideDialog();
                             if ($scope.customization.hasPopup) {
-                                //var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                                 //    if (btnIndex === 1) {
                                 //        $scope.reset();
                                 //    }
-                                //}) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                 //if (quit) {
                                 //    $scope.reset();
                                 //    $timeout(function () {
@@ -605,7 +619,7 @@ angular.module('APIServiceApp')
                                 //    displayData();
                                 //}
 
-                                customConfirm("Un passage a bien été ajouté à cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
                                     if (isConfirm) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -632,11 +646,11 @@ angular.module('APIServiceApp')
                         APIService.actions.useVoucherOffer(offer.OfferClassId).then(function (data) {
                             if (data) {
                                 if ($scope.customization.hasPopup) {
-                                    //var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function() {
+                                    //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function() {
                                     //    if (btnIndex === 1) {
                                     //        $scope.reset();
                                     //    }
-                                    //}) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     //if (quit) {
                                     //    $scope.reset();
                                     //    $timeout(function () {
@@ -646,7 +660,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("Un passage a bien été ajouté à cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -690,11 +704,11 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isOrderingAmount = false;
                                 if ($scope.customization.hasPopup) {
-                                    //var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                    //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                                     //    if (btnIndex === 1) {
                                     //        $scope.reset();
                                     //    }
-                                    //}) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     //if (quit) {
                                     //    $scope.reset();
                                     //    $timeout(function () {
@@ -704,7 +718,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("Un passage a bien été ajouté à cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -717,7 +731,7 @@ angular.module('APIServiceApp')
                                     });
 
                                 } else {
-                                    $scope.toast("Un passage a bien été ajouté à cette carte");
+                                    $scope.toast("L'action a bien été effectuée sur cette carte");
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -782,11 +796,11 @@ angular.module('APIServiceApp')
                         //            $scope.hideDialog();
                         //            $scope.isUsingAction = false;
                         //            if ($scope.customization.hasPopup) {
-                        //                var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                        //                var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                         //                    if (btnIndex === 1) {
                         //                        $scope.reset();
                         //                    }
-                        //                }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                        //                }) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                         //                if (quit) {
                         //                    $scope.reset();
                         //                    $timeout(function () {
@@ -797,7 +811,7 @@ angular.module('APIServiceApp')
                         //                    displayData();
                         //                }
                         //            } else {
-                        //                $scope.toast("Un passage a bien été ajouté à cette carte");
+                        //                $scope.toast("L'action a bien été effectuée sur cette carte");
                         //                $scope.reset();
                         //                $timeout(function () {
                         //                    !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -828,11 +842,11 @@ angular.module('APIServiceApp')
                         //        $scope.hideDialog();
                         //        $scope.isUsingAction = false;
                         //        if ($scope.customization.hasPopup) {
-                        //            var quit = navigator ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                        //            var quit = navigator ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                         //                if (btnIndex === 1) {
                         //                    $scope.reset();
                         //                }
-                        //            }) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                        //            }) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                         //            if (quit) {
                         //                $scope.reset();
                         //                $timeout(function () {
@@ -842,7 +856,7 @@ angular.module('APIServiceApp')
                         //                displayData();
                         //            }
                         //        } else {
-                        //            $scope.toast("Un passage a bien été ajouté à cette carte");
+                        //            $scope.toast("L'action a bien été effectuée sur cette carte");
                         //            $scope.reset();
                         //            $timeout(function () {
                         //                !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -874,11 +888,11 @@ angular.module('APIServiceApp')
                                 $scope.hideDialog();
                                 $scope.isUsingAction = false;
                                 if ($scope.customization.hasPopup) {
-                                    //var quit = navigator.notification ? navigator.notification.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                                    //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                                     //    if (btnIndex === 1) {
                                     //        $scope.reset();
                                     //    }
-                                    //}) : $window.confirm("Un passage a bien été ajouté à cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                                    //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
                                     //if (quit) {
                                     //    $scope.reset();
                                     //    $timeout(function () {
@@ -889,7 +903,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("Un passage a bien été ajouté à cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -902,7 +916,7 @@ angular.module('APIServiceApp')
                                     });
 
                                 } else {
-                                    $scope.toast("Un passage a bien été ajouté à cette carte");
+                                    $scope.toast("L'action a bien été effectuée sur cette carte");
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;

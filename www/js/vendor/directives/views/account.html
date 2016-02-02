@@ -184,7 +184,7 @@
             </div>-->
 
             <div class="text-center"
-                 ng-if="(data.CustomerEmail || data.AnonymousCustomer) && !data.OneRuleWithOrderAmount"
+                 ng-if="containsBalanceType('Passages') && (data.CustomerEmail || data.AnonymousCustomer) && !data.OneRuleWithOrderAmount"
                  style="margin-top: 16px;">
                 <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
                     <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
@@ -410,7 +410,7 @@
                             <input id="firstname" name="firstname" class="form-control" type="text"
                                    ng-model="client.firstname"
                                    placeholder="Prénom&#8230;" ng-minlength="1"
-                                   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+                                   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
 
                             <div class="alert alert-danger"
@@ -427,7 +427,7 @@
                             <input id="lastname" name="lastname" class="form-control" type="text"
                                    ng-model="client.lastname"
                                    placeholder="Nom&#8230;" ng-minlength="1"
-                                   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+                                   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
 
                             <div class="alert alert-danger"

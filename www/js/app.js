@@ -7,7 +7,9 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'firebase', 'APIServiceApp'])
 
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $rootScope) {
+    	$rootScope.Version = "3.0.0.0";
+
         $ionicPlatform.ready(function () {
 //            if (window.StatusBar) {
 //                // org.apache.cordova.statusbar required
