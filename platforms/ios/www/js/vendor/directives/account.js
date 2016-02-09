@@ -82,6 +82,23 @@ angular.module('APIServiceApp')
                         return (yiq >= 125) ? '#333' : '#fefefe';
                     }
 
+                    function configureApp(dataApp) {
+                    	$scope.appconfiguration = {
+                    		clientSearch: true,
+							clientView: true
+                    	};
+
+                    	if (dataApp.LoyaltyAppType) {
+                    		switch (dataApp.LoyaltyAppType) {
+                    			case LoyaltyAppType.PartialCustomerRegisterOnly:
+                    				$scope.appconfiguration.clientSearch = false;
+                    				$scope.appconfiguration.clientView = false;
+                    				break;
+                    		}
+                    	}
+
+                    }
+
                     /** @function onDeviceReady
                      *  Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48) */
                     function onDeviceReady() {
@@ -89,7 +106,7 @@ angular.module('APIServiceApp')
                             $scope.isBrowser = false;
                             /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
                              *  Sinon, on applique l'url déjà présente. */
-                            if (!$scope.clientUrl) APIService.set.clientUrl('http://ffpizza.izipass.pro');
+                        	if (!$scope.clientUrl) APIService.set.clientUrl('http://izi-resto.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
 
                             /** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
@@ -97,8 +114,11 @@ angular.module('APIServiceApp')
                                 $scope.deviceName = data.AppName;
                                 $rootScope.deviceName = data.AppName;
 
+								/** Configuration de l'application */
+                                configureApp(data);
+
                                 /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
-                                if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
+                                if (!data.Server_Url) customAlert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
                                 /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
                                 APIService.set.clientUrl(data.Server_Url);
                                 $scope.clientUrl = data.Server_Url;
@@ -213,6 +233,7 @@ angular.module('APIServiceApp')
                             showCancelButton: false,
                             confirmButtonColor: $scope.customization.styling.mainColor,
                             confirmButtonText: "OK",
+                            closeOnCancel: false,
                             closeOnConfirm: true
                         }, callback);
                     }
@@ -318,6 +339,9 @@ angular.module('APIServiceApp')
                                 if (data.Offers !== []) {
                                     $scope.showVoucherView = true;
                                     $scope.voucher = data.Offers[0];
+                                    if ($scope.voucher.OfferParam) {
+                                    	$scope.voucher.OfferParam = JSON.parse($scope.voucher.OfferParam);
+                                    }
                                 }
 
                                 // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
@@ -326,34 +350,45 @@ angular.module('APIServiceApp')
 
                                 // Si cette url accepte le login anonyme, on identifie le client en tant que client anonyme
                                 if (data.AllowAnonymous) {
-                                    if (data.AnonymousCustomer) {
-                                        $scope.data = data;
-                                        $scope.data.Offers = APIService.get.formattedOffers(data);
-                                        $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
-                                        $scope.hideData = false;
-                                    } else {
-                                        APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
-                                            $scope.data = data.data;
-                                            $scope.data.Offers = APIService.get.formattedOffers(data);
-                                            $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
-                                            $scope.hideData = false;
-                                        }).catch(function (error) {
-                                            $log.error('registerAnonymous error', error);
-                                        });
-                                    }
+                                	if (data.AnonymousCustomer) {
+                                		$scope.data = data;
+                                		$scope.data.Offers = APIService.get.formattedOffers(data);
+                                		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                		$scope.hideData = false;
+                                	} else {
+                                		APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
+                                			$scope.data = data.data;
+                                			$scope.data.Offers = APIService.get.formattedOffers(data);
+                                			$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                			$scope.hideData = false;
+                                		}).catch(function (error) {
+                                			$log.error('registerAnonymous error', error);
+                                		});
+                                	}
 
-                                    // Sinon, on envoie le client vers le formulaire d'enregistrement
-                                } else {
+                                } else if (data.CustomerPartial){ //Si la création partielle est autorisée
+                                	$scope.reset();
+                                	$scope.goPartialRegister();
+                                	
+                                } else { // Sinon, on envoie le client vers le formulaire d'enregistrement
                                     $scope.reset();
                                     $scope.goRegister();
                                 }
 
                                 // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
-                                $scope.data = data;
-                                $scope.data.Offers = APIService.get.formattedOffers(data);
-                                $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
-                                $scope.hideData = false;
+
+                            	if ($scope.appconfiguration.clientView) {
+                            		$scope.data = data;
+                            		$scope.data.Offers = APIService.get.formattedOffers(data);
+                            		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                            		$scope.hideData = false;
+                            	} else {//on autorise pas l'affichage de la vue client, retour au login
+                            		customAlert("La carte est enregistrée", "", function () {
+                            			$scope.reset();
+                            			$scope.backToLogin();
+                            		});
+                            	}
                             }
                         });
                     }
@@ -390,11 +425,18 @@ angular.module('APIServiceApp')
                         $scope.register = true;
                     };
 
+                	/** @function goPartialRegister
+                     *  Affiche la vue du formulaire d'enregistrement partiel */
+                    $scope.goPartialRegister = function () {
+                    	$scope.partialRegister = true;
+                    };
+
                     /** Retourne à l'écran d'accueil depuis le formulaire d'enregistrement */
                     $scope.backToLogin = function () {
                         $scope.reset();
                         $timeout(function () {
-                            $scope.register = false;
+                        	$scope.register = false;
+                        	$scope.partialRegister = false;
                         }, 0);
                         window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -643,7 +685,7 @@ angular.module('APIServiceApp')
                     };
 
                     $scope.useVoucherOffer = function (offer) {
-                        APIService.actions.useVoucherOffer(offer.OfferClassId).then(function (data) {
+                    	APIService.actions.useVoucherOffer(offer.OfferClassId, offer.Barcode).then(function (data) {
                             if (data) {
                                 if ($scope.customization.hasPopup) {
                                     //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function() {
@@ -767,163 +809,99 @@ angular.module('APIServiceApp')
                             displayData();
                         }).catch(function (error) {
                             if (error.status === 500)
-                                $window.alert('Cette carte est déjà enregistrée !');
-                            else $window.alert('Une erreur ' + error.status + ' est survenue !');
+                            	customAlert('Cette carte est déjà enregistrée !');
+                            else customAlert('Une erreur ' + error.status + ' est survenue !');
                         });
                     };
 
+                    $scope.submitPartialRegister = function () {
+                    	var obj = {
+                    		Barcode: $scope.client.barcode,
+                    		FirstName: $scope.client.firstname,
+                    		LastName: $scope.client.lastname,
+                    		Email: $scope.client.email,
+                    	};
+
+                    	APIService.actions.registerAnonymous(obj).then(function () {
+                    		$scope.partialRegister = false;
+                    		$scope.barcode = $scope.client.barcode;
+                    		displayData();
+                    	}).catch(function (error) {
+                    		if (error.status === 500)
+                    			customAlert('Cette carte est déjà enregistrée !');
+                    		else customAlert('Une erreur ' + error.status + ' est survenue !');
+                    	});
+                    };
+
+                    $scope.clickAction = function (actionId, isTiles) {
+                    	$scope.data.customAction = actionId;
+                    	$scope.useAction(true);
+                    }
+
                     $scope.useAction = function (isTiles) {
-                        //if (navigator.notification) {
-                        //    $scope.isUsingAction = true;
-                        //    navigator.notification.alert("L'action a bien été effectuée", function () {
-                        //        var passageObj = APIService.get.emptyPassageObj();
-                        //        var amount = $('#orderAmountInput').val();
-                        //        passageObj.OrderTotalIncludeTaxes = amount;
-                        //        passageObj.OrderTotalExcludeTaxes = amount;
-
-                        //        if (isTiles) {
-                        //            passageObj.CustomAction = {
-                        //                "CustomActionId": $scope.data.customAction
-                        //            };
-                        //        } else {
-                        //            passageObj.CustomAction = {
-                        //                "CustomActionId": $('#actionSelect').val()
-                        //            };
-                        //        }
-                        //        $log.info(passageObj);
-
-                        //        APIService.actions.addPassage(passageObj).success(function () {
-                        //            $scope.hideDialog();
-                        //            $scope.isUsingAction = false;
-                        //            if ($scope.customization.hasPopup) {
-                        //                var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
-                        //                    if (btnIndex === 1) {
-                        //                        $scope.reset();
-                        //                    }
-                        //                }) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
-                        //                if (quit) {
-                        //                    $scope.reset();
-                        //                    $timeout(function () {
-                        //                        !$scope.isBrowser ? $rootScope.scan() : 0;
-                        //                    }, 1600);
-                        //                } else {
-                        //                    $('#orderAmountInput').val('');
-                        //                    displayData();
-                        //                }
-                        //            } else {
-                        //                $scope.toast("L'action a bien été effectuée sur cette carte");
-                        //                $scope.reset();
-                        //                $timeout(function () {
-                        //                    !$scope.isBrowser ? $rootScope.scan() : 0;
-                        //                }, 1600);
-                        //            }
-                        //            return true;
-                        //        });
-                        //    });
-                        //} else {
-                        //    $scope.isUsingAction = true;
-                        //    alert("L'action a bien été effectuée");
-                        //    var passageObj = APIService.get.emptyPassageObj();
-                        //    var amount = $('#orderAmountInput').val();
-                        //    passageObj.OrderTotalIncludeTaxes = amount;
-                        //    passageObj.OrderTotalExcludeTaxes = amount;
-                        //    if (isTiles) {
-                        //        passageObj.CustomAction = {
-                        //            "CustomActionId": $scope.data.customAction
-                        //        };
-                        //    } else {
-                        //        passageObj.CustomAction = {
-                        //            "CustomActionId": $('#actionSelect').val()
-                        //        };
-                        //    }
-                        //    $log.info(passageObj);
-
-                        //    APIService.actions.addPassage(passageObj).success(function () {
-                        //        $scope.hideDialog();
-                        //        $scope.isUsingAction = false;
-                        //        if ($scope.customization.hasPopup) {
-                        //            var quit = navigator ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
-                        //                if (btnIndex === 1) {
-                        //                    $scope.reset();
-                        //                }
-                        //            }) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
-                        //            if (quit) {
-                        //                $scope.reset();
-                        //                $timeout(function () {
-                        //                    !$scope.isBrowser ? $rootScope.scan() : 0;
-                        //                }, 1600);
-                        //            } else {
-                        //                displayData();
-                        //            }
-                        //        } else {
-                        //            $scope.toast("L'action a bien été effectuée sur cette carte");
-                        //            $scope.reset();
-                        //            $timeout(function () {
-                        //                !$scope.isBrowser ? $rootScope.scan() : 0;
-                        //            }, 1600);
-                        //        }
-                        //        return true;
-                        //    });
-                        //}
 
                         $scope.isUsingAction = true;
-                        customAlert("L'action a bien été effectuée","", function () {
-                            var passageObj = APIService.get.emptyPassageObj();
-                            var amount = $('#orderAmountInput').val();
-                            passageObj.OrderTotalIncludeTaxes = amount;
-                            passageObj.OrderTotalExcludeTaxes = amount;
+                        customConfirm("Voulez-vous effectuer cette action ?", "", function (isAccept) {
+                        	if (isAccept) {
+                        		var passageObj = APIService.get.emptyPassageObj();
+                        		var amount = $('#orderAmountInput').val();
+                        		passageObj.OrderTotalIncludeTaxes = amount;
+                        		passageObj.OrderTotalExcludeTaxes = amount;
 
-                            if (isTiles) {
-                                passageObj.CustomAction = {
-                                    "CustomActionId": $scope.data.customAction
-                                };
-                            } else {
-                                passageObj.CustomAction = {
-                                    "CustomActionId": $('#actionSelect').val()
-                                };
-                            }
-                            $log.info(passageObj);
+                        		if (isTiles) {
+                        			passageObj.CustomAction = {
+                        				"CustomActionId": $scope.data.customAction
+                        			};
+                        		} else {
+                        			passageObj.CustomAction = {
+                        				"CustomActionId": $('#actionSelect').val()
+                        			};
+                        		}
+                        		$log.info(passageObj);
 
-                            APIService.actions.addPassage(passageObj).success(function () {
-                                $scope.hideDialog();
-                                $scope.isUsingAction = false;
-                                if ($scope.customization.hasPopup) {
-                                    //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
-                                    //    if (btnIndex === 1) {
-                                    //        $scope.reset();
-                                    //    }
-                                    //}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
-                                    //if (quit) {
-                                    //    $scope.reset();
-                                    //    $timeout(function () {
-                                    //        !$scope.isBrowser ? $rootScope.scan() : 0;
-                                    //    }, 1600);
-                                    //} else {
-                                    //    $('#orderAmountInput').val('');
-                                    //    displayData();
-                                    //}
+                        		APIService.actions.addPassage(passageObj).success(function () {
+                        			$scope.hideDialog();
+                        			$scope.isUsingAction = false;
+                        			if ($scope.customization.hasPopup) {
+                        				//var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
+                        				//    if (btnIndex === 1) {
+                        				//        $scope.reset();
+                        				//    }
+                        				//}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
+                        				//if (quit) {
+                        				//    $scope.reset();
+                        				//    $timeout(function () {
+                        				//        !$scope.isBrowser ? $rootScope.scan() : 0;
+                        				//    }, 1600);
+                        				//} else {
+                        				//    $('#orderAmountInput').val('');
+                        				//    displayData();
+                        				//}
 
-                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
-                                        if (isConfirm) {
-                                            $scope.reset();
-                                            $timeout(function () {
-                                                !$scope.isBrowser ? $rootScope.scan() : 0;
-                                            }, 1600);
-                                        } else {
-                                            $('#orderAmountInput').val('');
-                                            displayData();
-                                        }
-                                    });
+                        				customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                        					if (isConfirm) {
+                        						$scope.reset();
+                        						$timeout(function () {
+                        							!$scope.isBrowser ? $rootScope.scan() : 0;
+                        						}, 1600);
+                        					} else {
+                        						$('#orderAmountInput').val('');
+                        						displayData();
+                        					}
+                        				});
 
-                                } else {
-                                    $scope.toast("L'action a bien été effectuée sur cette carte");
-                                    $scope.reset();
-                                    $timeout(function () {
-                                        !$scope.isBrowser ? $rootScope.scan() : 0;
-                                    }, 1600);
-                                }
-                                return true;
-                            });
+                        			} else {
+                        				$scope.toast("L'action a bien été effectuée sur cette carte");
+                        				$scope.reset();
+                        				$timeout(function () {
+                        					!$scope.isBrowser ? $rootScope.scan() : 0;
+                        				}, 1600);
+                        			}
+                        			return true;
+                        		});
+                        	} else {
+                        		$scope.isUsingAction = false;
+                        	}
                         });
 
                     };
@@ -1117,3 +1095,9 @@ angular.module('APIServiceApp')
         };
     }
 );
+
+
+var LoyaltyAppType = {
+	Default : 0,
+	PartialCustomerRegisterOnly : 1
+};

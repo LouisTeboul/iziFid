@@ -73,6 +73,7 @@
             padding: 7px 20px;
             margin-bottom: 12px;
             width: 97.75%;
+			display: block;
             margin-left: auto;
             margin-right: auto;
             background-color: #123456;
@@ -80,6 +81,19 @@
             -moz-box-shadow: 0 1px 8px #cdcdcd;
             box-shadow: 0 1px 8px #cdcdcd;
         }
+
+		.izi-account li.li-unstyled{
+			-webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+			display:block;
+		}
+
+		.izi-account .izi-balances .customAction{
+			font-size: 16px;
+			padding-top: 15px;
+			padding-bottom: 15px;
+		}
 
         .izi-account .izi-offers li h3, .izi-account .izi-balances li h3, .izi-account li b {
             color: #fdfdfd !important;
@@ -143,12 +157,14 @@
 
     <div class="izi-account center-block" style="margin-top: 16px;">
         <md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
+
+		<!-- #region CLIENT VIEW-->
         <div ng-if="isReady && barcode && !register && !voucher && !showSearchView" style="padding-top: 24px;">
 
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="disconnect()" style="font-size: 2em; margin-top: -44px"></i>
 
-            <!-- Balances -->
+            <!-- #region Balances -->
             <ul class="izi-balances list-unstyled">
 
                 <!-- Montant d'achat -->
@@ -210,7 +226,8 @@
                 </button>
             </div>
 
-            <div ng-if="data.CustomActions && data.CustomActions[0].Name && customization.showActionsAsButtons">
+			<!--Replace by buttons-->
+            <!--<div ng-if="data.CustomActions && data.CustomActions[0].Name && customization.showActionsAsButtons">
                 <md-radio-group ng-model="data.customAction">
                     <md-radio-button class="md-warn" ng-repeat="action in data.CustomActions"
                                      ng-value="action.Id"
@@ -222,9 +239,17 @@
                 <button class="btn btn-lg center-block hvr-grow no-radius ink"
                         ng-click="!isUsingAction ? useAction(true) : 0">Valider
                 </button>
-            </div>
+            </div>-->
 
-            <!-- Offers -->
+			<ul class="izi-balances list-unstyled" ng-if="data.CustomActions && data.CustomActions[0].Name && customization.showActionsAsButtons" style="margin-top: 24px;">
+				<li class="bg-accent li-unstyled waves-effect customAction" ng-repeat="action in data.CustomActions"
+					ng-click="!isUsingAction ? clickAction(action.Id, true) : 0">
+					<span>{{action.Name}}</span>
+				</li>
+			</ul>
+			<!-- #endregion -->
+
+            <!-- #region Offers -->
             <ul class="izi-offers list-unstyled" ng-if="data.Offers.length > 0" style="margin-top: 24px;">
                 <li class="bg-accent hvr-sink waves-effect"
                     ng-click="showConfirm($event, data.Offers[0])">
@@ -328,10 +353,12 @@
                     </div>
                 </div>
             </div>
+			<!-- #endregion -->
         </div>
+		<!-- #endregion -->
 
-        <!-- LOGIN VIEW -->
-        <div id="loginView" ng-if="isReady && !barcode && !register && !showSearchView" style="margin-top: 30px;">
+        <!-- #region LOGIN VIEW -->
+        <div id="loginView" ng-if="isReady && !barcode && !register &&!partialRegister && !showSearchView" style="margin-top: 30px;">
             <h2 class="title text-center">{{firebase ? customization.title : 'FIDÉLITÉ'}}</h2>
 
             <h4 class="blanc text-center subtitle">
@@ -360,11 +387,12 @@
                         ng-click="login()">Valider
                 </button>
                 <br/>
-                <a href="" class="blanc cursor-pointer pull-right" ng-click="launchClientSearch()">Rechercher un client&#8230;</a>
+                <a href="" ng-if="appconfiguration.clientSearch" class="blanc cursor-pointer pull-right" ng-click="launchClientSearch()">Rechercher un client&#8230;</a>
             </div>
         </div>
+		<!-- #endregion -->
 
-        <!-- REGISTER VIEW -->
+        <!-- #region REGISTER VIEW -->
         <div id="registerView" ng-if="register">
             <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;"
                ng-click="backToLogin()"></i>
@@ -576,6 +604,100 @@
                 </form>
             </div>
         </div>
+		<!-- #endregion -->
+
+		<!-- #region PARTIAL REGISTER VIEW -->
+		<div id="partialRegisterView" ng-if="partialRegister">
+			<i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;"
+			   ng-click="backToLogin()"></i>
+
+			<div class="container" style="max-width: 600px; margin: auto;">
+				<h2 class="blanc text-center">
+					Enregistrer Ma Carte<br>
+					<small>Tous les champs sont obligatoires</small>
+				</h2>
+
+				<form name="partialRegisterForm" class="form-horizontal" novalidate style="margin-top: 28px;">
+					<div class="clearfix">
+						<label for="barcode" class="col-sm-3">N° de carte</label>
+
+						<div class="form-group col-sm-9">
+							<input id="barcode" name="barcode" class="form-control" type="text"
+								   ng-model="client.barcode"
+								   ng-init="client.barcode = scannedBarcode"
+								   placeholder="N° de carte&#8230;" ng-minlength="8" required />
+
+							<div class="alert alert-danger"
+								 ng-if="partialRegisterForm.barcode.$invalid && !partialRegisterForm.barcode.$pristine">
+								<p class="text-center">Ce numéro de carte n'est pas valide</p>
+							</div>
+						</div>
+					</div>
+
+    				<div class="clearfix">
+						<label for="firstname" class="col-sm-3">Prénom</label>
+
+						<div class="form-group col-sm-9">
+							<input id="firstname" name="firstname" class="form-control" type="text"
+								   ng-model="client.firstname"
+								   placeholder="Prénom&#8230;" ng-minlength="1"
+								   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+								   required="" />
+
+							<div class="alert alert-danger"
+								 ng-if="partialRegisterForm.firstname.$invalid && !partialRegisterForm.firstname.$pristine">
+								<p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="lastname" class="col-sm-3">Nom</label>
+
+						<div class="form-group col-sm-9">
+							<input id="lastname" name="lastname" class="form-control" type="text"
+								   ng-model="client.lastname"
+								   placeholder="Nom&#8230;" ng-minlength="1"
+								   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+								   required="" />
+
+							<div class="alert alert-danger"
+								 ng-if="partialRegisterForm.lastname.$invalid && !partialRegisterForm.lastname.$pristine">
+								<p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<label for="email" class="col-sm-3">Email</label>
+
+						<div class="form-group col-sm-9">
+							<input id="email" name="email" class="form-control" type="email" ng-model="client.email"
+								   placeholder="Adresse Email&#8230;"
+								   ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
+								   required="" />
+
+							<div class="alert alert-danger"
+								 ng-if="partialRegisterForm.email.$invalid && !partialRegisterForm.email.$pristine">
+								<p class="text-center">Cette adresse email ne semble pas être valide</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center">
+						<button id="submitRegister"
+								class="btn bg-{{partialRegisterForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
+								ng-disabled="partialRegisterForm.$invalid || partialRegisterForm.$pristine"
+								ng-click="submitPartialRegister()">
+							VALIDER
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- #endregion -->
+		
+		<!-- #region VOUCHER VIEW -->
         <div ng-if="isReady && voucher && showVoucherView">
             <div class="card">
                 <i class="glyphicon glyphicon-remove pull-right hvr-grow"
@@ -598,8 +720,9 @@
                 </button>
             </div>
         </div>
+		<!-- #endregion -->
 
-        <!-- CLIENT SEARCH VIEW -->
+        <!-- #region CLIENT SEARCH VIEW -->
         <div id="searchView" ng-if="isReady && !barcode && !register && showSearchView" style="margin-top: 30px;">
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="hideSearchView()" style="font-size: 2em; margin-top: -44px"></i>
@@ -630,5 +753,6 @@
                 <h4 style="margin-top: 8px; text-align: center">Aucun résultat&#8230;</h4>
             </div>
         </div>
+		<!-- #endregion -->
     </div>
 </div>

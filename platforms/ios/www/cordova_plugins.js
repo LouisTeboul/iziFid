@@ -9,11 +9,11 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
-        "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
-        "pluginId": "com.phonegap.plugins.barcodescanner",
+        "file": "plugins/org.apache.cordova.device/www/device.js",
+        "id": "org.apache.cordova.device.device",
+        "pluginId": "org.apache.cordova.device",
         "clobbers": [
-            "cordova.plugins.barcodeScanner"
+            "device"
         ]
     },
     {
@@ -33,11 +33,11 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.device/www/device.js",
-        "id": "org.apache.cordova.device.device",
-        "pluginId": "org.apache.cordova.device",
+        "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
+        "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
+        "pluginId": "com.phonegap.plugins.barcodescanner",
         "clobbers": [
-            "device"
+            "cordova.plugins.barcodeScanner"
         ]
     },
     {
@@ -60,6 +60,13 @@ module.exports = [
 ];
 module.exports.metadata = 
 // TOP OF METADATA
-{}
+{
+    "com.ionic.keyboard": "1.0.4",
+    "org.apache.cordova.device": "0.3.0",
+    "org.apache.cordova.console": "0.2.13",
+    "com.phonegap.plugins.barcodescanner": "2.2.0",
+    "org.apache.cordova.dialogs": "0.3.0",
+    "org.apache.cordova.vibration": "0.3.13"
+}
 // BOTTOM OF METADATA
 });
