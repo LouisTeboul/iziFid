@@ -119,7 +119,9 @@ angular.module('APIServiceApp')
 
                                 /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
                                 if (!data.Server_Url) {
-                                	customAlert("Cet appareil n'est pas relié à la fidélité !\n\nUUID: " + window.device.uuid);
+                                	customAlert("Merci de contacter votre interlocuteur IziPass\n\nUUID: " + window.device.uuid, "", function () {
+                                		navigator.app.exitApp();
+                                	});
                                 	return;
                                 }
                                 /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
