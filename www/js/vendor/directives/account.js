@@ -84,7 +84,8 @@ angular.module('APIServiceApp')
 
                     function configureApp(dataApp) {
                     	$scope.appconfiguration = {
-                    		clientSearch: true
+                    		clientSearch: true,
+							clientView: true
                     	};
 
                     	if (dataApp.LoyaltyAppType) {

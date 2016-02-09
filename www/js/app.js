@@ -8,7 +8,7 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'firebase', 'APIServiceApp'])
 
     .run(function ($ionicPlatform, $rootScope) {
-    	$rootScope.Version = "3.0.0.0";
+    	$rootScope.Version = "3.0.0.1";
 
         $ionicPlatform.ready(function () {
 //            if (window.StatusBar) {
