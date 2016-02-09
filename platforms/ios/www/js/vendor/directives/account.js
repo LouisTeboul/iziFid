@@ -119,8 +119,12 @@ angular.module('APIServiceApp')
 
                                 /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
                                 if (!data.Server_Url) {
-                                	customAlert("Merci de contacter votre interlocuteur IziPass\n\nUUID: " + window.device.uuid, "", function () {
-                                		navigator.app.exitApp();
+                                	customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
+                                		if (navigator.app) {
+                                			navigator.app.exitApp();
+                                		} else if (navigator.device) {
+                                			navigator.device.exitApp();
+                                		}
                                 	});
                                 	return;
                                 }
