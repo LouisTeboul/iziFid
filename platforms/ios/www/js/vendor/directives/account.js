@@ -384,11 +384,10 @@ accountApp
                             $scope.isReady = true;
                             // Si l'API retourne false, la carte est inconnue
                             if (data === false) {
-                                $scope.reset();
-                                //navigator.notification.alert('Carte inconnue !', null, document.title, "OK");
-                                customAlert("Carte inconnue !");
-                                // $window.alert('Carte inconnue !');
-                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                            	customAlert($translate.instant("Carte inconnue !"), "", function () {
+                            		$scope.reset();
+                            		$scope.backToLogin();
+                            	});
 
                                 // Si l'API ne retourne pas de Barcode, ce QR est une offre
                             } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
@@ -426,9 +425,14 @@ accountApp
                                 	$scope.reset();
                                 	$scope.goPartialRegister();
                                 	
-                                } else { // Sinon, on envoie le client vers le formulaire d'enregistrement
+                                } else if (data.AllowCustomerToCreateLoyaltyBarcode) { // Sinon, on envoie le client vers le formulaire d'enregistrement
                                     $scope.reset();
                                     $scope.goRegister();
+                                } else {
+                                	customAlert($translate.instant("Carte inconnue !"), "", function () {
+                                		$scope.reset();
+                                		$scope.backToLogin();
+                                	});
                                 }
 
                                 // Sinon, le client a bien été identifié, on affiche la vue
@@ -440,7 +444,7 @@ accountApp
                             		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                             		$scope.hideData = false;
                             	} else {//on autorise pas l'affichage de la vue client, retour au login
-                            		customAlert("La carte est enregistrée", "", function () {
+                            		customAlert($translate.instant("La carte est enregistrée"), "", function () {
                             			$scope.reset();
                             			$scope.backToLogin();
                             		});
