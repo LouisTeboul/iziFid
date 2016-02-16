@@ -41,7 +41,10 @@ accountApp
 
                     document.addEventListener("deviceready", onDeviceReady, false);
 
-                    document.addEventListener("backbutton", function () {
+                    document.addEventListener("backbutton", function (event) {
+                    	event.preventDefault();
+                    	event.stopPropagation();
+
                     	if ($scope.tryExit == true) {
                     		try {
                     			navigator.app.exitApp();
@@ -52,12 +55,12 @@ accountApp
                     	} else {
                     		$scope.tryExit = true;
                     		try {
-                    			window.plugins.toast.showLongBottom($translate.instant("Appuyez une autre fois pour quitter"));
+                    			$scope.toast($translate.instant($translate.instant("Appuyez une autre fois pour quitter")));
                     		}
                     		catch (err) {
 
                     		}
-                    		setTimeout(function () { $scope.tryExit = false; }, 3000);
+                    		setTimeout(function () { $scope.tryExit = false; }, 2000);
                     	}
 
                     }, false);
@@ -311,21 +314,23 @@ accountApp
 
                     /** @function $scope.getToastPosition Utility function for material toast
                      *  @returns {string} The toast position */
-                    $scope.getToastPosition = function () {
-                        return Object.keys($scope.toastPosition)
+                    $scope.getToastPosition = function (toastPosition) {
+                    	var position = toastPosition || $scope.toastPosition;
+                    	var ret = Object.keys(position)
                             .filter(function (pos) {
-                                return $scope.toastPosition[pos];
+                            	return position[pos];
                             })
                             .join(' ');
+                    	return ret;
                     };
 
                     /** @function toast Displays a toast with a message
                      *  @param {string} message The message to display in the toast */
-                    $scope.toast = function (message) {
+                    $scope.toast = function (message, toastPosition) {
                         $mdToast.show(
                             $mdToast.simple()
                                 .content(message)
-                                .position($scope.getToastPosition())
+                                .position($scope.getToastPosition(toastPosition))
                                 .hideDelay(1500)
                         );
                     };
