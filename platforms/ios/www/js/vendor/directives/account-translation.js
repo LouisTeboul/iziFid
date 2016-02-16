@@ -53,7 +53,7 @@
 		"Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?": "Can you confirm that customer doesn't use loyalty and/or asset ?",
 		"Oui": "Yes",
 		"Non": "No",
-
+		"Appuyez une autre fois pour quitter":"Push back button another time to exit"
 
 	});
 
