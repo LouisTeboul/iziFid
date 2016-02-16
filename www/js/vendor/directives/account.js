@@ -137,7 +137,7 @@ accountApp
                                 if (!data.Server_Url) {
                                 	$scope.deviceNotRegistered = true;
                                 	$rootScope.deviceNotRegistered = true;
-                                	customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid + "\r\n" +data.AppName + "\r\n" + callableServerUrl, function () {
+                                	customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
                                 		if (navigator.app) {
                                 			navigator.app.exitApp();
                                 		} else if (navigator.device) {
