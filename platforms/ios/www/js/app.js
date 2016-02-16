@@ -20,6 +20,10 @@ starterApp
                 navigator.splashscreen.hide();
             }
         });
+
+        $ionicPlatform.registerBackButtonAction(function (e) {
+        	e.preventDefault();
+        }, 1000);
     })
 
     .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $ionicConfigProvider) {
