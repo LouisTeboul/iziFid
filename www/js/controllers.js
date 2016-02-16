@@ -4,6 +4,10 @@ starterApp
             prevPassages = localStorage.getItem('prevPassages');
         prevPassages = JSON.parse(prevPassages);
 
+        if (!prevPassages) {
+        	prevPassages = [];
+        }
+
         $rootScope.cardNum = "";
 
         $rootScope.reload = function () {
@@ -35,10 +39,11 @@ starterApp
                                 scp.client.barcode = $rootScope.cardNum;
                                 prevPassages.push({card: $rootScope.cardNum, date: new Date()});
                                 localStorage.setItem('prevPassages', JSON.stringify(prevPassages));
-                                $scope.$apply(function () {
-                                    $('input[name=barcodeId]').val("");
-                                    $('input[name=barcodeId]').val($rootScope.cardNum);
-                                });
+
+                                $rootScope.$evalAsync();
+
+                                $('input[name=barcodeId]').val("");
+                                $('input[name=barcodeId]').val($rootScope.cardNum);
                             }
                         }
                         else {

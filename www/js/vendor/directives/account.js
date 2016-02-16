@@ -478,12 +478,14 @@ accountApp
                     /** @function goRegister
                      *  Affiche la vue du formulaire d'enregistrement */
                     $scope.goRegister = function () {
+                    	$scope.$evalAsync();
                         $scope.register = true;
                     };
 
                 	/** @function goPartialRegister
                      *  Affiche la vue du formulaire d'enregistrement partiel */
                     $scope.goPartialRegister = function () {
+                    	$scope.$evalAsync();
                     	$scope.partialRegister = true;
                     };
 
@@ -538,7 +540,7 @@ accountApp
                      */
                     $scope.reset = function () {
                         $timeout(function () {
-                            $scope.client = {barcode: $scope.form.barcode};
+                            //$scope.client = {barcode: $scope.form.barcode};
                             $scope.showVoucherView = false;
                             delete $scope.barcode;
                             delete $scope.voucher;
