@@ -41,6 +41,27 @@ accountApp
 
                     document.addEventListener("deviceready", onDeviceReady, false);
 
+                    document.addEventListener("backbutton", function () {
+                    	if ($scope.tryExit == true) {
+                    		try {
+                    			navigator.app.exitApp();
+                    		}
+                    		catch (err) {
+     
+                    		}
+                    	} else {
+                    		$scope.tryExit = true;
+                    		try {
+                    			window.plugins.toast.showLongBottom($translate.instant("Appuyez une autre fois pour quitter"));
+                    		}
+                    		catch (err) {
+
+                    		}
+                    		setTimeout(function () { $scope.tryExit = false; }, 3000);
+                    	}
+
+                    }, false);
+
                     /** Initial setup */
                     //$timeout(function () {
                     //    if (!window.phonegap) {
