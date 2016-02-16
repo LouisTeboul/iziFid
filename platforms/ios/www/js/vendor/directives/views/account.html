@@ -1,4 +1,4 @@
-<div style="padding: 4px;">
+<div layout-fill layout="column" style="padding: 4px;">
     <style id="izi-style">
         .izi-account {
             min-height: 210px;
@@ -127,10 +127,15 @@
             margin: 10px auto;
         }
 
-        .izi-account md-progress-circular {
-            position: absolute;
-            top: 50%;
+		.izi-account .loading{
+			position: absolute;
+			top: 50%;
             left: 50%;
+		}
+
+        .izi-account .loading md-progress-circular {
+            top: -50%;
+            left: -50%;
         }
 
         md-dialog {
@@ -155,11 +160,13 @@
     </style>
 
 
-    <div class="izi-account center-block" style="margin-top: 16px;">
-        <md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
+    <div layout-fill layout="column" class="izi-account center-block" style="margin-top: 16px;" flex>
+		<div class="loading">
+			<md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
+		</div>
 
 		<!-- #region CLIENT VIEW-->
-        <div ng-if="isReady && barcode && !register && !voucher && !showSearchView" style="padding-top: 24px;">
+        <div ng-if="!deviceNotRegistered && isReady && barcode && !register && !voucher && !showSearchView" style="padding-top: 24px;">
 
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="disconnect()" style="font-size: 2em; margin-top: -44px"></i>
@@ -169,8 +176,8 @@
 
                 <!-- Montant d'achat -->
                 <li ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
-                    <h3 class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
-                        data.OneRuleWithOrderAmountString : 'Montant d\'achat'}}</h3>
+                    <h3 translate class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
+                        data.OneRuleWithOrderAmountString : "Montant d'achat"}}</h3>
 
                     <div>
                         <div class="input-group" style="width: 100%;">
@@ -178,10 +185,10 @@
                                    type="number"
                                    style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 30px; height: 65px; max-width: 100% !important"
                                    ng-model="orderAmountInput.value"
-                                   placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : 'Montant d\'achat...'}}"
+                                   placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : ("Montant d'achat" | translate)...}}"
                                    required>
 
-                            <div class="input-group-addon wave-effect"
+                            <div translate class="input-group-addon wave-effect"
                                  style="width:50%; font-size: 1.5em;"
                                  ng-click="!isOrderingAmount ? orderAmount(orderAmountInput.value) : 0"
                                     >VALIDER
@@ -191,19 +198,11 @@
                 </li>
             </ul>
 
-            <!--<div class="text-center" ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
-                <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect"
-                        ng-click="orderAmount(orderAmountInput.value)">
-                    <i class="icon ion-plus"></i> {{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString :
-                    'Montant d\'Achat'}}
-                </button>
-            </div>-->
-
             <div class="text-center"
                  ng-if="containsBalanceType('Passages') && (data.CustomerEmail || data.AnonymousCustomer) && !data.OneRuleWithOrderAmount"
                  style="margin-top: 16px;">
                 <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
-                    <i class="icon ion-plus"></i> AJOUTER UN PASSAGE
+                    <i translate class="icon ion-plus"></i>AJOUTER UN PASSAGE
                 </button>
             </div>
 
@@ -221,7 +220,7 @@
                     </select>
                 </label>
 
-                <button class="btn btn-lg center-block hvr-grow no-radius ink"
+                <button translate class="btn btn-lg center-block hvr-grow no-radius ink"
                         ng-click="!isUsingAction ? useAction() : 0">Valider
                 </button>
             </div>
@@ -271,7 +270,7 @@
                     <h3 class="text-center no-mg-vert fid-item-title">{{balance.BalanceName}}</h3>
 
                     <div class="text-center">
-                        <b style="font-size: 1.6em;">Solde disponible: {{balance.Value}} {{balance.BalanceType === 'Dollar' ? '$' :
+                        <b style="font-size: 1.6em;">{{"Solde disponible" | translate}}: {{balance.Value}} {{balance.BalanceType === 'Dollar' ? '$' :
                             balance.BalanceType}}</b>
                     </div>
 
@@ -282,9 +281,9 @@
                                    type="number"
                                    ng-model="balancePayment.value"
                                    style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 30px; height: 65px; max-width: 100% !important"
-                                   placeholder="Paiement en avoir..." required>
+                                   placeholder="{{"Paiement en avoir" | translate}}..." required>
 
-                            <div class="input-group-addon wave-effect" style="width: 50%; font-size: 1.5em;"
+                            <div translate class="input-group-addon wave-effect" style="width: 50%; font-size: 1.5em;"
                                  ng-click="(balancePayment.value && +balancePayment.value > 0) && !isUsingBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
                                     >VALIDER
                             </div>
@@ -311,34 +310,33 @@
                                  onerror="$('.barcode-container').slideUp(); $('.onMissingQR').fadeIn('slow')"/>
 
                             <div class="text-center">
-                                <small class="blanc">Carte n° {{barcode}}</small>
+                                <small class="blanc">{{"Carte n°" | translate}} {{barcode}}</small>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-sm-9">
-                        <h4 class="no-mg-vert" ng-if="data.CustomerFirstName"><b>Prénom</b>
+                        <h4 class="no-mg-vert" ng-if="data.CustomerFirstName"><b translate>Prénom</b>
                             : {{data.CustomerFirstName}}</h4>
-                        <h4 class="no-mg-vert" ng-if="data.CustomerLastName"><b>Nom</b> : {{data.CustomerLastName}}</h4>
-                        <h4 class="no-mg-vert" ng-if="data.CustomerEmail"><b>Email</b> :
+                        <h4 class="no-mg-vert" ng-if="data.CustomerLastName"><b translate>Nom</b> : {{data.CustomerLastName}}</h4>
+                        <h4 class="no-mg-vert" ng-if="data.CustomerEmail"><b translate>Email</b> :
                             <a data-ng-href="mailto:{{data.CustomerEmail}}">{{data.CustomerEmail}}</a>
                         </h4>
-                        <h4 class="no-mg-vert" ng-if="data.CustomerPhone"><b>Téléphone</b> :
+                        <h4 class="no-mg-vert" ng-if="data.CustomerPhone"><b translate>Téléphone</b> :
                             <a data-ng-href="tel:{{data.CustomerPhone}}">{{data.CustomerPhone}}</a>
                         </h4>
                         <h4 class="no-mg-vert" ng-if="data.Barcodes[0].LastBipDate"
-                            ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)"><b>Dernier passage </b>:
+                            ng-init="bipDate = getDate(data.Barcodes[0].LastBipDate)"><b translate>Dernier passage</b> :
                             {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
                             bipDate.getFullYear()}}
                         </h4>
-                        <h4 class="no-mg-vert" ng-if="data.History"><b>Cumul depuis la création</b> :
+                        <h4 class="no-mg-vert" ng-if="data.History"><b translate>Cumul depuis la création</b> :
                             {{getTotalPositiveHistory(data.History)}} {{data.Balances[0].BalanceType === 'Dollar' ? '$'
                             :
                             data.Balances[0].BalanceType}}
                         </h4>
 
-                        <h2 class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur
-                            Anonyme</h2>
+                        <h2 translate class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur anonyme</h2>
 
                         <div class="barcode-container visible-xs" ng-if="data.AllowAnonymous && data.AnonymousCustomer">
                             <img class="img-responsive barcode-img"
@@ -347,7 +345,7 @@
                                  onerror="$('.barcode-container').slideUp(); $('.onMissingQR').fadeIn('slow')"/>
 
                             <div style="padding-left: 5px;">
-                                <small class="blanc">Carte n° {{barcode}}</small>
+                                <small class="blanc">{{"Carte n°" | translate}} {{barcode}}</small>
                             </div>
                         </div>
                     </div>
@@ -358,11 +356,12 @@
 		<!-- #endregion -->
 
         <!-- #region LOGIN VIEW -->
-        <div id="loginView" ng-if="isReady && !barcode && !register &&!partialRegister && !showSearchView" style="margin-top: 30px;">
+        <div layout="column" id="loginView" ng-if="!deviceNotRegistered && isReady && !barcode && !register &&!partialRegister && !showSearchView" style="margin-top: 30px;" flex>
             <h2 class="title text-center">{{firebase ? customization.title : 'FIDÉLITÉ'}}</h2>
 
-            <h4 class="blanc text-center subtitle">
-                {{firebase ? customization.subtitle : 'Veuillez saisir votre numéro de carte ci-dessous'}}
+            <h4 translate class="blanc text-center subtitle">
+                <!--{{firebase ? customization.subtitle : 'Veuillez saisir votre numéro de carte ci-dessous'}}-->
+				Veuillez saisir votre numéro de carte
             </h4>
 
             <form name="iziLoginForm">
@@ -370,25 +369,32 @@
                        ng-minlength="8"
                        ng-enter="login()"
                        ng-pattern="/(^[0-9]*$)|(^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$)/"
-                       placeholder="N° de carte&#8230;"
+                       placeholder="{{'N° de carte' | translate}}&#8230;"
                        ng-change="autoLogin()"
                        required/>
-
-                <!--<input class="center-block" type="password" name="password"-->
-                <!--ng-model="form.password"-->
-                <!--ng-minlength="8"-->
-                <!--ng-enter="login()"-->
-                <!--placeholder="Mot de passe..." required/>-->
             </form>
 
             <div class="clearfix">
-                <button class="btn btn-lg center-block hvr-grow no-radius ink {{(iziLoginForm.barcodeId.$invalid || iziLoginForm.barcodeId.$pristine) ? 'bg-rouge' : 'bg-accent'}}"
+                <button translate class="btn btn-lg center-block hvr-grow no-radius ink {{(iziLoginForm.barcodeId.$invalid || iziLoginForm.barcodeId.$pristine) ? 'bg-rouge' : 'bg-accent'}}"
                         ng-disabled="iziLoginForm.barcodeId.$invalid || iziLoginForm.barcodeId.$pristine"
                         ng-click="login()">Valider
                 </button>
                 <br/>
-                <a href="" ng-if="appconfiguration.clientSearch" class="blanc cursor-pointer pull-right" ng-click="launchClientSearch()">Rechercher un client&#8230;</a>
+                <a href="" ng-if="appconfiguration.clientSearch" class="blanc cursor-pointer pull-right" ng-click="launchClientSearch()">{{"Rechercher un client" | translate}}&#8230;</a>
             </div>
+
+			<span flex></span>
+
+			<div layout="row" layout-padding layout-align="end center">
+				<button class="btn hvr-grow no-radius ink" style="margin-left:5px;margin-right:5px;"
+						ng-click="changeLanguage('fr_FR')">
+					FR
+				</button>
+				<button class="btn hvr-grow no-radius ink" style="margin-left:5px;margin-right:5px;"
+						ng-click="changeLanguage('en_EN')">
+					EN
+				</button>
+			</div>
         </div>
 		<!-- #endregion -->
 
@@ -398,75 +404,75 @@
                ng-click="backToLogin()"></i>
 
             <div class="container" style="max-width: 600px; margin: auto;">
-                <h2 class="blanc text-center">Enregistrer Ma Carte<br>
-                    <small>Tous les champs sont obligatoires</small>
+                <h2 class="blanc text-center"><span translate>Enregistrer Ma Carte</span><br>
+                    <small translate>Tous les champs sont obligatoires</small>
                 </h2>
 
                 <form name="registerForm" class="form-horizontal" novalidate style="margin-top: 28px;">
                     <div class="clearfix">
-                        <label for="barcode" class="col-sm-3">N° de carte</label>
+                        <label translate for="barcode" class="col-sm-3">N° de carte</label>
 
                         <div class="form-group col-sm-9">
                             <input id="barcode" name="barcode" class="form-control" type="text"
                                    ng-model="client.barcode"
                                    ng-init="client.barcode = scannedBarcode"
-                                   placeholder="N° de carte&#8230;" ng-minlength="8" required/>
+                                   placeholder="{{'N° de carte' | translate}}&#8230;" ng-minlength="8" required/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.barcode.$invalid && !registerForm.barcode.$pristine">
-                                <p class="text-center">Ce numéro de carte n'est pas valide</p>
+                                <p translate class="text-center">Ce numéro de carte n'est pas valide</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.gender" style="padding-bottom: 16px;">
-                        <label for="sex" class="col-sm-3">Sexe</label>
+                        <label translate for="sex" class="col-sm-3">Sexe</label>
 
                         <div class="form-group col-sm-9">
                             <select class="form-control" id="sex" ng-model="client.gender" ng-init="client.gender = 'M'"
                                     name="gender" required>
-                                <option value="M">Homme</option>
-                                <option value="F">Femme</option>
+                                <option translate value="M">Homme</option>
+                                <option translate value="F">Femme</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="clearfix">
-                        <label for="firstname" class="col-sm-3">Prénom</label>
+                        <label translate for="firstname" class="col-sm-3">Prénom</label>
 
                         <div class="form-group col-sm-9">
                             <input id="firstname" name="firstname" class="form-control" type="text"
                                    ng-model="client.firstname"
-                                   placeholder="Prénom&#8230;" ng-minlength="1"
+                                   placeholder="{{'Prénom' | translate}}&#8230;" ng-minlength="1"
                                    ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.firstname.$invalid && !registerForm.firstname.$pristine">
-                                <p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix">
-                        <label for="lastname" class="col-sm-3">Nom</label>
+                        <label translate for="lastname" class="col-sm-3">Nom</label>
 
                         <div class="form-group col-sm-9">
                             <input id="lastname" name="lastname" class="form-control" type="text"
                                    ng-model="client.lastname"
-                                   placeholder="Nom&#8230;" ng-minlength="1"
+                                   placeholder="{{'Nom' | translate}}&#8230;" ng-minlength="1"
                                    ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.lastname.$invalid && !registerForm.lastname.$pristine">
-                                <p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.dob" style="padding-bottom: 16px;">
-                        <label for="sex" class="col-sm-3">Date de naissance</label>
+                        <label translate for="birthDate" class="col-sm-3">Date de naissance</label>
 
                         <div class="form-group col-sm-9">
                             <input id="birthDate" name="birthDate" ng-model="client.birthdate" type="date"/>
@@ -474,128 +480,127 @@
                     </div>
 
                     <div class="clearfix">
-                        <label for="email" class="col-sm-3">Email</label>
+                        <label translate for="email" class="col-sm-3">Email</label>
 
                         <div class="form-group col-sm-9">
                             <input id="email" name="email" class="form-control" type="email" ng-model="client.email"
-                                   placeholder="Adresse Email&#8230;"
+                                   placeholder="{{'Email' | translate}}&#8230;"
                                    ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.email.$invalid && !registerForm.email.$pristine">
-                                <p class="text-center">Cette adresse email ne semble pas être valide</p>
+                                <p translate class="text-center">Cette adresse email ne semble pas être valide</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.phone">
-                        <label for="tel" class="col-sm-3">Tél.</label>
+                        <label translate for="tel" class="col-sm-3">Téléphone</label>
 
                         <div class="form-group col-sm-9">
                             <input id="tel" name="tel" class="form-control" type="tel" ng-model="client.tel"
-                                   placeholder="N° de téléphone&#8230;"
+                                   placeholder="{{'Téléphone' | translate }}&#8230;"
                                    ng-pattern="/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.tel.$invalid && !registerForm.tel.$pristine">
-                                <p class="text-center">Ce numéro de téléphone ne semble pas être valide</p>
+                                <p translate class="text-center">Ce numéro de téléphone ne semble pas être valide</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.address">
-                        <label for="address" class="col-sm-3">Adresse</label>
+                        <label translate for="address" class="col-sm-3">Adresse</label>
 
                         <div class="form-group col-sm-9">
                             <input id="address" name="address" class="form-control" type="text"
                                    ng-model="client.address"
-                                   placeholder="Adresse&#8230;" ng-minlength="8" required=""/>
+                                   placeholder="{{'Adresse' | translate}}&#8230;" ng-minlength="8" required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.address.$invalid && !registerForm.address.$pristine">
-                                <p class="text-center">Ce champ doit comporter au moins 8 caractères</p>
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 8 {{"caractères" | translate}}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.zipcode">
-                        <label for="zipcode" class="col-sm-3">Code Postal</label>
+                        <label translate for="zipcode" class="col-sm-3">Code Postal</label>
 
                         <div class="form-group col-sm-9">
                             <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
-                                   placeholder="Code Postal&#8230;" ng-minlength="{{data.zipcodeLength}}"
+                                   placeholder="{{'Code Postal' | translate}}&#8230;" ng-minlength="{{data.zipcodeLength}}"
                                    maxlength="{{data.zipcodeLength}}"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.zipcode.$invalid && !registerForm.zipcode.$pristine">
-                                <p class="text-center">Ce champ doit comporter au moins {{data.zipcodeLength}}
-                                    caractères</p>
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} {{data.zipcodeLength}} {{"caractères" | translate}}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.city">
-                        <label for="email" class="col-sm-3">Ville</label>
+                        <label translate for="email" class="col-sm-3">Ville</label>
 
                         <div class="form-group col-sm-9">
                             <input id="city" name="city" class="form-control" type="text" ng-model="client.city"
-                                   placeholder="Ville&#8230;"
+                                   placeholder="{{'Ville' | translate}}&#8230;"
                                    ng-minlength="2"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.city.$invalid && !registerForm.city.$pristine">
-                                <p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="clearfix" ng-if="data.form.company">
-                        <label for="society" class="col-sm-3">Société</label>
+                        <label translate for="society" class="col-sm-3">Société</label>
 
                         <div class="form-group col-sm-9">
                             <input id="society" name="society" class="form-control" type="text"
                                    ng-model="client.society"
-                                   placeholder="Société&#8230;"/>
+                                   placeholder="{{'Société' | translate}}&#8230;"/>
                         </div>
                     </div>
 
                     <div class="clearfix">
-                        <label for="password" class="col-sm-3">Mot de Passe</label>
+                        <label translate for="password" class="col-sm-3">Mot de passe</label>
 
                         <div class="form-group col-sm-9">
                             <input id="password" name="password" class="form-control" type="password"
                                    ng-model="client.password"
-                                   placeholder="Mot de passe&#8230;" ng-minlength="8" required=""/>
+                                   placeholder="{{'Mot de passe' | translate}}&#8230;" ng-minlength="8" required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="registerForm.password.$invalid && !registerForm.password.$pristine">
-                                <p class="text-center">Votre mot de passe doit comporter au moins 8 caractères</p>
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 8 {{"caractères" | translate}}</p>
                             </div>
                         </div>
                     </div>
                     <div class="clearfix">
-                        <label for="password" class="col-sm-3">Mot de Passe (confirmation)</label>
+                        <label translate for="password" class="col-sm-3">Mot de passe (confirmation)</label>
 
                         <div class="form-group col-sm-9">
                             <input id="passwordConfirm" name="passwordConfirm" class="form-control" type="password"
                                    ng-model="client.passwordConfirm"
-                                   placeholder="Mot de passe (confirmation)&#8230;"
+                                   placeholder="{{'Mot de passe (confirmation)' | translate}}&#8230;"
                                    compare-to="client.password"
                                    ng-minlength="8"
                                    required=""/>
 
                             <div class="alert alert-danger"
                                  ng-if="client.password !== client.passwordConfirm && !registerForm.passwordConfirm.$pristine">
-                                <p class="text-center">Le mot de passe ne correspond pas</p>
+                                <p translate class="text-center">Le mot de passe ne correspond pas</p>
                             </div>
                         </div>
                     </div>
                     <div class="text-center">
-                        <button id="submitRegister"
+                        <button translate id="submitRegister"
                                 class="btn bg-{{registerForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
                                 ng-disabled="registerForm.$invalid || registerForm.$pristine"
                                 ng-click="submitRegister()">VALIDER
@@ -613,79 +618,79 @@
 
 			<div class="container" style="max-width: 600px; margin: auto;">
 				<h2 class="blanc text-center">
-					Enregistrer Ma Carte<br>
-					<small>Tous les champs sont obligatoires</small>
+					<span translate>Enregistrer Ma Carte</span><br>
+					<small translate>Tous les champs sont obligatoires</small>
 				</h2>
 
 				<form name="partialRegisterForm" class="form-horizontal" novalidate style="margin-top: 28px;">
 					<div class="clearfix">
-						<label for="barcode" class="col-sm-3">N° de carte</label>
+						<label translate for="barcode" class="col-sm-3">N° de carte</label>
 
 						<div class="form-group col-sm-9">
 							<input id="barcode" name="barcode" class="form-control" type="text"
 								   ng-model="client.barcode"
 								   ng-init="client.barcode = scannedBarcode"
-								   placeholder="N° de carte&#8230;" ng-minlength="8" required />
+								   placeholder="{{'N° de carte' | translate}}&#8230;" ng-minlength="8" required />
 
 							<div class="alert alert-danger"
 								 ng-if="partialRegisterForm.barcode.$invalid && !partialRegisterForm.barcode.$pristine">
-								<p class="text-center">Ce numéro de carte n'est pas valide</p>
+								<p translate class="text-center">Ce numéro de carte n'est pas valide</p>
 							</div>
 						</div>
 					</div>
 
     				<div class="clearfix">
-						<label for="firstname" class="col-sm-3">Prénom</label>
+						<label translate for="firstname" class="col-sm-3">Prénom</label>
 
 						<div class="form-group col-sm-9">
 							<input id="firstname" name="firstname" class="form-control" type="text"
 								   ng-model="client.firstname"
-								   placeholder="Prénom&#8230;" ng-minlength="1"
+								   placeholder="{{'Prénom' | translate}}&#8230;" ng-minlength="1"
 								   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
 								   required="" />
 
 							<div class="alert alert-danger"
 								 ng-if="partialRegisterForm.firstname.$invalid && !partialRegisterForm.firstname.$pristine">
-								<p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+								<p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
 							</div>
 						</div>
 					</div>
 
 					<div class="clearfix">
-						<label for="lastname" class="col-sm-3">Nom</label>
+						<label translate for="lastname" class="col-sm-3">Nom</label>
 
 						<div class="form-group col-sm-9">
 							<input id="lastname" name="lastname" class="form-control" type="text"
 								   ng-model="client.lastname"
-								   placeholder="Nom&#8230;" ng-minlength="1"
+								   placeholder="{{'Nom' | translate}}&#8230;" ng-minlength="1"
 								   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
 								   required="" />
 
 							<div class="alert alert-danger"
 								 ng-if="partialRegisterForm.lastname.$invalid && !partialRegisterForm.lastname.$pristine">
-								<p class="text-center">Ce champ doit comporter au moins 2 caractères</p>
+								<p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
 							</div>
 						</div>
 					</div>
 
 					<div class="clearfix">
-						<label for="email" class="col-sm-3">Email</label>
+						<label translate for="email" class="col-sm-3">Email</label>
 
 						<div class="form-group col-sm-9">
 							<input id="email" name="email" class="form-control" type="email" ng-model="client.email"
-								   placeholder="Adresse Email&#8230;"
+								   placeholder="{{'Email' | translate}}&#8230;"
 								   ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
 								   required="" />
 
 							<div class="alert alert-danger"
 								 ng-if="partialRegisterForm.email.$invalid && !partialRegisterForm.email.$pristine">
-								<p class="text-center">Cette adresse email ne semble pas être valide</p>
+								<p translate class="text-center">Cette adresse email ne semble pas être valide</p>
 							</div>
 						</div>
 					</div>
 
 					<div class="text-center">
-						<button id="submitRegister"
+						<button translate id="submitRegister"
 								class="btn bg-{{partialRegisterForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
 								ng-disabled="partialRegisterForm.$invalid || partialRegisterForm.$pristine"
 								ng-click="submitPartialRegister()">
@@ -727,30 +732,32 @@
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="hideSearchView()" style="font-size: 2em; margin-top: -44px"></i>
 
-            <h2 class="text-center">Rechercher un client</h2>
+            <h2 translate class="text-center">Rechercher un client</h2>
             <input type="text" class="center-block form-control" ng-model="search.query"
-                   placeholder="Nom, prénom ou email&#8230;" ng-init="search = {query: ''}"
+                   placeholder="{{'Nom, prénom ou email' | translate}}&#8230;" ng-init="search = {query: ''}"
                    ng-enter="searchForCustomer(search.query)"/>
-            <button class="btn btn-lg center-block text-center no-radius ink"
+            <button translate class="btn btn-lg center-block text-center no-radius ink"
                     ng-click="searchForCustomer(search.query)">
                 Rechercher
             </button>
             <br/>
 
-            <md-progress-circular md-mode="indeterminate" class="md-warn" ng-show="isSearching"></md-progress-circular>
+			<div class="loading">
+				<md-progress-circular md-mode="indeterminate" class="md-warn" ng-show="isSearching"></md-progress-circular>
+			</div>
 
             <div class="card" ng-click="login(client.Barcode)" ng-repeat="client in searchResults"
                  style="cursor:pointer;">
                 <h4 style="margin-top: 0">{{client.FirstName}} {{client.LastName}}</h4>
                 <h4>{{client.Email}}</h4>
                 <h4 style="margin-bottom: 0">
-                    <small>N° de carte:</small>
+                    <small translate>N° de carte</small>:
                     {{client.Barcode}}
                 </h4>
             </div>
 
             <div class="card error" ng-if="searchResults.length === 0">
-                <h4 style="margin-top: 8px; text-align: center">Aucun résultat&#8230;</h4>
+                <h4 style="margin-top: 8px; text-align: center">{{'Aucun résultat' | translate}}&#8230;</h4>
             </div>
         </div>
 		<!-- #endregion -->

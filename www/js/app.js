@@ -5,10 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngMaterial', 'firebase', 'APIServiceApp'])
+var starterApp = angular.module('starter', ['ionic', 'starter.services', 'ngMaterial', 'firebase','AccountApp', 'APIServiceApp']);
 
+starterApp
     .run(function ($ionicPlatform, $rootScope) {
-    	$rootScope.Version = "3.0.0.1";
+    	$rootScope.Version = "3.0.0.2";
 
         $ionicPlatform.ready(function () {
 //            if (window.StatusBar) {

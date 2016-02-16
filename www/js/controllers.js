@@ -1,10 +1,20 @@
-angular.module('starter.controllers', [])
-    .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'appServices', function ($scope, $rootScope, $log, $timeout, $location, appServices) {
+starterApp
+    .controller('HeaderCtrl', ['$scope', '$rootScope', '$log', '$timeout', '$location', 'appServices', '$state', '$stateParams', function ($scope, $rootScope, $log, $timeout, $location, appServices, $state, $stateParams) {
         var scanCounter = 0,
             prevPassages = localStorage.getItem('prevPassages');
         prevPassages = JSON.parse(prevPassages);
 
         $rootScope.cardNum = "";
+
+        $rootScope.reload = function () {
+        	//$state.go($state.current, {}, { reload: true });
+
+        	$state.transitionTo($state.current, $stateParams, {
+        		reload: true,
+        		inherit: false,
+        		notify: true
+        	});
+        }
 
         $scope.scan = function () {
             if (scanCounter === 0) {
@@ -46,7 +56,7 @@ angular.module('starter.controllers', [])
 
         $rootScope.scan = $scope.scan;
 
-        $scope.scan();
+        //$scope.scan();
     }]
 )
     .controller('OfflineCtrl', ['$scope', '$http', '$log', '$timeout', function ($scope, $http, $log, $timeout) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$timeout', function ($http, $log, $timeout) {
+angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$timeout', function ($http, $log, $timeout) {
     var methods, vars, errors, fakeData, emptyData, passagePromise = null;
 
     /** Variables & flags

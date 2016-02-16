@@ -1,6 +1,9 @@
 "use strict";
 
-angular.module('APIServiceApp')
+var accountApp = angular.module('AccountApp', ['pascalprecht.translate']);
+
+accountApp
+
     .directive('iziAccount', function () {
         return {
             restrict: "EA",
@@ -23,23 +26,30 @@ angular.module('APIServiceApp')
                 }
             },
             controller: [
-                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService',
-                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService) {
+                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService', '$translate',
+                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService, $translate) {
 
                     $scope.isReady = false;
                     $rootScope.isReady = false;
 
+                    $scope.changeLanguage = function (lang) {
+                    	window.localStorage.setItem("CurrentLanguage",lang);
+                    	$translate.use(lang);
+                    	//$window.location.reload();
+                    	$rootScope.reload();
+                    }
+
                     document.addEventListener("deviceready", onDeviceReady, false);
 
                     /** Initial setup */
-                    $timeout(function () {
-                        if (!window.phonegap) {
-                            !APIService.get.debugState() ?
-                                $window.alert('The app is running in a browser, no UUID found!') :
-                                $log.info('The app is running in a browser, no UUID found!');
-                            $scope.isBrowser = true;
-                        }
-                    }, 0);
+                    //$timeout(function () {
+                    //    if (!window.phonegap) {
+                    //        !APIService.get.debugState() ?
+                    //            $window.alert('The app is running in a browser, no UUID found!') :
+                    //            $log.info('The app is running in a browser, no UUID found!');
+                    //        $scope.isBrowser = true;
+                    //    }
+                    //}, 0);
 
                     /** @function generateUUID
                      *  Permet de générer un UUID aléatoire pour la version navigateur de l'appli (l'uuid est fourni par phonegap si l'app tourne sur un device).
@@ -54,18 +64,24 @@ angular.module('APIServiceApp')
                         return uuid + "-browser";
                     }
 
-                    /** Si l'app tourne dans un navigateur, on récupère l'UUID stocké dans le localStorage ou on en génère un si c'est la 1ere visite du client */
-                    if (!window.device) {
-                        var storedUUID = localStorage.getItem('deviceUUID');
-                        if (!storedUUID) {
-                            $scope.randomUUID = generateUUID();
-                            localStorage.setItem('deviceUUID', $scope.randomUUID);
-                            storedUUID = $scope.randomUUID;
-                        }
-                        window.device = {uuid: storedUUID};
-                        window.phonegap = true;
-                        onDeviceReady();
-                    }
+
+                    $timeout(function () {
+                    	/** Si l'app tourne dans un navigateur, on récupère l'UUID stocké dans le localStorage ou on en génère un si c'est la 1ere visite du client */
+                    	if (!window.device) {
+                    		var storedUUID = localStorage.getItem('deviceUUID');
+                    		if (!storedUUID) {
+                    			$scope.randomUUID = generateUUID();
+                    			localStorage.setItem('deviceUUID', $scope.randomUUID);
+                    			storedUUID = $scope.randomUUID;
+                    		}
+                    		window.device = { uuid: storedUUID };
+                    		window.phonegap = true;
+                    		$scope.isBrowser = true;
+                    		onDeviceReady();
+                    	} else {
+                    		$scope.isBrowser = false;
+                    	}
+                    }, 2000);
 
                     /** @function blackOrWhite
                      *  Cette fonction retourne blanc ou noir en fonction de la couleur passée en paramètre pour la meilleure visibilité.
@@ -103,14 +119,14 @@ angular.module('APIServiceApp')
                      *  Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48) */
                     function onDeviceReady() {
                         if (window.device) {
-                            $scope.isBrowser = false;
-                            /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
+                             /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
                              *  Sinon, on applique l'url déjà présente. */
                         	if (!$scope.clientUrl) APIService.set.clientUrl('http://izi-resto.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
 
-                            /** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
-                            $http.get(APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid)).success(function (data) {
+                        	/** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
+                        	var callableServerUrl = APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid);
+                        	$http.get(callableServerUrl).success(function (data) {
                                 $scope.deviceName = data.AppName;
                                 $rootScope.deviceName = data.AppName;
 
@@ -119,7 +135,9 @@ angular.module('APIServiceApp')
 
                                 /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
                                 if (!data.Server_Url) {
-                                	customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
+                                	$scope.deviceNotRegistered = true;
+                                	$rootScope.deviceNotRegistered = true;
+                                	customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid + "\r\n" +data.AppName + "\r\n" + callableServerUrl, function () {
                                 		if (navigator.app) {
                                 			navigator.app.exitApp();
                                 		} else if (navigator.device) {
@@ -178,9 +196,12 @@ angular.module('APIServiceApp')
                                                     angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
                                                 angular.element('#izi-style').remove();
 
+                                                !$scope.isBrowser && !$scope.deviceNotRegistered ? $rootScope.scan() : 0;
+
                                             })
                                             .catch(function (error) {
-                                                console.error("Error:", error);
+                                            	console.error("Error:", error);
+                                            	$rootScope.deviceNotRegistered = $scope.deviceNotRegistered = true;
                                             }
                                         );
                                     }
@@ -253,8 +274,8 @@ angular.module('APIServiceApp')
                             text: newText,
                             showCancelButton: true,
                             confirmButtonColor: $scope.customization ? $scope.customization.styling.mainColor : "#28A54C",
-                            confirmButtonText: "Oui",
-                            cancelButtonText: "Non",
+                            confirmButtonText: $translate.instant("Oui"),
+                            cancelButtonText: $translate.instant("Non"),
                             closeOnCancel: true,
                             closeOnConfirm: true
                         }, callback);
@@ -420,7 +441,7 @@ angular.module('APIServiceApp')
                         //        $scope.reset();
                         //    })() : 0;
                         //}
-                        customConfirm("Voulez-vous vraiment quitter la fiche client ?", "", function (isConfirm) {
+                        customConfirm($translate.instant("Voulez-vous quitter la fiche client ?"), "", function (isConfirm) {
                             if (isConfirm) {
                                 $scope.reset();
                             }
@@ -465,7 +486,7 @@ angular.module('APIServiceApp')
                         //    $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                         //}
 
-                        $scope.barcodeValid ? displayData() : customAlert("Ce n° de carte n'est pas valide !");
+                        $scope.barcodeValid ? displayData() : customAlert($translate.instant("Ce numéro de carte n'est pas valide !"));
                     };
 
                     $scope.autoLogin = function () {
@@ -476,7 +497,7 @@ angular.module('APIServiceApp')
                             //} else {
                             //    $scope.barcodeValid ? displayData() : $window.alert("Ce n° de carte n'est pas valide !");
                             //}
-                            $scope.barcodeValid ? displayData() : customAlert("Ce n° de carte n'est pas valide !");
+                            $scope.barcodeValid ? displayData() : customAlert($translate.instant("Ce numéro de carte n'est pas valide !"));
                         }
                     };
 
@@ -522,7 +543,7 @@ angular.module('APIServiceApp')
                                 //    $('#orderAmountInput').val('');
                                 //    displayData();
                                 //}
-                                customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                            	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                     if (isConfirm) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -534,7 +555,7 @@ angular.module('APIServiceApp')
                                     }
                                 });
                             } else {
-                                $scope.toast("L'action a bien été effectuée sur cette carte");
+                            	$scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
                                 $scope.reset();
                                 $timeout(function () {
                                     !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -617,7 +638,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -630,7 +651,7 @@ angular.module('APIServiceApp')
                                         }
                                     });
                                 } else {
-                                    $scope.toast("Le paiement en avoir a bien été effectué");
+                                    $scope.toast($translate.instant("Le paiement en avoir a bien été effectué"));
                                     $scope.reset();
                                     $timeout(function () {
                                         $scope.hasUsedBalance = false;
@@ -670,7 +691,7 @@ angular.module('APIServiceApp')
                                 //    displayData();
                                 //}
 
-                                customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                            	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                     if (isConfirm) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -682,7 +703,7 @@ angular.module('APIServiceApp')
                                 });
 
                             } else {
-                                $scope.toast("L'offre a bien été utilisée");
+                                $scope.toast($translate.instant("L'offre a bien été utilisée"));
                                 $scope.reset();
                                 $timeout(function () {
                                     !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -711,7 +732,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -724,7 +745,7 @@ angular.module('APIServiceApp')
                                     });
 
                                 } else {
-                                    $scope.toast("L'offre a bien été utilisée");
+                                	$scope.toast($translate.instant("L'offre a bien été utilisée"));
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -732,11 +753,11 @@ angular.module('APIServiceApp')
                                 }
                                 return true;
                             } else {
-                                $window.alert("Une erreur est survenue, l'offre n'a pas été utilisée !");
+                            	$window.alert($translate.instant("Une erreur ")+$translate.instant(" est survenue !"));
                             }
                         }).catch(function (error) {
                             $log.error(error);
-                            $window.alert('Une erreur ' + error.status + ' est survenue !');
+                            $window.alert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
                         });
                     };
 
@@ -769,7 +790,7 @@ angular.module('APIServiceApp')
                                     //    displayData();
                                     //}
 
-                                    customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                                	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -782,7 +803,7 @@ angular.module('APIServiceApp')
                                     });
 
                                 } else {
-                                    $scope.toast("L'action a bien été effectuée sur cette carte");
+                                	$scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -818,8 +839,8 @@ angular.module('APIServiceApp')
                             displayData();
                         }).catch(function (error) {
                             if (error.status === 500)
-                            	customAlert('Cette carte est déjà enregistrée !');
-                            else customAlert('Une erreur ' + error.status + ' est survenue !');
+                            	customAlert($translate.instant("Cette carte est déjà enregistrée !"));
+                            else customAlert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
                         });
                     };
 
@@ -837,8 +858,8 @@ angular.module('APIServiceApp')
                     		displayData();
                     	}).catch(function (error) {
                     		if (error.status === 500)
-                    			customAlert('Cette carte est déjà enregistrée !');
-                    		else customAlert('Une erreur ' + error.status + ' est survenue !');
+                    			customAlert($translate.instant("Cette carte est déjà enregistrée !"));
+                    		else customAlert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
                     	});
                     };
 
@@ -850,7 +871,7 @@ angular.module('APIServiceApp')
                     $scope.useAction = function (isTiles) {
 
                         $scope.isUsingAction = true;
-                        customConfirm("Voulez-vous effectuer cette action ?", "", function (isAccept) {
+                        customConfirm($translate.instant("Voulez-vous effectuer cette action ?"), "", function (isAccept) {
                         	if (isAccept) {
                         		var passageObj = APIService.get.emptyPassageObj();
                         		var amount = $('#orderAmountInput').val();
@@ -887,7 +908,7 @@ angular.module('APIServiceApp')
                         				//    displayData();
                         				//}
 
-                        				customConfirm("L'action a bien été effectuée sur cette carte", "Voulez-vous quitter la fiche client ?", function (isConfirm) {
+                        				customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                         					if (isConfirm) {
                         						$scope.reset();
                         						$timeout(function () {
@@ -900,7 +921,7 @@ angular.module('APIServiceApp')
                         				});
 
                         			} else {
-                        				$scope.toast("L'action a bien été effectuée sur cette carte");
+                        				$scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
                         				$scope.reset();
                         				$timeout(function () {
                         					!$scope.isBrowser ? $rootScope.scan() : 0;
@@ -927,7 +948,7 @@ angular.module('APIServiceApp')
                         //    if (doUse) $scope.useOffer(offer);
                         //}
 
-                        customConfirm("Voulez-vous utiliser cette offre ?", "", function (isConfirm) {
+                        customConfirm($translate.instant("Voulez-vous utiliser cette offre ?"), "", function (isConfirm) {
                             if (isConfirm) {
                                 $scope.useOffer(offer);
                             } 
@@ -946,7 +967,7 @@ angular.module('APIServiceApp')
                         //    if (doUse) $scope.addPassage();
                         //}
 
-                        customConfirm("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?", "", function (isConfirm) {
+                        customConfirm($translate.instant("Confirmez-vous que ce client est passé en caisse sans utiliser d'offre et/ou d'avoir fidélité ?"), "", function (isConfirm) {
                             if (isConfirm) {
                                 $scope.addPassage();
                             }
