@@ -176,9 +176,7 @@
 
                 <!-- Montant d'achat -->
                 <li ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
-                    <h3 translate class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
-                        data.OneRuleWithOrderAmountString : "Montant d'achat"}}</h3>
-
+                    <h3 translate class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : "Montant d'achat"}}</h3>
                     <div>
                         <div class="input-group" style="width: 100%;">
                             <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
