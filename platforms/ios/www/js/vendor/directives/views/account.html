@@ -176,16 +176,14 @@
 
                 <!-- Montant d'achat -->
                 <li ng-if="(data.CustomerEmail || data.AnonymousCustomer) && data.OneRuleWithOrderAmount">
-                    <h3 translate class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ?
-                        data.OneRuleWithOrderAmountString : "Montant d'achat"}}</h3>
-
+                    <h3 translate class="text-center no-mg-vert fid-item-title">{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : "Montant d'achat"}}</h3>
                     <div>
                         <div class="input-group" style="width: 100%;">
                             <input id="orderAmountInput" class="form-control" ng-minlength="1" ng-pattern="/^[0-9.,]+$/"
                                    type="number"
                                    style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 30px; height: 65px; max-width: 100% !important"
                                    ng-model="orderAmountInput.value"
-                                   placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : ("Montant d'achat" | translate)...}}"
+                                   placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : ('Montant d\'achat' | translate)}}..."
                                    required>
 
                             <div translate class="input-group-addon wave-effect"
@@ -281,7 +279,7 @@
                                    type="number"
                                    ng-model="balancePayment.value"
                                    style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 30px; height: 65px; max-width: 100% !important"
-                                   placeholder="{{"Paiement en avoir" | translate}}..." required>
+                                   placeholder="{{'Paiement en avoir' | translate}}..." required>
 
                             <div translate class="input-group-addon wave-effect" style="width: 50%; font-size: 1.5em;"
                                  ng-click="(balancePayment.value && +balancePayment.value > 0) && !isUsingBalance ? useBalanceToPay(balancePayment.value, balance) : 0"

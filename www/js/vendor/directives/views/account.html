@@ -183,7 +183,7 @@
                                    type="number"
                                    style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 30px; height: 65px; max-width: 100% !important"
                                    ng-model="orderAmountInput.value"
-                                   placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : ("Montant d'achat" | translate)...}}"
+                                   placeholder="{{data.OneRuleWithOrderAmountString ? data.OneRuleWithOrderAmountString : ('Montant d\'achat' | translate)}}..."
                                    required>
 
                             <div translate class="input-group-addon wave-effect"
@@ -279,7 +279,7 @@
                                    type="number"
                                    ng-model="balancePayment.value"
                                    style="background-color: #fefefe; padding-top: 0; padding-bottom: 0; padding-right: 0; line-height: 30px; height: 65px; max-width: 100% !important"
-                                   placeholder="{{"Paiement en avoir" | translate}}..." required>
+                                   placeholder="{{'Paiement en avoir' | translate}}..." required>
 
                             <div translate class="input-group-addon wave-effect" style="width: 50%; font-size: 1.5em;"
                                  ng-click="(balancePayment.value && +balancePayment.value > 0) && !isUsingBalance ? useBalanceToPay(balancePayment.value, balance) : 0"
