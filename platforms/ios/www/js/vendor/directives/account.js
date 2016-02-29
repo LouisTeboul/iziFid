@@ -422,11 +422,11 @@ accountApp
                                 	}
 
                                 } else if (data.CustomerPartial){ //Si la création partielle est autorisée
-                                	$scope.reset();
+                                	//$scope.reset();
                                 	$scope.goPartialRegister();
                                 	
                                 } else if (data.AllowCustomerToCreateLoyaltyBarcode) { // Sinon, on envoie le client vers le formulaire d'enregistrement
-                                    $scope.reset();
+                                	//$scope.reset();
                                     $scope.goRegister();
                                 } else {
                                 	customAlert($translate.instant("Carte inconnue !"), "", function () {
@@ -544,7 +544,7 @@ accountApp
                      */
                     $scope.reset = function () {
                         $timeout(function () {
-                            //$scope.client = {barcode: $scope.form.barcode};
+                        	$scope.client = {}; // {barcode: $scope.form.barcode};
                             $scope.showVoucherView = false;
                             delete $scope.barcode;
                             delete $scope.voucher;
@@ -868,6 +868,7 @@ accountApp
                             $scope.barcode = $scope.client.barcode;
                             $scope.form.password = $scope.client.password;
                             $scope.register = false;
+                            $scope.reset();
                             displayData();
                         }).catch(function (error) {
                             if (error.status === 500)
@@ -887,6 +888,7 @@ accountApp
                     	APIService.actions.registerAnonymous(obj).then(function () {
                     		$scope.partialRegister = false;
                     		$scope.barcode = $scope.client.barcode;
+                    		$scope.reset();
                     		displayData();
                     	}).catch(function (error) {
                     		if (error.status === 500)

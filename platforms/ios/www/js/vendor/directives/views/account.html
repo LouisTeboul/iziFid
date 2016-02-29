@@ -166,7 +166,7 @@
 		</div>
 
 		<!-- #region CLIENT VIEW-->
-        <div ng-if="!deviceNotRegistered && isReady && barcode && !register && !voucher && !showSearchView" style="padding-top: 24px;">
+        <div ng-if="!deviceNotRegistered && isReady && barcode && !register && !partialRegister && !voucher && !showSearchView" style="padding-top: 24px;">
 
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="disconnect()" style="font-size: 2em; margin-top: -44px"></i>
@@ -725,7 +725,7 @@
 		<!-- #endregion -->
 
         <!-- #region CLIENT SEARCH VIEW -->
-        <div id="searchView" ng-if="isReady && !barcode && !register && showSearchView" style="margin-top: 30px;">
+        <div id="searchView" ng-if="isReady && !barcode && !register && !partialRegister && showSearchView" style="margin-top: 30px;">
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="hideSearchView()" style="font-size: 2em; margin-top: -44px"></i>
 
