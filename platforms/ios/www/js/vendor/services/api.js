@@ -173,8 +173,19 @@ angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$tim
                 if (offers) {
                     /** Group valid offers by OfferTypeId */
                     for (var i = 0; i < offers.length; i++) {
-                        if (offers[i].isValid)
-                            offersTypes.push(offers[i]);
+                    	if (offers[i].isValid){
+                    		var sameOffer = Enumerable.from(offersTypes).firstOrDefault(function (o) {
+                    			return o.OfferClassId == offers[i].OfferClassId;
+                    		});
+
+                    		if (sameOffer) {
+                    			sameOffer.Count++;
+                    		} else {
+                    			offers[i].Count = 1;
+                    			offersTypes.push(offers[i]);
+                    		}
+                    	}
+                            
                     }
                 }
                 return offersTypes;

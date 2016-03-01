@@ -55,7 +55,8 @@
 		"Non": "No",
 		"Appuyez une autre fois pour quitter": "Push back button another time to exit",
 		"Carte inconnue !": "Invalid card !",
-		"La carte est enregistrée": "This card is registered"
+		"La carte est enregistrée": "This card is registered",
+		"J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité": "I agree to receive by email my account information and loyalty offers"
 
 	});
 

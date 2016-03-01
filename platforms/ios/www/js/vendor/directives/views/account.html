@@ -248,16 +248,16 @@
 
             <!-- #region Offers -->
             <ul class="izi-offers list-unstyled" ng-if="data.Offers.length > 0" style="margin-top: 24px;">
-                <li class="bg-accent hvr-sink waves-effect"
-                    ng-click="showConfirm($event, data.Offers[0])">
-                    <b class="pull-right">x{{data.Offers.length}}</b>
+                <li class="bg-accent hvr-sink waves-effect" ng-repeat="offer in data.Offers"
+                    ng-click="showConfirm($event, offer)">
+                    <b class="pull-right">x{{offer.Count}}</b>
 
                     <h3 class="text-center no-mg-vert fid-item-title">
-                        {{data.Offers[0].OfferClassDescription}}
+                        {{offer.OfferClassDescription}}
                     </h3>
 
                     <div class="text-center">
-                        <b>{{data.Offers[0].OfferObjectDescription}}</b><br/>
+                        <b>{{offer.OfferObjectDescription}}</b><br/>
                     </div>
                 </li>
             </ul>
@@ -597,6 +597,9 @@
                             </div>
                         </div>
                     </div>
+					<div class="clearfix">
+						<p translate class="text-center">J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité</p>
+					</div>
                     <div class="text-center">
                         <button translate id="submitRegister"
                                 class="btn bg-{{registerForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
@@ -686,6 +689,9 @@
 						</div>
 					</div>
 
+					<div class="clearfix">
+						<p translate class="text-center">J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité</p>
+					</div>
 					<div class="text-center">
 						<button translate id="submitRegister"
 								class="btn bg-{{partialRegisterForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
