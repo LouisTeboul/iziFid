@@ -262,7 +262,8 @@ accountApp
                                     ".izi-account .fid-item-title + div b," +
                                     ".izi-account .fid-item-title + input { color: " + blackOrWhite(data.styling.bgColor) + " !important; }" +
                                     ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
-                                    ".izi-account .alert p, .izi-account .barcode-container small, .izi-account .card h4 { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
+                                    ".izi-account .alert p, .izi-account .barcode-container small { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+									".izi-account .card h4 { color: " + data.styling.mainColor + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
                         }
 
@@ -275,7 +276,7 @@ accountApp
                             ".izi-account .fid-item-title + div b, .izi-account .fid-item-title + input { font-family:" + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             ".izi-account a, .izi-account a:hover { color: " + data.styling.mainColor + " !important; } " +
                             ".izi-account md-radio-button{ background: " + data.styling.mainColor + "; padding: 16px; }" +
-                            ".izi-account button, .izi-account .input-group-addon, .izi-account md-radio-button { color: " + blackOrWhite(data.styling.bgColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
+                            ".izi-account button, .izi-account .input-group-addon, .izi-account md-radio-button { color: " + blackOrWhite(data.styling.mainColor) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
                             fidItemStyle;
                     }
 
@@ -927,21 +928,7 @@ accountApp
                         			$scope.hideDialog();
                         			$scope.isUsingAction = false;
                         			if ($scope.customization.hasPopup) {
-                        				//var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
-                        				//    if (btnIndex === 1) {
-                        				//        $scope.reset();
-                        				//    }
-                        				//}) : $window.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client");
-                        				//if (quit) {
-                        				//    $scope.reset();
-                        				//    $timeout(function () {
-                        				//        !$scope.isBrowser ? $rootScope.scan() : 0;
-                        				//    }, 1600);
-                        				//} else {
-                        				//    $('#orderAmountInput').val('');
-                        				//    displayData();
-                        				//}
-
+     
                         				customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                         					if (isConfirm) {
                         						$scope.reset();
@@ -971,16 +958,6 @@ accountApp
                     };
 
                     $scope.showConfirm = function (ev, offer) {
-                        //if (navigator.notification) {
-                        //    navigator.notification.confirm('Voulez-vous utiliser cette offre ?', function (btnIndex) {
-                        //        if (btnIndex === 1) {
-                        //            $scope.useOffer(offer);
-                        //        }
-                        //    }, document.title);
-                        //} else {
-                        //    var doUse = $window.confirm("Voulez-vous utiliser cette offre ?");
-                        //    if (doUse) $scope.useOffer(offer);
-                        //}
 
                         customConfirm($translate.instant("Voulez-vous utiliser cette offre ?"), "", function (isConfirm) {
                             if (isConfirm) {

@@ -20,7 +20,7 @@ starterApp
         	});
         }
 
-        $scope.scan = function () {
+        $scope.openScan = function () {
             if (scanCounter === 0) {
                 var scp = angular.element('.izi-account').scope();
                 if (scp && scp.reset) scp.reset();
@@ -58,6 +58,10 @@ starterApp
             }
             scanCounter++;
         };
+
+        $scope.scan = function () {
+
+        }
 
         $rootScope.scan = $scope.scan;
 
