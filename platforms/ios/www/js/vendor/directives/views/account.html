@@ -197,7 +197,7 @@
             </ul>
 
             <div class="text-center"
-                 ng-if="containsBalanceType('Passages') && (data.CustomerEmail || data.AnonymousCustomer) && !data.OneRuleWithOrderAmount"
+                 ng-if="containsBalanceType('Passages') && (data.CustomerEmail || data.AnonymousCustomer) && !data.OneRuleWithOrderAmount && !data.PartialCustomer" 
                  style="margin-top: 16px;">
                 <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
                     <i translate class="icon ion-plus"></i>AJOUTER UN PASSAGE

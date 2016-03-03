@@ -124,11 +124,15 @@ accountApp
 
                     function configureApp(dataApp) {
                     	$scope.appconfiguration = {
+							loyaltyAppType: LoyaltyAppType.Default,
                     		clientSearch: true,
 							clientView: true
                     	};
 
                     	if (dataApp.LoyaltyAppType) {
+
+                    		$scope.appconfiguration.loyaltyAppType = dataApp.LoyaltyAppType;
+
                     		switch (dataApp.LoyaltyAppType) {
                     			case LoyaltyAppType.PartialCustomerRegisterOnly:
                     				$scope.appconfiguration.clientSearch = false;
@@ -422,11 +426,11 @@ accountApp
                                 		});
                                 	}
 
-                                } else if (data.CustomerPartial){ //Si la création partielle est autorisée
+                                } else if (data.CustomerPartial && $scope.appconfiguration.loyaltyAppType == LoyaltyAppType.PartialCustomerRegisterOnly) { //Si la création partielle est autorisée
                                 	//$scope.reset();
                                 	$scope.goPartialRegister();
                                 	
-                                } else if (data.AllowCustomerToCreateLoyaltyBarcode) { // Sinon, on envoie le client vers le formulaire d'enregistrement
+                                } else if ((data.Barcodes && data.Barcodes.length > 0) || data.AllowCustomerToCreateLoyaltyBarcode) { // Sinon, on envoie le client vers le formulaire d'enregistrement
                                 	//$scope.reset();
                                     $scope.goRegister();
                                 } else {
