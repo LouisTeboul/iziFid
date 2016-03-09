@@ -528,7 +528,7 @@
                         <label translate for="zipcode" class="col-sm-3">Code Postal</label>
 
                         <div class="form-group col-sm-9">
-                            <input id="zipcode" name="zipcode" class="form-control" type="tel" ng-model="client.zipcode"
+                            <input id="zipcode" name="zipcode" class="form-control" type="{{data.zipcodeLength > 5 ? 'text' : 'tel'}}" ng-model="client.zipcode"
                                    placeholder="{{'Code Postal' | translate}}&#8230;" ng-minlength="{{data.zipcodeLength}}"
                                    maxlength="{{data.zipcodeLength}}"
                                    required=""/>
