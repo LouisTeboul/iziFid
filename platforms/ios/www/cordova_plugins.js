@@ -9,12 +9,18 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.device/www/device.js",
-        "id": "org.apache.cordova.device.device",
-        "pluginId": "org.apache.cordova.device",
+        "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
+        "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
+        "pluginId": "com.phonegap.plugins.barcodescanner",
         "clobbers": [
-            "device"
+            "cordova.plugins.barcodeScanner"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-whitelist/whitelist.js",
+        "id": "cordova-plugin-whitelist.whitelist",
+        "pluginId": "cordova-plugin-whitelist",
+        "runs": true
     },
     {
         "file": "plugins/org.apache.cordova.console/www/console-via-logger.js",
@@ -33,11 +39,11 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
-        "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
-        "pluginId": "com.phonegap.plugins.barcodescanner",
+        "file": "plugins/org.apache.cordova.device/www/device.js",
+        "id": "org.apache.cordova.device.device",
+        "pluginId": "org.apache.cordova.device",
         "clobbers": [
-            "cordova.plugins.barcodeScanner"
+            "device"
         ]
     },
     {
@@ -62,9 +68,10 @@ module.exports.metadata =
 // TOP OF METADATA
 {
     "com.ionic.keyboard": "1.0.4",
-    "org.apache.cordova.device": "0.3.0",
-    "org.apache.cordova.console": "0.2.13",
     "com.phonegap.plugins.barcodescanner": "2.2.0",
+    "cordova-plugin-whitelist": "1.1.1-dev",
+    "org.apache.cordova.console": "0.2.13",
+    "org.apache.cordova.device": "0.3.0",
     "org.apache.cordova.dialogs": "0.3.0",
     "org.apache.cordova.vibration": "0.3.13"
 }

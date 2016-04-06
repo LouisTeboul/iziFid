@@ -7,6 +7,8 @@
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
     <preference name="MediaPlaybackRequiresUserAction" value="false" />
     <preference name="SuppressesIncrementalRendering" value="false" />
+    <preference name="SuppressesLongPressGesture" value="false" />
+    <preference name="Suppresses3DTouchGesture" value="false" />
     <preference name="GapBetweenPages" value="0" />
     <preference name="PageLength" value="0" />
     <preference name="PaginationBreakingMode" value="page" />
@@ -14,17 +16,33 @@
     <feature name="LocalStorage">
         <param name="ios-package" value="CDVLocalStorage" />
     </feature>
+    <feature name="HandleOpenUrl">
+        <param name="ios-package" value="CDVHandleOpenURL" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="IntentAndNavigationFilter">
+        <param name="ios-package" value="CDVIntentAndNavigationFilter" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="GestureHandler">
+        <param name="ios-package" value="CDVGestureHandler" />
+        <param name="onload" value="true" />
+    </feature>
     <feature name="Keyboard">
         <param name="ios-package" onload="true" value="IonicKeyboard" />
     </feature>
-    <feature name="Device">
-        <param name="ios-package" value="CDVDevice" />
+    <feature name="BarcodeScanner">
+        <param name="ios-package" value="CDVBarcodeScanner" />
+    </feature>
+    <feature name="Whitelist">
+        <param name="ios-package" value="CDVWhitelistPlugin" />
+        <param name="onload" value="true" />
     </feature>
     <feature name="Console">
         <param name="ios-package" value="CDVLogger" />
     </feature>
-    <feature name="BarcodeScanner">
-        <param name="ios-package" value="CDVBarcodeScanner" />
+    <feature name="Device">
+        <param name="ios-package" value="CDVDevice" />
     </feature>
     <feature name="Notification">
         <param name="ios-package" value="CDVNotification" />

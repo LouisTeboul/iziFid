@@ -13,7 +13,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
+                            "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Whitelist\"><param name=\"ios-package\" value=\"CDVWhitelistPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
                         {
@@ -21,7 +25,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
+                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
                             "count": 1
                         },
                         {
@@ -39,22 +43,25 @@
     },
     "installed_plugins": {
         "com.ionic.keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.izifid749652"
-        },
-        "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.ionicframework.izifid749652"
-        },
-        "org.apache.cordova.console": {
-            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+            "PACKAGE_NAME": "com.izipass.izipass"
         },
         "com.phonegap.plugins.barcodescanner": {
-            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "com.izipass.izipass"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.izipass.izipass"
         },
         "org.apache.cordova.dialogs": {
-            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+            "PACKAGE_NAME": "com.izipass.izipass"
         },
         "org.apache.cordova.vibration": {
-            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+            "PACKAGE_NAME": "com.izipass.izipass"
         }
     },
     "dependent_plugins": {},
@@ -68,12 +75,18 @@
             ]
         },
         {
-            "file": "plugins/org.apache.cordova.device/www/device.js",
-            "id": "org.apache.cordova.device.device",
-            "pluginId": "org.apache.cordova.device",
+            "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
+            "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
+            "pluginId": "com.phonegap.plugins.barcodescanner",
             "clobbers": [
-                "device"
+                "cordova.plugins.barcodeScanner"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-whitelist/whitelist.js",
+            "id": "cordova-plugin-whitelist.whitelist",
+            "pluginId": "cordova-plugin-whitelist",
+            "runs": true
         },
         {
             "file": "plugins/org.apache.cordova.console/www/console-via-logger.js",
@@ -92,11 +105,11 @@
             ]
         },
         {
-            "file": "plugins/com.phonegap.plugins.barcodescanner/www/barcodescanner.js",
-            "id": "com.phonegap.plugins.barcodescanner.BarcodeScanner",
-            "pluginId": "com.phonegap.plugins.barcodescanner",
+            "file": "plugins/org.apache.cordova.device/www/device.js",
+            "id": "org.apache.cordova.device.device",
+            "pluginId": "org.apache.cordova.device",
             "clobbers": [
-                "cordova.plugins.barcodeScanner"
+                "device"
             ]
         },
         {
@@ -119,9 +132,10 @@
     ],
     "plugin_metadata": {
         "com.ionic.keyboard": "1.0.4",
-        "org.apache.cordova.device": "0.3.0",
-        "org.apache.cordova.console": "0.2.13",
         "com.phonegap.plugins.barcodescanner": "2.2.0",
+        "cordova-plugin-whitelist": "1.1.1-dev",
+        "org.apache.cordova.console": "0.2.13",
+        "org.apache.cordova.device": "0.3.0",
         "org.apache.cordova.dialogs": "0.3.0",
         "org.apache.cordova.vibration": "0.3.13"
     }

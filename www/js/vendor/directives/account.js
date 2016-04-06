@@ -55,7 +55,7 @@ accountApp
                     	} else {
                     		$scope.tryExit = true;
                     		try {
-                    			$scope.toast($translate.instant($translate.instant("Appuyez une autre fois pour quitter")));
+                    			$scope.toast($translate.instant("Appuyez une autre fois pour quitter"));
                     		}
                     		catch (err) {
 
