@@ -39,14 +39,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.dialogs/www/notification.js",
-        "id": "org.apache.cordova.dialogs.notification",
-        "pluginId": "org.apache.cordova.dialogs",
-        "merges": [
-            "navigator.notification"
-        ]
-    },
-    {
         "file": "plugins/org.apache.cordova.vibration/www/vibration.js",
         "id": "org.apache.cordova.vibration.notification",
         "pluginId": "org.apache.cordova.vibration",
@@ -62,6 +54,14 @@ module.exports = [
         "clobbers": [
             "device"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -71,9 +71,9 @@ module.exports.metadata =
     "com.phonegap.plugins.barcodescanner": "2.2.0",
     "cordova-plugin-whitelist": "1.1.1-dev",
     "org.apache.cordova.console": "0.2.13",
-    "org.apache.cordova.dialogs": "0.3.0",
     "org.apache.cordova.vibration": "0.3.13",
-    "cordova-plugin-device": "1.1.3-dev"
+    "cordova-plugin-device": "1.1.3-dev",
+    "cordova-plugin-dialogs": "1.2.2-dev"
 }
 // BOTTOM OF METADATA
 });
