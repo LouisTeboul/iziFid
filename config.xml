@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.izipass.izipass" version="3.0.0.2"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0"
@@ -61,7 +61,7 @@
         <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
-    <gap:plugin name="org.apache.cordova.device" version="0.2.12"/>
+    <gap:plugin name="org.apache.cordova.device" version="1.1.3-dev"/>
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
