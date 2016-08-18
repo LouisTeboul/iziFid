@@ -62,7 +62,6 @@
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
     <gap:plugin name="org.apache.cordova.device" version="0.3.0"/>
-    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.11"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
