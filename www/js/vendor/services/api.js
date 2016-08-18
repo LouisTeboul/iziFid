@@ -1,6 +1,7 @@
 'use strict';
-
-angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$timeout', function ($http, $log, $timeout) {
+/* TODO API-V2 */
+angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$timeout', '$q', function ($http, $log, $timeout, $q) {
+//angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$timeout', function ($http, $log, $timeout) {
     var methods, vars, errors, fakeData, emptyData, passagePromise = null;
 
     /** Variables & flags
@@ -9,12 +10,15 @@ angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$tim
      * @variable fake [type: boolean] : whether this service should mock API calls by serving fake JSON data for debugging
      * @variable debug [type: boolean] : Turns logging ON/OFF
      */
+    /* TODO API-V2 */
     vars = {
-        endpoint: "/api/RESTLoyalty/RESTLoyalty/",
+    	endpoint: "/api/RESTLoyalty/RESTLoyalty/",
+    	//endpoint: "/apiv2/RESTLoyalty/",
         clientUrl: "",
         fake: false,
         debug: true,
-        currLoyaltyObject: {}
+        currLoyaltyObject: {}/* TODO API-V2 ,
+		token:undefined */
     };
 
     /** Shortcut functions for throwing the various possible errors */
@@ -75,7 +79,10 @@ angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$tim
              *  Self-explanatory */
             fake: function (bool) {
                 vars.fake = !!bool;
-            }
+            }/* TODO API-V2 ,
+            token: function (token) {
+            	vars.token = token;
+            }*/
         },
 
         get: {
@@ -209,7 +216,10 @@ angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$tim
                     "BalanceUpdate": {},
                     "OrderSpecificInfo": "2"
                 };
-            }
+            }/* TODO API-V2 ,
+            token: function () {
+            	return vars.token;
+            }*/
         },
 
         actions: {
@@ -256,6 +266,8 @@ angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$tim
                 if (!passagePromise) {
                     passagePromise = $http.post(methods.get.callableUrl("AddPassage"), JSON.stringify(JSON.stringify(obj))).success(function (data) {
                         return data;
+                    }).error(function (e) {
+                            vars.debug ? $log.error(e) : 0;
                     });
                     return passagePromise;
                 }
@@ -293,7 +305,29 @@ angular.module('APIServiceApp',[]).factory('APIService', ['$http', '$log', '$tim
                 }).catch(function (err) {
                     console.log(err);
                 });
-            }
+            },
+
+            /* TODO API-V2 
+            login: function (hardwareId) {
+            	var loginDefer = $q.defer();
+
+            	$http({
+            		method: 'POST',
+            		url: vars.clientUrl + '/apiv2/login',
+            		data: 'grant_type=password&username=HardwareId:' + hardwareId + '&password='
+            	}).then(function successCallback(response) {
+            		console.log(response);
+            		methods.set.token(response.data);
+            		loginDefer.resolve(response.data);
+            	}, function errorCallback(response) {
+            		console.log(response);
+            		methods.set.token(undefined);
+            		loginDefer.reject(response);
+            	});
+
+            	return loginDefer.promise;
+            },
+            */
         },
 
         /** Methods to validate user input */

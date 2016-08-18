@@ -149,95 +149,109 @@ accountApp
                         if (window.device) {
                              /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
                              *  Sinon, on applique l'url déjà présente. */
-                        	if (!$scope.clientUrl) APIService.set.clientUrl('http://izi-resto.izipass.pro');
+                            if (!$scope.clientUrl) APIService.set.clientUrl('http://izi-resto.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
 
                         	/** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
                         	var callableServerUrl = APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid);
+
                         	$http.get(callableServerUrl).success(function (data) {
-                                $scope.deviceName = data.AppName;
-                                $rootScope.deviceName = data.AppName;
+                        		$scope.deviceName = data.AppName;
+                        		$rootScope.deviceName = data.AppName;
 
-								/** Configuration de l'application */
-                                configureApp(data);
+                        		/** Configuration de l'application */
+                        		configureApp(data);
 
-                                /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
-                                if (!data.Server_Url) {
-                                	$scope.deviceNotRegistered = true;
-                                	$rootScope.deviceNotRegistered = true;
-                                	customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
-                                		if (navigator.app) {
-                                			navigator.app.exitApp();
-                                		} else if (navigator.device) {
-                                			navigator.device.exitApp();
-                                		}
-                                	});
-                                	return;
-                                }
-                                /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
-                                APIService.set.clientUrl(data.Server_Url);
-                                $scope.clientUrl = data.Server_Url;
-                                var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
-                                var confTable = $firebaseArray(confTableRef);
+                        		/** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
+                        		if (!data.Server_Url) {
+                        			$scope.deviceNotRegistered = true;
+                        			$rootScope.deviceNotRegistered = true;
+                        			customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
+                        				if (navigator.app) {
+                        					navigator.app.exitApp();
+                        				} else if (navigator.device) {
+                        					navigator.device.exitApp();
+                        				}
+                        			});
+                        			return;
+                        		}
+                        		/** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
+                        		APIService.set.clientUrl(data.Server_Url);
+                        		$scope.clientUrl = data.Server_Url;
 
-                                confTable.$loaded().then(function (data) {
-                                    $scope.configuration = data;
 
-                                    /** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats */
-                                    var result = $.grep(data, function (e) {
-                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
-                                    });
+                        	    /** Login for obtain token */
+                                /* TODO API-V2 */
+                        		//APIService.actions.login(window.device.uuid);
 
-                                    /** TODO: prévoir le cas où plusieurs configs existent avec la même url
-                                     * Pour l'instant, on prends le 1er resultat et on utilise son url de firebase pour récupérer les données de personalisation */
-                                    if (result[0]) {
-                                        $scope.firebase = result[result.length - 1].firebase;
-                                        var ref = new Firebase($scope.firebase); //jshint ignore:line
+                        		var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
+                        		var confTable = $firebaseArray(confTableRef);
 
-                                        $scope.data = $firebaseObject(ref);
+                        		confTable.$loaded().then(function (data) {
+                        			$scope.configuration = data;
 
-                                        $scope.data.$loaded()
-                                            .then(function (data) {
-                                                /** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
-                                                $scope.isReady = true;
-                                                $rootScope.isReady = true;
+                        			/** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats */
+                        			var result = $.grep(data, function (e) {
+                        				return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
+                        			});
 
-                                                document.title = data.title;
-                                                var topHeader = $('.bar-header h1');
-                                                topHeader.text(data.title.replace('Fidélité', ''));
+                        			/** TODO: prévoir le cas où plusieurs configs existent avec la même url
+									 * Pour l'instant, on prends le 1er resultat et on utilise son url de firebase pour récupérer les données de personalisation */
+                        			if (result[0]) {
+                        				$scope.firebase = result[result.length - 1].firebase;
+                        				var ref = new Firebase($scope.firebase); //jshint ignore:line
 
-                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
-                                                $('.bar-header').css('background-color', data.styling.primaryColor);
-                                                $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
-                                                var body = $('body');
-                                                var bgColor = body.css('background-color');
-                                                if (bgColor === "rgb(255, 255, 255)") {
-                                                    bgColor = "#ffffff";
-                                                }
-                                                var properColor = blackOrWhite(bgColor);
-                                                body.css('color', properColor + ' !important');
+                        				$scope.data = $firebaseObject(ref);
 
-                                                $scope.customization = data;
-                                                /** Get the customization data from firebase and build css style from it */
-                                                angular.element(document).find('head').append("<style type='text/css'>" +
-                                                    buildStyleFromData($scope.customization) +
-                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
-                                                angular.element('#izi-style').remove();
+                        				$scope.data.$loaded()
+											.then(function (data) {
+												/** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
+												$scope.isReady = true;
+												$rootScope.isReady = true;
 
-                                                !$scope.isBrowser && !$scope.deviceNotRegistered ? $rootScope.scan() : 0;
+												document.title = data.title;
+												var topHeader = $('.bar-header h1');
+												topHeader.text(data.title.replace('Fidélité', ''));
 
-                                            })
-                                            .catch(function (error) {
-                                            	console.error("Error:", error);
-                                            	$rootScope.deviceNotRegistered = $scope.deviceNotRegistered = true;
-                                            }
-                                        );
-                                    }
-                                });
+												topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
+												$('.bar-header').css('background-color', data.styling.primaryColor);
+												$('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
+												var body = $('body');
+												var bgColor = body.css('background-color');
+												if (bgColor === "rgb(255, 255, 255)") {
+													bgColor = "#ffffff";
+												}
+												var properColor = blackOrWhite(bgColor);
+												body.css('color', properColor + ' !important');
 
-                            }).error(function (e) {
-                                $scope.debug ? $log.error(e) : 0;
-                            });
+												$scope.customization = data;
+												/** Get the customization data from firebase and build css style from it */
+												angular.element(document).find('head').append("<style type='text/css'>" +
+													buildStyleFromData($scope.customization) +
+													angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
+												angular.element('#izi-style').remove();
+
+												!$scope.isBrowser && !$scope.deviceNotRegistered ? $rootScope.scan() : 0;
+
+											})
+											.catch(function (error) {
+												console.error("Error:", error);
+												$rootScope.deviceNotRegistered = $scope.deviceNotRegistered = true;
+											}
+										);
+                        			}
+                        		});
+
+                        	}).error(function (e) {
+                        		$scope.debug ? $log.error(e) : 0;
+                        		customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
+                        			if (navigator.app) {
+                        				navigator.app.exitApp();
+                        			} else if (navigator.device) {
+                        				navigator.device.exitApp();
+                        			}
+                        		});
+                        	});
                         }
                     }
 
@@ -621,10 +635,10 @@ accountApp
                         $scope.showSearchView = true;
                     };
 
-                    $scope.getTotalPositiveHistory = function (history) {
+                    $scope.getTotalPositiveHistory = function (history, balanceType_id) {
                         var total = 0;
                         for (var i = 0; i < history.length; i++) {
-                            total += history[i].Value > 0 ? history[i].Value : 0;
+                            total += history[i].Value > 0 && history[i].BalanceType_Id == balanceType_id ? history[i].Value : 0;
                         }
                         return total;
                     };
@@ -849,6 +863,9 @@ accountApp
                                 return true;
                             });
                         }
+                        else {
+                            customAlert($translate.instant("Veuillez saisir") + " " + ($scope.data.OneRuleWithOrderAmountString ? $scope.data.OneRuleWithOrderAmountString : $translate.instant("Montant d'achat")));
+                        }
                     };
 
                     $scope.submitRegister = function () {
@@ -909,55 +926,62 @@ accountApp
 
                     $scope.useAction = function (isTiles) {
 
-                        $scope.isUsingAction = true;
-                        customConfirm($translate.instant("Voulez-vous effectuer cette action ?"), "", function (isAccept) {
-                        	if (isAccept) {
-                        		var passageObj = APIService.get.emptyPassageObj();
-                        		var amount = $('#orderAmountInput').val();
-                        		passageObj.OrderTotalIncludeTaxes = amount;
-                        		passageObj.OrderTotalExcludeTaxes = amount;
+                        var amount = $('#orderAmountInput').val();
+                        // If the amount is mandatory
+                        if ($scope.data.CustomActionMandatoryAmount && (amount == null || amount == undefined || amount === "")) {
+                            customAlert($translate.instant("Veuillez saisir") + " " + ($scope.data.OneRuleWithOrderAmountString ? $scope.data.OneRuleWithOrderAmountString : $translate.instant("Montant d'achat")));
+                        }
+                        else {
+                            $scope.isUsingAction = true;
+                            customConfirm($translate.instant("Voulez-vous effectuer cette action ?"), "", function (isAccept) {
+                                if (isAccept) {
+                                    var passageObj = APIService.get.emptyPassageObj();
+                                    if (amount != null && amount != undefined && amount != "") {
+                                        passageObj.OrderTotalIncludeTaxes = amount;
+                                        passageObj.OrderTotalExcludeTaxes = amount;
+                                    }
+                                    if (isTiles) {
+                                        passageObj.CustomAction = {
+                                            "CustomActionId": $scope.data.customAction
+                                        };
+                                    } else {
+                                        passageObj.CustomAction = {
+                                            "CustomActionId": $('#actionSelect').val()
+                                        };
+                                    }
+                                    $log.info(passageObj);
 
-                        		if (isTiles) {
-                        			passageObj.CustomAction = {
-                        				"CustomActionId": $scope.data.customAction
-                        			};
-                        		} else {
-                        			passageObj.CustomAction = {
-                        				"CustomActionId": $('#actionSelect').val()
-                        			};
-                        		}
-                        		$log.info(passageObj);
+                                    APIService.actions.addPassage(passageObj).success(function () {
+                                        $scope.hideDialog();
+                                        $scope.isUsingAction = false;
+                                        if ($scope.customization.hasPopup) {
 
-                        		APIService.actions.addPassage(passageObj).success(function () {
-                        			$scope.hideDialog();
-                        			$scope.isUsingAction = false;
-                        			if ($scope.customization.hasPopup) {
-     
-                        				customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
-                        					if (isConfirm) {
-                        						$scope.reset();
-                        						$timeout(function () {
-                        							!$scope.isBrowser ? $rootScope.scan() : 0;
-                        						}, 1600);
-                        					} else {
-                        						$('#orderAmountInput').val('');
-                        						displayData();
-                        					}
-                        				});
+                                            customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
+                                                if (isConfirm) {
+                                                    $scope.reset();
+                                                    $timeout(function () {
+                                                        !$scope.isBrowser ? $rootScope.scan() : 0;
+                                                    }, 1600);
+                                                } else {
+                                                    $('#orderAmountInput').val('');
+                                                    displayData();
+                                                }
+                                            });
 
-                        			} else {
-                        				$scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
-                        				$scope.reset();
-                        				$timeout(function () {
-                        					!$scope.isBrowser ? $rootScope.scan() : 0;
-                        				}, 1600);
-                        			}
-                        			return true;
-                        		});
-                        	} else {
-                        		$scope.isUsingAction = false;
-                        	}
-                        });
+                                        } else {
+                                            $scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
+                                            $scope.reset();
+                                            $timeout(function () {
+                                                !$scope.isBrowser ? $rootScope.scan() : 0;
+                                            }, 1600);
+                                        }
+                                        return true;
+                                    });
+                                } else {
+                                    $scope.isUsingAction = false;
+                                }
+                            });
+                        }
 
                     };
 

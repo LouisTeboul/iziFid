@@ -6,6 +6,7 @@
 		"VALIDER": "VALID",
 		"Rechercher": "Search",
 		"RECHERCHER": "SEARCH",
+		"Veuillez saisir": "Please enter",
 		"Veuillez saisir votre numéro de carte": "Please enter your card number",
 		"N° de carte": "Card number",
 		"Ce numéro de carte n'est pas valide": "Invalid card number",
