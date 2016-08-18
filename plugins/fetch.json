@@ -7,14 +7,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "org.apache.cordova.device": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.device"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "org.apache.cordova.console": {
         "source": {
             "type": "registry",
@@ -75,8 +67,9 @@
     },
     "cordova-plugin-device": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-device"
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-device",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}

@@ -29,12 +29,12 @@
 		B32A459EF9EF477B858DF05E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B227EAE7586B46C6B991BE27 /* AudioToolbox.framework */; };
 		13B57929F5AE48F188910EEB /* CDVWhitelistPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2819E90124684DA385D76FAD /* CDVWhitelistPlugin.m */; };
 		F6670F3B503E4D5F93538D28 /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E8D3E140E3014E77A1BA2C71 /* CDVLogger.m */; };
-		FDA89A4733EA4FFC9E68DC3E /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2551CDD0933D4AB196D5E655 /* CDVDevice.m */; };
 		DF8F34644B4B432AAEFA02E7 /* CDVNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B88173985CC4C0ABDF852AB /* CDVNotification.m */; };
 		B82912F76B154FB48382A220 /* CDVNotification.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 59091934F78140B5B790529F /* CDVNotification.bundle */; };
 		0611D2B2C99F4A3A8FEA2B59 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E68B9640247D4467917319E6 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1283B1E6FEAC4EA6BFD60642 /* CDVVibration.m in Sources */ = {isa = PBXBuildFile; fileRef = D1412AE2D19F401D8953C565 /* CDVVibration.m */; };
 		1F390902FA124760BFE55B77 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BE447D0B5CF4D1F8B0D2BDF /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		75CD4C565D824D8C8092D130 /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F0B1288E38A432A88131293 /* CDVDevice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,8 +93,6 @@
 		387E01E60BAF402DA6DE79B5 /* CDVWhitelistPlugin.h */ = {isa = PBXFileReference; name = "CDVWhitelistPlugin.h"; path = "cordova-plugin-whitelist/CDVWhitelistPlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		E8D3E140E3014E77A1BA2C71 /* CDVLogger.m */ = {isa = PBXFileReference; name = "CDVLogger.m"; path = "org.apache.cordova.console/CDVLogger.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		1E09BA2B05B04066BBED658D /* CDVLogger.h */ = {isa = PBXFileReference; name = "CDVLogger.h"; path = "org.apache.cordova.console/CDVLogger.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		2551CDD0933D4AB196D5E655 /* CDVDevice.m */ = {isa = PBXFileReference; name = "CDVDevice.m"; path = "org.apache.cordova.device/CDVDevice.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		E45C27F60ABD4A73B4545F4A /* CDVDevice.h */ = {isa = PBXFileReference; name = "CDVDevice.h"; path = "org.apache.cordova.device/CDVDevice.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		7B88173985CC4C0ABDF852AB /* CDVNotification.m */ = {isa = PBXFileReference; name = "CDVNotification.m"; path = "org.apache.cordova.dialogs/CDVNotification.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		0997AD709E7F49459F0B79E7 /* CDVNotification.h */ = {isa = PBXFileReference; name = "CDVNotification.h"; path = "org.apache.cordova.dialogs/CDVNotification.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		59091934F78140B5B790529F /* CDVNotification.bundle */ = {isa = PBXFileReference; name = "CDVNotification.bundle"; path = "CDVNotification.bundle"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.plug-in; explicitFileType = undefined; includeInIndex = 0; };
@@ -102,6 +100,8 @@
 		D1412AE2D19F401D8953C565 /* CDVVibration.m */ = {isa = PBXFileReference; name = "CDVVibration.m"; path = "org.apache.cordova.vibration/CDVVibration.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		8F6E1DE2F1D04120A80A19DD /* CDVVibration.h */ = {isa = PBXFileReference; name = "CDVVibration.h"; path = "org.apache.cordova.vibration/CDVVibration.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		9BE447D0B5CF4D1F8B0D2BDF /* AudioToolbox.framework */ = {isa = PBXFileReference; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		4F0B1288E38A432A88131293 /* CDVDevice.m */ = {isa = PBXFileReference; name = "CDVDevice.m"; path = "cordova-plugin-device/CDVDevice.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		08F8355F874B4615800C1CF0 /* CDVDevice.h */ = {isa = PBXFileReference; name = "CDVDevice.h"; path = "cordova-plugin-device/CDVDevice.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,12 +234,12 @@
 				387E01E60BAF402DA6DE79B5 /* CDVWhitelistPlugin.h */,
 				E8D3E140E3014E77A1BA2C71 /* CDVLogger.m */,
 				1E09BA2B05B04066BBED658D /* CDVLogger.h */,
-				2551CDD0933D4AB196D5E655 /* CDVDevice.m */,
-				E45C27F60ABD4A73B4545F4A /* CDVDevice.h */,
 				7B88173985CC4C0ABDF852AB /* CDVNotification.m */,
 				0997AD709E7F49459F0B79E7 /* CDVNotification.h */,
 				D1412AE2D19F401D8953C565 /* CDVVibration.m */,
 				8F6E1DE2F1D04120A80A19DD /* CDVVibration.h */,
+				4F0B1288E38A432A88131293 /* CDVDevice.m */,
+				08F8355F874B4615800C1CF0 /* CDVDevice.h */,
 			);
 			name = Plugins;
 			path = "Fidelite IziPass/Plugins";
@@ -363,9 +363,9 @@
 				C9ACD3F68E4D4D01BF5B0B12 /* zxing-all-in-one.cpp in Resources */,
 				13B57929F5AE48F188910EEB /* CDVWhitelistPlugin.m in Sources */,
 				F6670F3B503E4D5F93538D28 /* CDVLogger.m in Sources */,
-				FDA89A4733EA4FFC9E68DC3E /* CDVDevice.m in Sources */,
 				DF8F34644B4B432AAEFA02E7 /* CDVNotification.m in Sources */,
 				1283B1E6FEAC4EA6BFD60642 /* CDVVibration.m in Sources */,
+				75CD4C565D824D8C8092D130 /* CDVDevice.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
