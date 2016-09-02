@@ -7,6 +7,14 @@
         "is_top_level": true,
         "variables": {}
     },
+    "org.apache.cordova.device": {
+        "source": {
+            "type": "registry",
+            "id": "org.apache.cordova.device"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
     "org.apache.cordova.console": {
         "source": {
             "type": "registry",
@@ -67,18 +75,16 @@
     },
     "cordova-plugin-device": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-device",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-device"
         },
         "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-dialogs": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-dialogs",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
         },
         "is_top_level": true,
         "variables": {}

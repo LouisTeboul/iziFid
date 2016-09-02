@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.izipass.izipass" version="3.0.0.2"
+<widget id="com.izipass.izipass" version="3.0.0.10"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0"
         xmlns:gap="http://phonegap.com/ns/1.0">
@@ -21,6 +21,7 @@
     <preference name="SplashScreen" value="screen"/>
     <preference name="SplashScreenDelay" value="3000"/>
     <preference name="KeyboardShrinksView" value="true"/>
+    <preference name="phonegap-version" value="3.7.0"/>
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device"/>
     </feature>
@@ -61,8 +62,8 @@
         <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
     </platform>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.2.0"/>
-    <gap:plugin name="org.apache.cordova.device" version="0.3.0"/>
-    <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
+    <gap:plugin name="org.apache.cordova.device" version="0.2.12"/>
+    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10"/>
     <gap:plugin name="org.apache.cordova.vibration" version="0.3.11"/>
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
 </widget>

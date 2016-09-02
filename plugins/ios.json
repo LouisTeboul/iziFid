@@ -97,20 +97,20 @@
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.ionicframework.izifid749652"
         },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.ionicframework.izifid749652"
+        },
         "org.apache.cordova.console": {
             "PACKAGE_NAME": "com.ionicframework.izifid749652"
         },
         "com.phonegap.plugins.barcodescanner": {
             "PACKAGE_NAME": "com.ionicframework.izifid749652"
         },
-        "org.apache.cordova.vibration": {
+        "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "com.ionicframework.izifid749652"
         },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.izipass.izipass"
-        },
-        "cordova-plugin-dialogs": {
-            "PACKAGE_NAME": "com.izipass.izipass"
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "com.ionicframework.izifid749652"
         }
     },
     "dependent_plugins": {}

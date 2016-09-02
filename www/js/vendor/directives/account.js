@@ -425,13 +425,15 @@ accountApp
                                 // Si cette url accepte le login anonyme, on identifie le client en tant que client anonyme
                                 if (data.AllowAnonymous) {
                                 	if (data.AnonymousCustomer) {
-                                		$scope.data = data;
+                                	    $scope.data = data;
+                                	    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
                                 		$scope.data.Offers = APIService.get.formattedOffers(data);
                                 		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                 		$scope.hideData = false;
                                 	} else {
                                 		APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
-                                			$scope.data = data.data;
+                                		    $scope.data = data.data;
+                                		    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
                                 			$scope.data.Offers = APIService.get.formattedOffers(data);
                                 			$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                 			$scope.hideData = false;
@@ -458,7 +460,8 @@ accountApp
                             } else {
 
                             	if ($scope.appconfiguration.clientView) {
-                            		$scope.data = data;
+                            	    $scope.data = data;
+                            	    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
                             		$scope.data.Offers = APIService.get.formattedOffers(data);
                             		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                             		$scope.hideData = false;
@@ -635,12 +638,12 @@ accountApp
                         $scope.showSearchView = true;
                     };
 
-                    $scope.getTotalPositiveHistory = function (history, balanceType_id) {
+                    $scope.getTotalPositiveHistory = function (history, balance) {
                         var total = 0;
                         for (var i = 0; i < history.length; i++) {
-                            total += history[i].Value > 0 && history[i].BalanceType_Id == balanceType_id ? history[i].Value : 0;
+                            total += history[i].Value > 0 && history[i].BalanceType_Id == balance.BalanceType_Id ? history[i].Value : 0;
                         }
-                        return total;
+                        return balance.UseToPay ? currencyFormat(total) : total;
                     };
 
                     /** @function $scope.useBalanceToPay

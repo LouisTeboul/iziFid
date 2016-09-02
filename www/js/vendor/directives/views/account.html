@@ -331,17 +331,17 @@
                         </h4>
                         <!--3 differents Balances can be diplay -->
                         <h4 class="no-mg-vert" ng-if="data.History && data.Balances[0] != undefined"><b translate>Cumul depuis la création</b> :
-                            {{getTotalPositiveHistory(data.History, data.Balances[0].BalanceType_Id)}} {{data.Balances[0].BalanceType === 'Dollars' ? '$'
+                            {{getTotalPositiveHistory(data.History, data.Balances[0])}} {{data.Balances[0].BalanceType === 'Dollars' ? '$'
                             :
                             data.Balances[0].BalanceType}}
                         </h4>
                         <h4 class="no-mg-vert" ng-if="data.History && data.Balances[1] != undefined"><b translate>Cumul depuis la création</b> :
-                            {{getTotalPositiveHistory(data.History, data.Balances[1].BalanceType_Id)}} {{data.Balances[1].BalanceType === 'Dollars' ? '$'
+                            {{getTotalPositiveHistory(data.History, data.Balances[1])}} {{data.Balances[1].BalanceType === 'Dollars' ? '$'
                             :
                             data.Balances[1].BalanceType}}
                         </h4>
                         <h4 class="no-mg-vert" ng-if="data.History && data.Balances[2] != undefined"><b translate>Cumul depuis la création</b> :
-                            {{getTotalPositiveHistory(data.History, data.Balances[2].BalanceType_Id)}} {{data.Balances[2].BalanceType === 'Dollars' ? '$'
+                            {{getTotalPositiveHistory(data.History, data.Balances[2])}} {{data.Balances[2].BalanceType === 'Dollars' ? '$'
                             :
                             data.Balances[2].BalanceType}}
                         </h4>
