@@ -15,7 +15,7 @@ angular.module('starter.services', [])
                         deferred.resolve({'error': true, 'result': error.toString()});
                     },
 					  {
-      					"preferFrontCamera": true,
+      					"preferFrontCamera": false,
       					"showFlipCameraButton": true
 					  }
                 );
