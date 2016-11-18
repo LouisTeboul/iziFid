@@ -1,3 +1,7 @@
+---
+title: Whitelist
+description: Whitelist external content accessible by your app.
+---
 <!--
 # license: Licensed to the Apache Software Foundation (ASF) under one
 #         or more contributor license agreements.  See the NOTICE file
@@ -21,10 +25,20 @@
 
 This plugin implements a whitelist policy for navigating the application webview on Cordova 4.0
 
+:warning: Report issues on the [Apache Cordova issue tracker](https://issues.apache.org/jira/issues/?jql=project%20%3D%20CB%20AND%20status%20in%20%28Open%2C%20%22In%20Progress%22%2C%20Reopened%29%20AND%20resolution%20%3D%20Unresolved%20AND%20component%20%3D%20%22Plugin%20Whitelist%22%20ORDER%20BY%20priority%20DESC%2C%20summary%20ASC%2C%20updatedDate%20DESC)
+
+## Installation
+
+You can install whitelist plugin with Cordova CLI, from npm:
+
+```
+$ cordova plugin add cordova-plugin-whitelist
+$ cordova prepare
+```
+
 ## Supported Cordova Platforms
 
 * Android 4.0.0 or above
-* iOS 4.0.0 or above
 
 ## Navigation Whitelist
 Controls which URLs the WebView itself can be navigated to. Applies to
@@ -110,6 +124,9 @@ In `config.xml`, add `<access>` tags, like this:
 
 Without any `<access>` tags, only requests to `file://` URLs are allowed. However, the default Cordova application includes `<access origin="*">` by default.
 
+
+Note: Whitelist cannot block network redirects from a whitelisted remote website (i.e. http or https) to a non-whitelisted website. Use CSP rules to mitigate redirects to non-whitelisted websites for webviews that support CSP.
+
 Quirk: Android also allows requests to https://ssl.gstatic.com/accessibility/javascript/android/ by default, since this is required for TalkBack to function properly.
 
 ### Content Security Policy
@@ -130,13 +147,16 @@ Here are some example CSP declarations for your `.html` pages:
     -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
 
-    <!-- Allow requests to foo.com -->
+    <!-- Allow everything but only from the same origin and foo.com -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' foo.com">
 
-    <!-- Enable all requests, inline styles, and eval() -->
+    <!-- This policy allows everything (eg CSS, AJAX, object, frame, media, etc) except that 
+        * CSS only from the same origin and inline styles,
+        * scripts only from the same origin and inline styles, and eval()
+    -->
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
 
-    <!-- Allow XHRs via https only -->
+    <!-- Allows XHRs only over HTTPS on the same domain. -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
 
     <!-- Allow iframe to https://cordova.apache.org/ -->

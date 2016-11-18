@@ -198,6 +198,26 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
                 return offersTypes;
             },
 
+            formattedBalancesAmount: function (loyaltyObj) {
+                var balances = loyaltyObj.Balances;
+                $log.info('balances', balances);
+                var BalancesFormated = [];
+
+                if (balances) {
+
+                    for (var i = 0; i < balances.length; i++) {
+                        if (balances[i].UseToPay) {
+                            balances[i].Value = currencyFormat(balances[i].Value);
+                            BalancesFormated.push(balances[i]);
+                        }
+                        else {
+                            BalancesFormated.push(balances[i]);
+                        }
+                    }
+                }
+                return BalancesFormated;
+            },
+
             /** @function methods.get.emptyPassageObj
              *  Returns a LoyaltyOrderRequest object with empty properties */
             emptyPassageObj: function () {
@@ -365,3 +385,8 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
     /** return the exposed API methods */
     return methods;
 }]);
+
+
+function currencyFormat(amount) {
+    return (Math.round(amount * 100) / 100).toFixed(2);
+}
