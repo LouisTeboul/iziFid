@@ -11,8 +11,8 @@
     <access origin="*" />
     <allow-intent href="*" />
     <allow-navigation href="*" />
-    <preference name="phonegap-version" value="4.3.0" />
-    <preference name="cordova-version" value="4.3.0" />
+    <preference name="phonegap-version" value="4.0.0" />
+    <preference name="cordova-version" value="4.0.0" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
