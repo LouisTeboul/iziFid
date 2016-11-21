@@ -13,11 +13,7 @@ angular.module('starter.services', [])
                     },
                     function (error) {  // failure
                         deferred.resolve({'error': true, 'result': error.toString()});
-                    },
-					  {
-      					"preferFrontCamera": false,
-      					"showFlipCameraButton": true
-					  }
+                    }
                 );
             }
             catch (exc) {
