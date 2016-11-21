@@ -67,7 +67,7 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
-    <plugin name="phonegap-plugin-barcodescanner" spec="~3.1.2">
+    <plugin name="phonegap-plugin-barcodescanner" spec="~4.0.2">
         <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
     </plugin>
     <plugin name="cordova-plugin-device" spec="~1.1.3" />
