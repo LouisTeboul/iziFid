@@ -69,7 +69,9 @@ starterApp
     }]
 )
     .controller('OfflineCtrl', ['$scope', '$http', '$log', '$timeout', function ($scope, $http, $log, $timeout) {
-        var connectedRef = "https://izigenerator.firebaseio.com/.info/connected";
+        /* TODO API-V2 */
+    	var connectedRef = "https://izigenerator.firebaseio.com/.info/connected";
+    	//var connectedRef = "http://izi-resto.izipass.pro";
         var isOffline = false;
         var poll = function () {
             $timeout(function () {

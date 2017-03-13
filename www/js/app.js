@@ -9,7 +9,7 @@ var starterApp = angular.module('starter', ['ionic', 'starter.services', 'ngMate
 
 starterApp
     .run(function ($ionicPlatform, $rootScope) {
-    	$rootScope.Version = "3.0.0.9";
+    	$rootScope.Version = "3.0.0.10";
 
         $ionicPlatform.ready(function () {
 //            if (window.StatusBar) {
@@ -26,12 +26,31 @@ starterApp
         }, 1000);
     })
 
-    .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $ionicConfigProvider) {
+    /* TODO API-V2 */
+    //.config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $ionicConfigProvider, $httpProvider, $injector) {
+    .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $ionicConfigProvider, $httpProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('green')
             .accentPalette('lime');
 
         $ionicConfigProvider.scrolling.jsScrolling(true);
+
+        /* TODO API-V2 */
+    	// Auth custom content
+        //$httpProvider.interceptors.push(function ($q, $rootScope, $injector) {
+        //	return {
+        //		request: function (config) {
+        //			var apiService = $injector.get('APIService');
+        //			var token = apiService.get.token();
+
+        //			if (token) {
+        //				config.headers['Authorization'] = 'bearer ' + token.access_token;
+        //			}
+        //			return $q.when(config);
+        //		}
+
+        //	};
+        //});
 
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router

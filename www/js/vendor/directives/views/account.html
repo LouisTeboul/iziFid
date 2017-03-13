@@ -188,6 +188,7 @@
 
                             <div translate class="input-group-addon wave-effect"
                                  style="width:50%; font-size: 1.5em;"
+                                 ng-if="!data.CustomActionMandatoryAmount"
                                  ng-click="!isOrderingAmount ? orderAmount(orderAmountInput.value) : 0"
                                     >VALIDER
                             </div>
@@ -200,7 +201,7 @@
                  ng-if="containsBalanceType('Passages') && (data.CustomerEmail || data.AnonymousCustomer) && (!data.OneRuleWithOrderAmount || data.ForceDisplayAddPassage) && !data.PartialCustomer" 
                  style="margin-top: 16px;">
                 <button class="btn btn-lg bg-accent no-radius hvr-sink activated waves-effect" ng-click="addPassage()">
-                    <i translate class="icon ion-plus"></i>AJOUTER UN PASSAGE
+                    <i translate class="icon ion-plus">AJOUTER UN PASSAGE</i>
                 </button>
             </div>
 
@@ -328,10 +329,21 @@
                             {{bipDate.getDate() + '/' + (bipDate.getMonth() + 1) + '/' +
                             bipDate.getFullYear()}}
                         </h4>
-                        <h4 class="no-mg-vert" ng-if="data.History"><b translate>Cumul depuis la création</b> :
-                            {{getTotalPositiveHistory(data.History)}} {{data.Balances[0].BalanceType === 'Dollar' ? '$'
+                        <!--3 differents Balances can be diplay -->
+                        <h4 class="no-mg-vert" ng-if="data.History && data.Balances[0] != undefined"><b translate>Cumul depuis la création</b> :
+                            {{getTotalPositiveHistory(data.History, data.Balances[0])}} {{data.Balances[0].BalanceType === 'Dollars' ? '$'
                             :
                             data.Balances[0].BalanceType}}
+                        </h4>
+                        <h4 class="no-mg-vert" ng-if="data.History && data.Balances[1] != undefined"><b translate>Cumul depuis la création</b> :
+                            {{getTotalPositiveHistory(data.History, data.Balances[1])}} {{data.Balances[1].BalanceType === 'Dollars' ? '$'
+                            :
+                            data.Balances[1].BalanceType}}
+                        </h4>
+                        <h4 class="no-mg-vert" ng-if="data.History && data.Balances[2] != undefined"><b translate>Cumul depuis la création</b> :
+                            {{getTotalPositiveHistory(data.History, data.Balances[2])}} {{data.Balances[2].BalanceType === 'Dollars' ? '$'
+                            :
+                            data.Balances[2].BalanceType}}
                         </h4>
 
                         <h2 translate class="no-mg-vert" ng-if="data.AllowAnonymous && data.AnonymousCustomer">Utilisateur anonyme</h2>
@@ -442,7 +454,7 @@
                             <input id="firstname" name="firstname" class="form-control" type="text"
                                    ng-model="client.firstname"
                                    placeholder="{{'Prénom' | translate}}&#8230;" ng-minlength="1"
-                                   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+                                   ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
 
                             <div class="alert alert-danger"
@@ -459,7 +471,7 @@
                             <input id="lastname" name="lastname" class="form-control" type="text"
                                    ng-model="client.lastname"
                                    placeholder="{{'Nom' | translate}}&#8230;" ng-minlength="1"
-                                   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+                                   ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/"
                                    required=""/>
 
                             <div class="alert alert-danger"
@@ -483,7 +495,7 @@
                         <div class="form-group col-sm-9">
                             <input id="email" name="email" class="form-control" type="email" ng-model="client.email"
                                    placeholder="{{'Email' | translate}}&#8230;"
-                                   ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
+                                   ng-pattern="/^[_\-a-z0-9]+(\.[_\-a-z0-9]+)*@[\-a-z0-9-]+(\.[\-a-z0-9-]+)*(\.[\-a-z]{2,4})$/"
                                    required=""/>
 
                             <div class="alert alert-danger"
@@ -646,7 +658,7 @@
 							<input id="firstname" name="firstname" class="form-control" type="text"
 								   ng-model="client.firstname"
 								   placeholder="{{'Prénom' | translate}}&#8230;" ng-minlength="1"
-								   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+								   ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/"
 								   required="" />
 
 							<div class="alert alert-danger"
@@ -663,7 +675,7 @@
 							<input id="lastname" name="lastname" class="form-control" type="text"
 								   ng-model="client.lastname"
 								   placeholder="{{'Nom' | translate}}&#8230;" ng-minlength="1"
-								   ng-pattern="/[a-zA-ZÀ-ÿ ][a-zA-ZÀ-ÿ ]+/"
+								   ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/"
 								   required="" />
 
 							<div class="alert alert-danger"
@@ -679,7 +691,7 @@
 						<div class="form-group col-sm-9">
 							<input id="email" name="email" class="form-control" type="email" ng-model="client.email"
 								   placeholder="{{'Email' | translate}}&#8230;"
-								   ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
+								   ng-pattern="/^[_\-a-z0-9]+(\.[_\-a-z0-9]+)*@[\-a-z0-9-]+(\.[\-a-z0-9-]+)*(\.[\-a-z]{2,4})$/"
 								   required="" />
 
 							<div class="alert alert-danger"

@@ -6,6 +6,7 @@
 		"VALIDER": "VALID",
 		"Rechercher": "Search",
 		"RECHERCHER": "SEARCH",
+		"Veuillez saisir": "Please enter",
 		"Veuillez saisir votre numéro de carte": "Please enter your card number",
 		"N° de carte": "Card number",
 		"Ce numéro de carte n'est pas valide": "Invalid card number",
@@ -56,8 +57,9 @@
 		"Appuyez une autre fois pour quitter": "Push back button another time to exit",
 		"Carte inconnue !": "Invalid card !",
 		"La carte est enregistrée": "This card is registered",
-		"J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité": "I agree to receive by email my account information and loyalty offers"
-
+		"J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité": "I agree to receive by email my account information and loyalty offers",
+		"Vous dépassez la limite, le montant maximun est de": "You exceed the limit, the maximum amount is",
+		"Ce montant est supérieur au total de la cagnotte": "This amount is greater than the total of the pot"
 	});
 
 	$translateProvider.translations('fr_FR', {
