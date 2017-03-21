@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.izipass.izipass" version="3.0.0.11" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Fidelite IziPass</name>
+    <name>Fidelite IziPass IOS version 10</name>
     <description>
     Gestion Fidélité
   </description>
@@ -21,10 +21,10 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="KeyboardShrinksView" value="true" />
 	<preference name="android-build-tool" value="gradle" />
-	<!-- iOS only -->
+	<!-- iOS only 
 	<preference name="target-device" value="handset" />
 	<preference name="deployment-target" value="6.0" />
-	
+	-->
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
