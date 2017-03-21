@@ -21,8 +21,6 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="KeyboardShrinksView" value="true" />
 	<preference name="android-build-tool" value="gradle" />
-	<preference name="target-device" value "handset" />
-	<preference name="deployment-target" value="6" />
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
@@ -48,6 +46,8 @@
         <gap:splash gap:platform="ios" height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
         <gap:splash gap:platform="ios" height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <gap:splash gap:platform="ios" height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+		<preference name="target-device" value "handset" />
+		<preference name="deployment-target" value="6" />
     </platform>
     <platform name="android">
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
