@@ -1,0 +1,60 @@
+
+.signature {
+	border: 1px solid lightgray;
+	width: 400px;
+	height: 150px;
+    margin: 0 auto;
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.signatureempty {
+    width: 400px;
+	height: 150px;
+    margin: 0 auto;
+    position: relative;
+    margin-bottom: 25px;
+}
+
+#hasvalidlegaldocument {
+     width: 800px;
+     margin: 0 auto;
+     text-align: center;
+}
+.divcheck {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
+}
+
+#checkdocument {
+    width: 50px;
+    margin-bottom: 0px;
+}
+.signature span {
+	float: none;
+	display: block;
+	position: absolute;
+}
+
+.signature .md-button {
+	position: absolute;
+	display: block;
+	right: -65px;
+	background: transparent;
+	max-width: 50px !important;
+	max-height: 50px !important;
+	min-width: 50px !important;
+	min-height: inherit;
+	padding: 0;
+	line-height: 30px;
+}
+
+.signature md-icon {
+	width: 18px !important;
+	height: 18px !important;
+}
+
+.signature .md-button.savedocument{
+    top: 65px;
+}

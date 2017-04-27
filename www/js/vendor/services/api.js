@@ -147,6 +147,20 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 				}, 0);
 			},
 
+		    /** @function methods.get.customerSettings()
+			 *  Get the customersettings data
+			 * @param func [type: function]
+			 * A callback function to which we pass the data */
+			customerSettings: function (func) {
+			    return $timeout(function () {
+			        $http.get(methods.get.callableUrl("GetCustomerSettings")).success(function (data) {
+			            return func(data);
+			        }).error(function (e) {
+			            vars.debug ? $log.error(e) : 0;
+			            return func(false);
+			        });
+			    }, 0);
+			},
 			/** @function methods.get.loyaltyObjectWithPassword(@param barcode)
 			 *  Get the data associated with a particular barcode
 			 * @param barcode [type: number]

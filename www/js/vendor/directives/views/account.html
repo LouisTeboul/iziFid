@@ -159,14 +159,13 @@
         }
     </style>
 
-
     <div layout-fill layout="column" class="izi-account center-block" style="margin-top: 16px;" flex>
 		<div class="loading">
 			<md-progress-circular class="md-warn" md-mode="indeterminate" ng-if="!isReady"></md-progress-circular>
 		</div>
 
 		<!-- #region CLIENT VIEW-->
-        <div ng-if="!deviceNotRegistered && isReady && barcode && !register && !partialRegister && !voucher && !showSearchView" style="padding-top: 24px;">
+        <div ng-if="!deviceNotRegistered && isReady && barcode && !register && !partialRegister && !registerWithLegalDocument && !voucher && !showSearchView && !legalDocumentSignature" style="padding-top: 24px;">
 
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="disconnect()" style="font-size: 2em; margin-top: -44px"></i>
@@ -366,7 +365,7 @@
 		<!-- #endregion -->
 
         <!-- #region LOGIN VIEW -->
-        <div layout="column" id="loginView" ng-if="!deviceNotRegistered && isReady && !barcode && !register &&!partialRegister && !showSearchView" style="margin-top: 30px;" flex>
+        <div layout="column" id="loginView" ng-if="!deviceNotRegistered && isReady && !barcode && !register && !partialRegister && !registerWithLegalDocument && !legalDocumentSignature && !showSearchView" style="margin-top: 30px;" flex>
             <h2 class="title text-center">{{firebase ? customization.title : 'FIDÉLITÉ'}}</h2>
 
             <h4 translate class="blanc text-center subtitle">
@@ -717,6 +716,270 @@
 		</div>
 		<!-- #endregion -->
 		
+        <!-- #region REGISTER VIEW with legal document-->
+        <div id="registerWithLegalDocumentView" ng-if="registerWithLegalDocument">
+            <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;"
+               ng-click="backToLogin()"></i>
+
+            <div class="container" style="max-width: 800px; margin: auto;">
+                <h2 class="blanc text-center">
+                    <span translate>Enregistrer Ma Carte</span><br>
+                    <small translate>Tous les champs avec * sont obligatoires</small>
+                </h2>
+
+                <form name="registerWithLegalDocumentForm" class="form-horizontal" novalidate style="margin-top: 28px;">
+                    <div class="clearfix">
+                        <label for="barcode" class="col-sm-3"><span translate >N° de carte</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="barcode" name="barcode" class="form-control" type="text"
+                                   ng-model="client.barcode"
+                                   ng-init="client.barcode = scannedBarcode"
+                                   placeholder="{{'N° de carte' | translate}}&#8230;" ng-minlength="8" required />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.barcode.$invalid && !registerWithLegalDocumentForm.barcode.$pristine">
+                                <p translate class="text-center">Ce numéro de carte n'est pas valide</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.GenderEnabled" style="padding-bottom: 16px;">
+                        
+                        <label for="sex" class="col-sm-3"><span translate>Sexe</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <select class="form-control" id="sex" ng-model="client.gender" ng-init="client.gender = 'M'"
+                                    name="gender" required>
+                                <option translate value="M">Homme</option>
+                                <option translate value="F">Femme</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="firstname" class="col-sm-3"><span translate>Prénom</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="firstname" name="firstname" class="form-control" type="text"
+                                   ng-model="client.firstname"
+                                   placeholder="{{'Prénom' | translate}}&#8230;" ng-minlength="1"
+                                   ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/"
+                                   required="" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.firstname.$invalid && !registerWithLegalDocumentForm.firstname.$pristine">
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="lastname" class="col-sm-3"><span translate >Nom</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="lastname" name="lastname" class="form-control" type="text"
+                                   ng-model="client.lastname"
+                                   placeholder="{{'Nom' | translate}}&#8230;" ng-minlength="1"
+                                   ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/"
+                                   required="" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.lastname.$invalid && !registerWithLegalDocumentForm.lastname.$pristine">
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.DateOfBirthEnabled" style="padding-bottom: 16px;">
+                        <label translate for="birthDate" class="col-sm-3">Date de naissance</label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="birthDate" name="birthDate" ng-model="client.birthdate" type="date" />
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="email" class="col-sm-3"><span translate >Email</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="email" name="email" class="form-control" type="email" ng-model="client.email"
+                                   placeholder="{{'Email' | translate}}&#8230;"
+                                   ng-pattern="/^[_\-a-z0-9]+(\.[_\-a-z0-9]+)*@[\-a-z0-9-]+(\.[\-a-z0-9-]+)*(\.[\-a-z]{2,4})$/"
+                                   required="" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.email.$invalid && !registerWithLegalDocumentForm.email.$pristine">
+                                <p translate class="text-center">Cette adresse email ne semble pas être valide</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.PhoneEnabled"> 
+                        <label for="tel" class="col-sm-3"><span translate >Téléphone</span><span ng-if="customersettings.PhoneRequired"> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="tel" name="tel" class="form-control" type="tel" ng-model="client.tel"
+                                   placeholder="{{'Téléphone' | translate }}&#8230;"
+                                   ng-pattern="/^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/"
+                                   ng-required="customersettings.PhoneRequired" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.tel.$invalid && !registerWithLegalDocumentForm.tel.$pristine">
+                                <p translate class="text-center">Ce numéro de téléphone ne semble pas être valide</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.StreetAddressEnabled">
+                        <label for="address" class="col-sm-3"><span translate >Adresse</span><span ng-if="customersettings.StreetAddressRequired"> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="address" name="address" class="form-control" type="text"
+                                   ng-model="client.address"
+                                   placeholder="{{'Adresse' | translate}}&#8230;" ng-minlength="8" ng-required="customersettings.StreetAddressRequired"  />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.address.$invalid && !registerWithLegalDocumentForm.address.$pristine">
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 8 {{"caractères" | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.ZipPostalCodeEnabled">
+                        <label for="zipcode" class="col-sm-3"><span translate>Code Postal</span><span ng-if="customersettings.ZipPostalCodeRequired"> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="zipcode" name="zipcode" class="form-control" type="{{data.zipcodeLength > 5 ? 'text' : 'tel'}}" ng-model="client.zipcode"
+                                   placeholder="{{'Code Postal' | translate}}&#8230;" ng-minlength="{{data.zipcodeLength}}"
+                                   maxlength="{{data.zipcodeLength}}"
+                                   ng-required="customersettings.ZipPostalCodeRequired" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.zipcode.$invalid && !registerWithLegalDocumentForm.zipcode.$pristine">
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} {{data.zipcodeLength}} {{"caractères" | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.CityEnabled">
+                        <label for="email" class="col-sm-3"><span translate >Ville</span><span ng-if="customersettings.CityRequired"> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="city" name="city" class="form-control" type="text" ng-model="client.city"
+                                   placeholder="{{'Ville' | translate}}&#8230;"
+                                   ng-minlength="2"
+                                   ng-required="customersettings.CityRequired" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.city.$invalid && !registerWithLegalDocumentForm.city.$pristine">
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 2 {{"caractères" | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.CompanyEnabled">
+                        <label for="society" class="col-sm-3"><span translate >Société</span><span ng-if="customersettings.CompanyRequired"> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="society" name="society" class="form-control" type="text"
+                                   ng-model="client.society"
+                                   placeholder="{{'Société' | translate}}&#8230;" 
+                                   ng-required="customersettings.CompanyRequired" />
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <label for="password" class="col-sm-3"><span translate >Mot de passe</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="password" name="password" class="form-control" type="password"
+                                   ng-model="client.password"
+                                   placeholder="{{'Mot de passe' | translate}}&#8230;" ng-minlength="8" required="" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="registerWithLegalDocumentForm.password.$invalid && !registerWithLegalDocumentForm.password.$pristine">
+                                <p class="text-center">{{"Ce champ doit comporter au moins" | translate}} 8 {{"caractères" | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label for="password" class="col-sm-3"><span translate>Mot de passe (confirmation)</span><span> *</span></label>
+
+                        <div class="form-group col-sm-9">
+                            <input id="passwordConfirm" name="passwordConfirm" class="form-control" type="password"
+                                   ng-model="client.passwordConfirm"
+                                   placeholder="{{'Mot de passe (confirmation)' | translate}}&#8230;"
+                                   compare-to="client.password"
+                                   ng-minlength="8"
+                                   required="" />
+
+                            <div class="alert alert-danger"
+                                 ng-if="client.password !== client.passwordConfirm && !registerWithLegalDocumentForm.passwordConfirm.$pristine">
+                                <p translate class="text-center">Le mot de passe ne correspond pas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" ng-if="customersettings.CustomerSubAccountsEnabled">
+                        <label translate for="customersubaccount" class="col-sm-12">Enfants</label>
+                        <div data-ng-repeat="subaccount in client.subaccounts">
+                            <div class="form-group col-sm-2">
+                                <select class="form-control" ng-model="subaccount.gender" ng-init="subaccount.gender = 'M'"
+                                        name="sexSubAccount" required>
+                                    <option translate value="M">Homme</option>
+                                    <option translate value="F">Femme</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="subaccountfirstname" ng-model="subaccount.firstname" type="text" placeholder="{{'Prénom' | translate}}&#8230;" ng-minlength="1"
+                                       ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/" />
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="subaccountlastname" ng-model="subaccount.lastname" type="text" placeholder="{{'Nom' | translate}}&#8230;" ng-minlength="1"
+                                       ng-pattern="/[\-a-zA-ZÀ-ÿ ]+/" />
+                            </div>
+                            <div class="col-sm-3">
+                                <input name="subaccountbirthday" ng-model="subaccount.birthdate" type="date" />
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="remove" ng-show="$last" ng-click="removeSubAccount()">-</button>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <button translate class="addfields" ng-click="addNewSubAccount()">Ajouter un enfant</button>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <p translate class="text-center">J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité</p>
+                    </div>
+                    <div class="text-center">
+                        <button translate id="submitRegisterLegalDocument"
+                                class="btn bg-{{registerWithLegalDocumentForm.$invalid ? 'rouge' : 'accent'}} btn-lg center-block text-center no-radius ink"
+                                ng-disabled="registerWithLegalDocumentForm.$invalid || registerWithLegalDocumentForm.$pristine"
+                                ng-click="submitRegisterWithLegalDocument()">
+                            VALIDER
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- #endregion -->
+
+        <!-- #region Signature VIEW-->
+        <div ng-if="legalDocumentSignature">
+            <i class="glyphicon glyphicon-remove blanc pull-left hvr-grow" style="font-size: 2em;"
+               ng-click="backToLogin()"></i>
+            <div ng-if="hasValidLegalDocument" id="hasvalidlegaldocument">
+                <h2 translate>Vous avez déjà un document légal valide</h2>
+            </div>
+            <div ng-if="!hasValidLegalDocument">
+                <signature-control model="model.signature" title="{{'Signez-ici' | translate}}" documentlegal="documentlegal" customerfullname="customerfullname" currentdate="currentdate"></signature-control>
+                <div class="signatureempty" layout="column"></div>
+            </div>
+        </div>
+
 		<!-- #region VOUCHER VIEW -->
         <div ng-if="isReady && voucher && showVoucherView">
             <div class="card">
@@ -743,7 +1006,7 @@
 		<!-- #endregion -->
 
         <!-- #region CLIENT SEARCH VIEW -->
-        <div id="searchView" ng-if="isReady && !barcode && !register && !partialRegister && showSearchView" style="margin-top: 30px;">
+        <div id="searchView" ng-if="isReady && !barcode && !register && !partialRegister && !registerWithLegalDocument && showSearchView" style="margin-top: 30px;">
             <i class="glyphicon glyphicon-remove pull-left hvr-grow"
                ng-click="hideSearchView()" style="font-size: 2em; margin-top: -44px"></i>
 

@@ -59,7 +59,17 @@
 		"La carte est enregistrée": "This card is registered",
 		"J'accepte de recevoir par mail les informations concernant mon compte et les offres de fidélité": "I agree to receive by email my account information and loyalty offers",
 		"Vous dépassez la limite, le montant maximun est de": "You exceed the limit, the maximum amount is",
-		"Ce montant est supérieur au total de la cagnotte": "This amount is greater than the total of the pot"
+		"Ce montant est supérieur au total de la cagnotte": "This amount is greater than the total of the pot",
+		"Veuillez signer le document": "Please sign the document",
+		"Le document a été enregistré": "The document was recorded",
+		"Enfants": "Children",
+		"Ajouter un enfant": "Add a child",
+		"Fait le": "Made on",
+		"par": "by",
+		"lu et approuvé": "read and approved",
+		"Signez-ici": "Sign in here",
+		"Tous les champs avec * sont obligatoires": "All fields with * are required",
+		"Vous avez déjà un document légal valide": "You already have a valid legal document"
 	});
 
 	$translateProvider.translations('fr_FR', {

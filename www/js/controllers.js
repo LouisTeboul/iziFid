@@ -79,14 +79,14 @@ starterApp
                     $('#offline-alert').fadeOut();
                     if (isOffline) {
                         isOffline = false;
-                        $('#online-alert').fadeIn();
+                        //$('#online-alert').fadeIn();
                         $timeout(function () {
                             $('#online-alert').fadeOut();
                         }, 3000);
                     }
                     poll();
                 }).catch(function (err) {
-                    $('#offline-alert').fadeIn();
+                    //$('#offline-alert').fadeIn();
                     isOffline = true;
                     poll();
                 });
@@ -97,7 +97,7 @@ starterApp
             $('#offline-alert').fadeOut();
             poll();
         }).catch(function (err) {
-            $('#offline-alert').fadeIn();
+            //$('#offline-alert').fadeIn();
             poll();
         });
     }]

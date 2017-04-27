@@ -26,8 +26,8 @@ accountApp
                 }
             },
             controller: [
-                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService', '$translate',
-                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService, $translate) {
+                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService', '$translate', '$sce',
+                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService, $translate, $sce) {
 
                     $scope.isReady = false;
                     $rootScope.isReady = false;
@@ -123,10 +123,12 @@ accountApp
                     }
 
                     function configureApp(dataApp) {
+
                     	$scope.appconfiguration = {
 							loyaltyAppType: LoyaltyAppType.Default,
                     		clientSearch: true,
-							clientView: true
+                    		clientView: true,
+                            signatureView: false,
                     	};
 
                     	if (dataApp.LoyaltyAppType) {
@@ -137,7 +139,13 @@ accountApp
                     			case LoyaltyAppType.PartialCustomerRegisterOnly:
                     				$scope.appconfiguration.clientSearch = false;
                     				$scope.appconfiguration.clientView = false;
+                    				$scope.appconfiguration.signatureView = false;
                     				break;
+                    		    case LoyaltyAppType.CustomerRegisterWithLegalDocument:
+                    		        $scope.appconfiguration.clientSearch = false;
+                    		        $scope.appconfiguration.clientView = false;
+                    		        $scope.appconfiguration.signatureView = true;
+                    		        break;
                     		}
                     	}
 
@@ -178,8 +186,14 @@ accountApp
                         		/** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
                         		APIService.set.clientUrl(data.Server_Url);
                         		$scope.clientUrl = data.Server_Url;
+                        		$rootScope.clientUrl = data.Server_Url;
 
-
+                        	    /* Récupération des informations sur les champs activés côté smartstore*/
+                        		APIService.get.customerSettings(function (data) {
+                        		    $log.info('customersettings object:', data);
+                        		    $scope.customersettings = data;
+                        		});
+                        		
                         	    /** Login for obtain token */
                                 /* TODO API-V2 */
                         		//APIService.actions.login(window.device.uuid);
@@ -357,6 +371,7 @@ accountApp
                     $scope.form = {};
                     $scope.QRCodeValid = true;
                     $scope.client = {};
+                    $scope.client.subaccounts = [];
                     var balanceInUse;
 
                     $attrs.$observe('barcode', function (passedBarcode) {
@@ -423,7 +438,7 @@ accountApp
                                 $scope.client.barcode = $scope.barcode;
 
                                 // Si cette url accepte le login anonyme, on identifie le client en tant que client anonyme
-                                if (data.AllowAnonymous) {
+                                if (data.AllowAnonymous && $scope.appconfiguration.loyaltyAppType != LoyaltyAppType.CustomerRegisterWithLegalDocument) {
                                 	if (data.AnonymousCustomer) {
                                 	    $scope.data = data;
                                 	    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
@@ -441,7 +456,10 @@ accountApp
                                 			$log.error('registerAnonymous error', error);
                                 		});
                                 	}
-
+                                } else if ($scope.appconfiguration.loyaltyAppType == LoyaltyAppType.CustomerRegisterWithLegalDocument) { //Si mode Legal document
+                                    //$scope.reset();
+                                    $scope.goRegisterWithLegalDocument();
+                                	
                                 } else if (data.CustomerPartial && $scope.appconfiguration.loyaltyAppType == LoyaltyAppType.PartialCustomerRegisterOnly) { //Si la création partielle est autorisée
                                 	//$scope.reset();
                                 	$scope.goPartialRegister();
@@ -458,8 +476,32 @@ accountApp
 
                                 // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
+                                if ($scope.appconfiguration.signatureView) {
+                                    $scope.data = data;
+                                    $scope.legalDocumentSignature = true;
+                                    $rootScope.CustomerId = data.CustomerId;
+                                    $scope.customerfullname = data.CustomerFirstName + ' ' + data.CustomerLastName;
+                                    $scope.hasValidLegalDocument = data.HasValidLegalDocument;
 
-                            	if ($scope.appconfiguration.clientView) {
+                                    var today = new Date();
+
+                                    $scope.currentdate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+
+                                    $.ajax({
+                                        type: "GET",
+                                        url: $rootScope.clientUrl + "/Customer/HtmlCustomerLegalDocument?customerId=" + $scope.data.CustomerId,
+                                        async: false,
+                                        success: function (data) {
+                                            $scope.documentlegal = $sce.trustAsHtml(data);
+                                        },
+                                        error: function (err) {
+                                            alert(err.responseText);
+                                        },
+                                    });
+
+
+                                }
+                            	else if ($scope.appconfiguration.clientView) {
                             	    $scope.data = data;
                             	    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
                             		$scope.data.Offers = APIService.get.formattedOffers(data);
@@ -514,6 +556,13 @@ accountApp
                     	$scope.$evalAsync();
                     	$scope.partialRegister = true;
                     };
+                    
+                    /** @function goRegisterWithLegalDocument
+                    *  Affiche la vue du formulaire d'enregistrement avec document légal*/
+                    $scope.goRegisterWithLegalDocument = function () {
+                        $scope.$evalAsync();
+                        $scope.registerWithLegalDocument = true;
+                    };
 
                     /** Retourne à l'écran d'accueil depuis le formulaire d'enregistrement */
                     $scope.backToLogin = function () {
@@ -521,6 +570,21 @@ accountApp
                         $timeout(function () {
                         	$scope.register = false;
                         	$scope.partialRegister = false;
+                        	$scope.registerWithLegalDocument = false;
+                        	$scope.legalDocumentSignature = false;
+                        }, 0);
+                        window.scrollTo(0, 0);
+                        !$scope.isBrowser ? $rootScope.scan() : 0;
+                    };
+
+                    /** Retourne à l'écran d'accueil depuis le formulaire de signature */
+                    $rootScope.backToLoginRoot = function () {
+                        $scope.reset();
+                        $timeout(function () {
+                            $scope.register = false;
+                            $scope.partialRegister = false;
+                            $scope.registerWithLegalDocument = false;
+                            $scope.legalDocumentSignature = false;
                         }, 0);
                         window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -566,7 +630,8 @@ accountApp
                      */
                     $scope.reset = function () {
                         $timeout(function () {
-                        	$scope.client = {}; // {barcode: $scope.form.barcode};
+                            $scope.client = {}; // {barcode: $scope.form.barcode};
+                            $scope.client.subaccounts = [];
                             $scope.showVoucherView = false;
                             delete $scope.barcode;
                             delete $scope.voucher;
@@ -910,6 +975,67 @@ accountApp
                         });
                     };
 
+                    $scope.addNewSubAccount = function () {
+                        var newItemNo = $scope.client.subaccounts.length + 1;
+                        $scope.client.subaccounts.push({ 'id': 'subaccount' + newItemNo });
+                    };
+
+                    $scope.removeSubAccount = function () {
+                        var lastItem = $scope.client.subaccounts.length - 1;
+                        $scope.client.subaccounts.splice(lastItem);
+                    };
+
+                    $scope.submitRegisterWithLegalDocument = function (element) {
+
+                        $("#submitRegisterLegalDocument").prop("disabled", true);
+                        var customersubaccounts = [];
+                        if ($scope.client.subaccounts != undefined && $scope.client.subaccounts.length > 0) {
+
+                            $scope.client.subaccounts.forEach( function (subaccount) {
+                            var customersubaccount = {
+                                FirstName: subaccount.firstname,
+                                LastName: subaccount.lastname,
+                                Gender: subaccount.gender,
+                                DateOfBirthDay: subaccount.birthdate ? subaccount.birthdate.getMonth() + 1 : "",
+                                DateOfBirthMonth: subaccount.birthdate ? subaccount.birthdate.getDay() : "",
+                                DateOfBirthYear: subaccount.birthdate ? subaccount.birthdate.getFullYear() : "",
+                            };
+                                customersubaccounts.push(customersubaccount);
+                            });
+                        }
+                        var obj = {
+                            Barcode: $scope.client.barcode,
+                            FirstName: $scope.client.firstname,
+                            LastName: $scope.client.lastname,
+                            Gender: $scope.client.gender,
+                            DateOfBirthMonth: $scope.client.birthdate ? $scope.client.birthdate.getMonth() + 1 : "",
+                            DateOfBirthDay: $scope.client.birthdate ? $scope.client.birthdate.getDay() : "",
+                            DateOfBirthYear: $scope.client.birthdate ? $scope.client.birthdate.getFullYear() : "",
+                            Email: $scope.client.email,
+                            Phone: $scope.client.tel,
+                            StreetAddress: $scope.client.address,
+                            ZipPostalCode: $scope.client.zipcode,
+                            City: $scope.client.city,
+                            Password: $scope.client.password,
+                            ConfirmPassword: $scope.client.passwordConfirm,
+                            SubAccounts: customersubaccounts
+                        };
+
+                        
+                        
+                        APIService.actions.register(obj).then(function () {
+                            $scope.barcode = $scope.client.barcode;
+                            $scope.form.password = $scope.client.password;
+                            $scope.registerWithLegalDocument = false;
+                            $scope.legalDocumentSignature = true;
+                            $scope.reset();
+                            displayData();
+                        }).catch(function (error) {
+                            if (error.status === 500)
+                                customAlert($translate.instant("Cette carte est déjà enregistrée !"));
+                            else customAlert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
+                        });
+                    };
                     $scope.submitPartialRegister = function () {
                     	var obj = {
                     		Barcode: $scope.client.barcode,
@@ -919,7 +1045,8 @@ accountApp
                     	};
 
                     	APIService.actions.registerAnonymous(obj).then(function () {
-                    		$scope.partialRegister = false;
+                    	    $scope.partialRegister = false;
+                    	    $scope.registerWithLegalDocument = false;
                     		$scope.barcode = $scope.client.barcode;
                     		$scope.reset();
                     		displayData();
@@ -1189,5 +1316,6 @@ accountApp
 
 var LoyaltyAppType = {
 	Default : 0,
-	PartialCustomerRegisterOnly : 1
+	PartialCustomerRegisterOnly: 1,
+	CustomerRegisterWithLegalDocument: 2
 };
