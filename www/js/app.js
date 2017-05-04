@@ -9,7 +9,7 @@ var starterApp = angular.module('starter', ['ionic', 'starter.services', 'ngMate
 
 starterApp
     .run(function ($ionicPlatform, $rootScope) {
-    	$rootScope.Version = "3.0.0.11";
+    	$rootScope.Version = "3.0.0.12";
 
         $ionicPlatform.ready(function () {
 //            if (window.StatusBar) {
