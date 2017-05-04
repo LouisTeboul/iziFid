@@ -138,6 +138,14 @@
             left: -50%;
         }
 
+        .izi-account .loadingSignature{
+			position: absolute;
+            left: 50%;
+		}
+        .izi-account .loadingSignature md-progress-circular {
+            top: -50%;
+            left: -50%;
+        }
         md-dialog {
             width: 60% !important;
         }
@@ -975,7 +983,7 @@
                 <h2 translate>Vous avez déjà un document légal valide</h2>
             </div>
             <div ng-if="!hasValidLegalDocument">
-                <signature-control model="model.signature" title="{{'Signez-ici' | translate}}" documentlegal="documentlegal" customerfullname="customerfullname" currentdate="currentdate"></signature-control>
+                <signature-control model="model.signature" title="{{'Signez-ici' | translate}}" documentlegal="documentlegal" customerfullname="customerfullname" currentdate="currentdate" ></signature-control>
                 <div class="signatureempty" layout="column"></div>
             </div>
         </div>

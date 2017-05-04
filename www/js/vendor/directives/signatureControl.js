@@ -8,10 +8,13 @@
 			documentlegal: "=?",
 			customerfullname: "=?",
 			confirmed: "=?",
-			currentdate: "=?"
+			currentdate: "=?",
+			isSubmit: "=?"
 		},
 		link: function ($scope, elem, attrs) {
 		    var _signaturePad = undefined;
+
+		    $scope.isSubmit = false;
 
 			setTimeout(function () {
 				var canvas = document.getElementById("signatureCanvas");
@@ -45,6 +48,7 @@
 
 			$scope.saveSignature = function () {
 			    if ($scope.model) {
+			        $scope.isSubmit = true;
 			        var data = _signaturePad.toDataURL($scope.model);
 
 			        var obj = {
@@ -52,6 +56,7 @@
 			            "base64string": data
 			        };
 			        $http.post($rootScope.clientUrl + "/Customer/SavePdfCustomerLegalDocument", JSON.stringify(obj)).success(function (data) {
+			            $scope.isSubmit = false;
 			            customAlert($translate.instant("Le document a été enregistré"), "", function () {
 			                $rootScope.backToLoginRoot();
 			            });
