@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.izipass.izipass" version="3.0.0.12" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Fidelite IziPass</name>
+    <name>Fidelite IziPass IOS10</name>
     <description>
     Gestion Fidélité
   </description>
@@ -11,12 +11,13 @@
     <access origin="*" />
     <allow-intent href="*" />
     <allow-navigation href="*" />
+	<!--
     <preference name="phonegap-version" value="cli-5.4.1" />
     <preference name="cordova-version" value="cli-5.4.1" />
-    <!--
+    -->
     <preference name="phonegap-version" value="cli-6.4.0" />
     <preference name="cordova-version" value="cli-6.4.0" />
-    -->
+    
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
@@ -25,10 +26,10 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="KeyboardShrinksView" value="true" />
 	  <preference name="android-build-tool" value="gradle" />
-    <!-- iOS only For Ipod -->
+    <!-- iOS only For Ipod
     <preference name="target-device" value="handset" />
     <preference name="deployment-target" value="6.0" />
-    
+    -->
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
