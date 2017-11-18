@@ -12,8 +12,8 @@
     <allow-intent href="*" />
     <allow-navigation href="*" />
 	
-    <preference name="phonegap-version" value="cli-5.4.1" />
-    <preference name="cordova-version" value="cli-5.4.1" />
+    <preference name="phonegap-version" value="cli-6.0.0" />
+    <preference name="cordova-version" value="cli-6.0.0" />
     
     <!--<preference name="phonegap-version" value="cli-6.5.0" />
     <preference name="cordova-version" value="cli-6.5.0" />-->
