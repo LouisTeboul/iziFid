@@ -26,10 +26,10 @@
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="KeyboardShrinksView" value="true" />
 	  <preference name="android-build-tool" value="gradle" />
-    <!-- iOS only For Ipod
+    <!-- iOS only For Ipod -->
     <preference name="target-device" value="handset" />
     <preference name="deployment-target" value="6.0" />
-    -->
+    
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
