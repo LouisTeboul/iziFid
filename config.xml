@@ -12,11 +12,11 @@
     <allow-intent href="*" />
     <allow-navigation href="*" />
 	
-    <preference name="phonegap-version" value="cli-6.0.0" />
-    <preference name="cordova-version" value="cli-6.0.0" />
+    <!--<preference name="phonegap-version" value="cli-6.0.0" />
+    <preference name="cordova-version" value="cli-6.0.0" />-->
     
-    <!--<preference name="phonegap-version" value="cli-6.5.0" />
-    <preference name="cordova-version" value="cli-6.5.0" />-->
+    <preference name="phonegap-version" value="cli-6.5.0" />
+    <preference name="cordova-version" value="cli-6.5.0" />
     
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
@@ -25,7 +25,7 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="KeyboardShrinksView" value="true" />
-	  <preference name="android-build-tool" value="gradle" />
+	<preference name="android-build-tool" value="gradle" />
     <!-- iOS only For Ipod -->
     <preference name="target-device" value="handset" />
     <preference name="deployment-target" value="6.0" />
