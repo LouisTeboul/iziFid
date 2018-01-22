@@ -413,11 +413,15 @@ accountApp
                         $scope.isReady = false;
                         $scope.scannedBarcode = $scope.barcode;
                         $scope.showSearchView = false;
+                        $scope.data = null;
+                        $scope.selectedAction = null;
+
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
-                            $scope.isReady = true;
+                            
                             // Si l'API retourne false, la carte est inconnue
                             if (data === false) {
+                                $scope.isReady = true;
                             	customAlert($translate.instant("Carte inconnue !"), "", function () {
                             		$scope.reset();
                             		$scope.backToLogin();
@@ -432,7 +436,7 @@ accountApp
                                     	$scope.voucher.OfferParam = JSON.parse($scope.voucher.OfferParam);
                                     }
                                 }
-
+                                $scope.isReady = true;
                                 // Si l'API ne retourne pas de prénom, nom et email, le client n'est pas enregistré
                             } else if (!data.CustomerFirstName && !data.CustomerLastName && !data.CustomerEmail) {
                                 $scope.client.barcode = $scope.barcode;
@@ -445,29 +449,36 @@ accountApp
                                 		$scope.data.Offers = APIService.get.formattedOffers(data);
                                 		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                 		$scope.hideData = false;
+                                		$scope.isReady = true;
                                 	} else {
-                                		APIService.actions.registerAnonymous({Barcode: $scope.client.barcode}).then(function (data) {
-                                		    $scope.data = data.data;
+                                        APIService.actions.registerAnonymous({ Barcode: $scope.client.barcode }).then(function (resRegister) {
+                                            var data = resRegister.data;
+                                		    $scope.data = data;
                                 		    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
                                 			$scope.data.Offers = APIService.get.formattedOffers(data);
                                 			$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
                                 			$scope.hideData = false;
+                                            $scope.isReady = true;
                                 		}).catch(function (error) {
                                 			$log.error('registerAnonymous error', error);
                                 		});
                                 	}
                                 } else if ($scope.appconfiguration.loyaltyAppType == LoyaltyAppType.CustomerRegisterWithLegalDocument) { //Si mode Legal document
                                     //$scope.reset();
+                                    $scope.isReady = true;
                                     $scope.goRegisterWithLegalDocument();
                                 	
                                 } else if (data.CustomerPartial && $scope.appconfiguration.loyaltyAppType == LoyaltyAppType.PartialCustomerRegisterOnly) { //Si la création partielle est autorisée
-                                	//$scope.reset();
+                                    //$scope.reset();
+                                    $scope.isReady = true;
                                 	$scope.goPartialRegister();
                                 	
                                 } else if ((data.Barcodes && data.Barcodes.length > 0) || data.AllowCustomerToCreateLoyaltyBarcode) { // Sinon, on envoie le client vers le formulaire d'enregistrement
-                                	//$scope.reset();
+                                    //$scope.reset();
+                                    $scope.isReady = true;
                                     $scope.goRegister();
                                 } else {
+                                    $scope.isReady = true;
                                 	customAlert($translate.instant("Carte inconnue !"), "", function () {
                                 		$scope.reset();
                                 		$scope.backToLogin();
@@ -476,6 +487,7 @@ accountApp
 
                                 // Sinon, le client a bien été identifié, on affiche la vue
                             } else {
+                                $scope.isReady = true;
                                 if ($scope.appconfiguration.signatureView) {
                                     $scope.data = data;
                                     $scope.legalDocumentSignature = true;
@@ -892,6 +904,7 @@ accountApp
                             if ($scope.data.MaxOrderAmount) {
                                 if (~~amount > ~~$scope.data.MaxOrderAmount) {
                                     customAlert($translate.instant("Vous dépassez la limite, le montant maximun est de") + " " + $scope.data.MaxOrderAmount);
+
                                     $scope.isOrderingAmount = false;
                                     return false;
                                 }
@@ -899,6 +912,7 @@ accountApp
                             APIService.actions.addPassage(passageObj).success(function () {
                                 $scope.hideDialog();
                                 $scope.isOrderingAmount = false;
+
                                 if ($scope.customization.hasPopup) {
                                     //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function(btnIndex) {
                                     //    if (btnIndex === 1) {
