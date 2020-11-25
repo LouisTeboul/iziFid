@@ -1,4 +1,4 @@
-﻿accountApp.config(['$translateProvider', function ($translateProvider) {
+accountApp.config(['$translateProvider', function ($translateProvider) {
 
 	// register english translation table
 	$translateProvider.translations('en_EN', {

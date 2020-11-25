@@ -11,7 +11,13 @@
   },
   "devDependencies": {
     "bower": "^1.3.3",
+    "cordova-ios": "^6.1.1",
+    "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-dialogs": "^1.3.4",
+    "cordova-plugin-vibration": "^2.1.6",
+    "cordova-plugin-whitelist": "^1.3.4",
     "gulp-util": "^2.2.14",
+    "phonegap-plugin-barcodescanner": "^7.0.4",
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
@@ -27,5 +33,19 @@
   ],
   "cordovaPlatforms": [
     "ios"
-  ]
+  ],
+  "cordova": {
+    "plugins": {
+      "phonegap-plugin-barcodescanner": {
+        "CAMERA_USAGE_DESCRIPTION": " "
+      },
+      "cordova-plugin-device": {},
+      "cordova-plugin-dialogs": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-vibration": {}
+    },
+    "platforms": [
+      "ios"
+    ]
+  }
 }

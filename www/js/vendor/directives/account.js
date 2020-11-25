@@ -26,42 +26,42 @@ accountApp
                 }
             },
             controller: [
-                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService', '$translate', '$sce',
-                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService, $translate, $sce) {
+                '$scope', '$rootScope', '$element', '$attrs', '$http', '$window', '$timeout', '$log', '$mdDialog', '$mdToast', '$animate', '$firebaseObject', '$firebaseArray', 'APIService', '$translate', '$sce', 'dialogs',
+                function ($scope, $rootScope, $element, $attrs, $http, $window, $timeout, $log, $mdDialog, $mdToast, $animate, $firebaseObject, $firebaseArray, APIService, $translate, $sce, dialogs) {
 
                     $scope.isReady = false;
                     $rootScope.isReady = false;
 
                     $scope.changeLanguage = function (lang) {
-                    	window.localStorage.setItem("CurrentLanguage",lang);
-                    	$translate.use(lang);
-                    	//$window.location.reload();
-                    	$rootScope.reload();
+                        window.localStorage.setItem("CurrentLanguage", lang);
+                        $translate.use(lang);
+                        //$window.location.reload();
+                        $rootScope.reload();
                     }
 
                     document.addEventListener("deviceready", onDeviceReady, false);
 
                     document.addEventListener("backbutton", function (event) {
-                    	event.preventDefault();
-                    	event.stopPropagation();
+                        event.preventDefault();
+                        event.stopPropagation();
 
-                    	if ($scope.tryExit == true) {
-                    		try {
-                    			navigator.app.exitApp();
-                    		}
-                    		catch (err) {
-     
-                    		}
-                    	} else {
-                    		$scope.tryExit = true;
-                    		try {
-                    			$scope.toast($translate.instant("Appuyez une autre fois pour quitter"));
-                    		}
-                    		catch (err) {
+                        if ($scope.tryExit == true) {
+                            try {
+                                navigator.app.exitApp();
+                            }
+                            catch (err) {
 
-                    		}
-                    		setTimeout(function () { $scope.tryExit = false; }, 2000);
-                    	}
+                            }
+                        } else {
+                            $scope.tryExit = true;
+                            try {
+                                $scope.toast($translate.instant("Appuyez une autre fois pour quitter"));
+                            }
+                            catch (err) {
+
+                            }
+                            setTimeout(function () { $scope.tryExit = false; }, 2000);
+                        }
 
                     }, false);
 
@@ -90,21 +90,36 @@ accountApp
 
 
                     $timeout(function () {
-                    	/** Si l'app tourne dans un navigateur, on récupère l'UUID stocké dans le localStorage ou on en génère un si c'est la 1ere visite du client */
-                    	if (!window.device) {
-                    		var storedUUID = localStorage.getItem('deviceUUID');
-                    		if (!storedUUID) {
-                    			$scope.randomUUID = generateUUID();
-                    			localStorage.setItem('deviceUUID', $scope.randomUUID);
-                    			storedUUID = $scope.randomUUID;
-                    		}
-                    		window.device = { uuid: storedUUID };
-                    		window.phonegap = true;
-                    		$scope.isBrowser = true;
-                    		onDeviceReady();
-                    	} else {
-                    		$scope.isBrowser = false;
-                    	}
+                        /** Si l'app tourne dans un navigateur, on récupère l'UUID stocké dans le localStorage ou on en génère un si c'est la 1ere visite du client */
+                        if (!window.device) {
+                            window.phonegap = true;
+                            $scope.isBrowser = true;
+
+                            //var storedUUID = localStorage.getItem('deviceUUID');
+                            var storedUUID = undefined;
+                            if (!storedUUID) {
+                                //$scope.randomUUID = generateUUID();
+                                //localStorage.setItem('deviceUUID', $scope.randomUUID);
+                                //storedUUID = $scope.randomUUID;
+                                new Fingerprint2().get(function (result) {
+                                    if (result.length == 0) result = undefined;
+                                    $scope.randomUUID = result+"-browser";
+                                    storedUUID = $scope.randomUUID;
+                                    window.device = { uuid: storedUUID };
+                                    onDeviceReady();
+                                });
+
+                            } else {
+                                window.device = { uuid: storedUUID };
+                                onDeviceReady();
+                            }
+                        } else {
+                            $scope.isBrowser = false;
+
+                            if (navigator.userAgent === "WPF") {
+                                onDeviceReady();
+                            }
+                        }
                     }, 2000);
 
                     /** @function blackOrWhite
@@ -124,30 +139,30 @@ accountApp
 
                     function configureApp(dataApp) {
 
-                    	$scope.appconfiguration = {
-							loyaltyAppType: LoyaltyAppType.Default,
-                    		clientSearch: true,
-                    		clientView: true,
+                        $scope.appconfiguration = {
+                            loyaltyAppType: LoyaltyAppType.Default,
+                            clientSearch: true,
+                            clientView: true,
                             signatureView: false,
-                    	};
+                        };
 
-                    	if (dataApp.LoyaltyAppType) {
+                        if (dataApp.LoyaltyAppType) {
 
-                    		$scope.appconfiguration.loyaltyAppType = dataApp.LoyaltyAppType;
+                            $scope.appconfiguration.loyaltyAppType = dataApp.LoyaltyAppType;
 
-                    		switch (dataApp.LoyaltyAppType) {
-                    			case LoyaltyAppType.PartialCustomerRegisterOnly:
-                    				$scope.appconfiguration.clientSearch = false;
-                    				$scope.appconfiguration.clientView = false;
-                    				$scope.appconfiguration.signatureView = false;
-                    				break;
-                    		    case LoyaltyAppType.CustomerRegisterWithLegalDocument:
-                    		        $scope.appconfiguration.clientSearch = false;
-                    		        $scope.appconfiguration.clientView = false;
-                    		        $scope.appconfiguration.signatureView = true;
-                    		        break;
-                    		}
-                    	}
+                            switch (dataApp.LoyaltyAppType) {
+                                case LoyaltyAppType.PartialCustomerRegisterOnly:
+                                    $scope.appconfiguration.clientSearch = false;
+                                    $scope.appconfiguration.clientView = false;
+                                    $scope.appconfiguration.signatureView = false;
+                                    break;
+                                case LoyaltyAppType.CustomerRegisterWithLegalDocument:
+                                    $scope.appconfiguration.clientSearch = false;
+                                    $scope.appconfiguration.clientView = false;
+                                    $scope.appconfiguration.signatureView = true;
+                                    break;
+                            }
+                        }
 
                     }
 
@@ -155,117 +170,128 @@ accountApp
                      *  Fonction appellée par défaut par phonegap une fois qu'il est prêt. Si l'appli tourne dans un navigateur, cette fonction est quand même appellée et window.device est défini (voir l.48) */
                     function onDeviceReady() {
                         if (window.device) {
-                             /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
-                             *  Sinon, on applique l'url déjà présente. */
-                            if (!$scope.clientUrl) APIService.set.clientUrl('http://izi-resto.izipass.pro');
+                            /** Si aucune url client n'est fournie (par paramètre sur la directive, param url ou autre), on utilise une url par défaut pour pouvoir appeller GetServerUrl
+                            *  Sinon, on applique l'url déjà présente. */
+                            if (!$scope.clientUrl) APIService.set.clientUrl('https://izi-resto.izipass.pro');
                             else APIService.set.clientUrl($scope.clientUrl);
 
-                        	/** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
-                        	var callableServerUrl = APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid);
+                            /** On apelle GetServerUrl en passant en paramètre l'UUID du device ou navigateur actuel */
+                            var callableServerUrl = APIService.get.callableUrl("GetServerUrl?Hardware_Id=" + window.device.uuid);
 
-                        	$http.get(callableServerUrl).success(function (data) {
-                        		$scope.deviceName = data.AppName;
-                        		$rootScope.deviceName = data.AppName;
+                            $http.get(callableServerUrl).success(function (data) {
+                                $scope.deviceName = data.AppName;
+                                $rootScope.deviceName = data.AppName;
 
-                        		/** Configuration de l'application */
-                        		configureApp(data);
+                                /** Configuration de l'application */
+                                configureApp(data);
 
-                        		/** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
-                        		if (!data.Server_Url) {
-                        			$scope.deviceNotRegistered = true;
-                        			$rootScope.deviceNotRegistered = true;
-                        			customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
-                        				if (navigator.app) {
-                        					navigator.app.exitApp();
-                        				} else if (navigator.device) {
-                        					navigator.device.exitApp();
-                        				}
-                        			});
-                        			return;
-                        		}
-                        		/** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
-                        		APIService.set.clientUrl(data.Server_Url);
-                        		$scope.clientUrl = data.Server_Url;
-                        		$rootScope.clientUrl = data.Server_Url;
+                                /** Si aucune url n'est retournée par l'API, ce device n'est pas relié à la fidélité dans le BO */
+                                if (!data.Server_Url) {
+                                    $scope.deviceNotRegistered = true;
+                                    $rootScope.deviceNotRegistered = true;
 
-                        	    /* Récupération des informations sur les champs activés côté smartstore*/
-                        		APIService.get.customerSettings(function (data) {
-                        		    $log.info('customersettings object:', data);
-                        		    $scope.customersettings = data;
-                        		});
-                        		
-                        	    /** Login for obtain token */
+                                    //if (!$scope.isBrowser) {
+                                        customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
+                                            if (navigator.app) {
+                                                navigator.app.exitApp();
+                                            } else if (navigator.device) {
+                                                navigator.device.exitApp();
+                                            } else if (window.wpfCloseApp) {
+                                                window.wpfCloseApp.shutdownApp();
+                                            }
+                                        });
+                                        return;
+                                    //} else {
+                                    //    dialogs.show("LoginDialog").then(function (result) {
+                                    //        window.device.uuid = result;
+                                    //        onDeviceReady();
+                                    //    });
+                                    //    return;
+                                    //}
+                                }
+                                /** Sinon, on applique cette url, et on récupère la config firebase pour essayer de trouver l'appli qui correspond à l'url renvoyée par l'api */
+                                APIService.set.clientUrl(data.Server_Url);
+                                $scope.clientUrl = data.Server_Url;
+                                $rootScope.clientUrl = data.Server_Url;
+
+                                /* Récupération des informations sur les champs activés côté smartstore*/
+                                APIService.get.customerSettings(function (data) {
+                                    $log.info('customersettings object:', data);
+                                    $scope.customersettings = data;
+                                });
+
+                                /** Login for obtain token */
                                 /* TODO API-V2 */
-                        		//APIService.actions.login(window.device.uuid);
+                                //APIService.actions.login(window.device.uuid);
 
-                        		var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
-                        		var confTable = $firebaseArray(confTableRef);
+                                var confTableRef = new Firebase("https://izigenerator.firebaseio.com/config");
+                                var confTable = $firebaseArray(confTableRef);
 
-                        		confTable.$loaded().then(function (data) {
-                        			$scope.configuration = data;
+                                confTable.$loaded().then(function (data) {
+                                    $scope.configuration = data;
 
-                        			/** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats */
-                        			var result = $.grep(data, function (e) {
-                        				return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
-                        			});
+                                    /** On itère sur les configs, si une des configs contient notre url on l'ajoute aux résultats */
+                                    var result = $.grep(data, function (e) {
+                                        return e.url ? e.url.indexOf($scope.clientUrl.replace('www.', '')) > -1 : 0;
+                                    });
 
                         			/** TODO: prévoir le cas où plusieurs configs existent avec la même url
 									 * Pour l'instant, on prends le 1er resultat et on utilise son url de firebase pour récupérer les données de personalisation */
-                        			if (result[0]) {
-                        				$scope.firebase = result[result.length - 1].firebase;
-                        				var ref = new Firebase($scope.firebase); //jshint ignore:line
+                                    if (result[0]) {
+                                        $scope.firebase = result[result.length - 1].firebase;
+                                        var ref = new Firebase($scope.firebase); //jshint ignore:line
 
-                        				$scope.data = $firebaseObject(ref);
+                                        $scope.data = $firebaseObject(ref);
 
-                        				$scope.data.$loaded()
-											.then(function (data) {
-												/** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
-												$scope.isReady = true;
-												$rootScope.isReady = true;
+                                        $scope.data.$loaded()
+                                            .then(function (data) {
+                                                /** On a notre data, on cache le loader, on affiche la vue et on fait la customization */
+                                                $scope.isReady = true;
+                                                $rootScope.isReady = true;
 
-												document.title = data.title;
-												var topHeader = $('.bar-header h1');
-												topHeader.text(data.title.replace('Fidélité', ''));
+                                                document.title = data.title;
+                                                var topHeader = $('.bar-header h1');
+                                                topHeader.text(data.title.replace('Fidélité', ''));
 
-												topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
-												$('.bar-header').css('background-color', data.styling.primaryColor);
-												$('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
-												var body = $('body');
-												var bgColor = body.css('background-color');
-												if (bgColor === "rgb(255, 255, 255)") {
-													bgColor = "#ffffff";
-												}
-												var properColor = blackOrWhite(bgColor);
-												body.css('color', properColor + ' !important');
+                                                topHeader.attr('style', 'font-family: "' + stripNameOffGoogleFonts(data.styling.mainFont) + '", Abel, Arial, sans-serif !important; text-align: center; margin-bottom: 2px; margin-left: -60px; font-weight: 400; font-size: 2em;');
+                                                $('.bar-header').css('background-color', data.styling.primaryColor);
+                                                $('.button-fab-top-right').css('background-color', data.styling.mainColor).css('border-color', data.styling.mainColor);
+                                                var body = $('body');
+                                                var bgColor = body.css('background-color');
+                                                if (bgColor === "rgb(255, 255, 255)") {
+                                                    bgColor = "#ffffff";
+                                                }
+                                                var properColor = blackOrWhite(bgColor);
+                                                body.css('color', properColor + ' !important');
 
-												$scope.customization = data;
-												/** Get the customization data from firebase and build css style from it */
-												angular.element(document).find('head').append("<style type='text/css'>" +
-													buildStyleFromData($scope.customization) +
-													angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
-												angular.element('#izi-style').remove();
+                                                $scope.customization = data;
+                                                /** Get the customization data from firebase and build css style from it */
+                                                angular.element(document).find('head').append("<style type='text/css'>" +
+                                                    buildStyleFromData($scope.customization) +
+                                                    angular.element('#izi-style').html().replace(/#123456/g, $scope.customization.styling.mainColor).replace(/#654321/g, $scope.customization.styling.secondaryColor).replace(/#321654/g, $scope.customization.styling.bgColor ? $scope.customization.styling.bgColor : 'transparent') + "</style>");
+                                                angular.element('#izi-style').remove();
 
-												!$scope.isBrowser && !$scope.deviceNotRegistered ? $rootScope.scan() : 0;
+                                                !$scope.isBrowser && !$scope.deviceNotRegistered ? $rootScope.scan() : 0;
 
-											})
-											.catch(function (error) {
-												console.error("Error:", error);
-												$rootScope.deviceNotRegistered = $scope.deviceNotRegistered = true;
-											}
-										);
-                        			}
-                        		});
+                                            })
+                                            .catch(function (error) {
+                                                console.error("Error:", error);
+                                                $rootScope.deviceNotRegistered = $scope.deviceNotRegistered = true;
+                                            }
+                                            );
+                                    }
+                                });
 
-                        	}).error(function (e) {
-                        		$scope.debug ? $log.error(e) : 0;
-                        		customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
-                        			if (navigator.app) {
-                        				navigator.app.exitApp();
-                        			} else if (navigator.device) {
-                        				navigator.device.exitApp();
-                        			}
-                        		});
-                        	});
+                            }).error(function (e) {
+                                $scope.debug ? $log.error(e) : 0;
+                                customAlert("Merci de contacter votre interlocuteur IziPass", "UUID: " + window.device.uuid, function () {
+                                    if (navigator.app) {
+                                        navigator.app.exitApp();
+                                    } else if (navigator.device) {
+                                        navigator.device.exitApp();
+                                    }
+                                });
+                            });
                         }
                     }
 
@@ -274,7 +300,7 @@ accountApp
                      *  @param gfontsUrl l'url Google Fonts
                      *  @returns {string} le nom de la police */
                     function stripNameOffGoogleFonts(gfontsUrl) {
-                        return gfontsUrl.replace("http://fonts.googleapis.com/css?family=", "").replace(/:.+/, "").replace("+", " ");
+                        return gfontsUrl.replace("https://fonts.googleapis.com/css?family=", "").replace(/:.+/, "").replace("+", " ");
                     }
 
                     /** @function buildStyleFromData
@@ -295,7 +321,7 @@ accountApp
                                     ".izi-account .fid-item-title + input { color: " + blackOrWhite(data.styling.bgColor) + " !important; }" +
                                     ".izi-account .card h4 small, .izi-account .card.error h4 { color: " + data.styling.mainColor + " !important; }" +
                                     ".izi-account .alert p, .izi-account .barcode-container small { color: " + blackOrWhite(blackOrWhite(data.styling.bgColor)) + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }" +
-									".izi-account .card h4 { color: " + data.styling.mainColor + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
+                                    ".izi-account .card h4 { color: " + data.styling.mainColor + " !important;  font-family: " + secondaryFontName + ", Helvetica, Arial, sans-serif !important; }"
                             }
                         }
 
@@ -313,7 +339,7 @@ accountApp
                     }
 
 
-                    function customAlert(newTitle,newText,callback) {
+                    function customAlert(newTitle, newText, callback) {
                         swal({
                             title: newTitle,
                             text: newText,
@@ -348,13 +374,13 @@ accountApp
                     /** @function $scope.getToastPosition Utility function for material toast
                      *  @returns {string} The toast position */
                     $scope.getToastPosition = function (toastPosition) {
-                    	var position = toastPosition || $scope.toastPosition;
-                    	var ret = Object.keys(position)
+                        var position = toastPosition || $scope.toastPosition;
+                        var ret = Object.keys(position)
                             .filter(function (pos) {
-                            	return position[pos];
+                                return position[pos];
                             })
                             .join(' ');
-                    	return ret;
+                        return ret;
                     };
 
                     /** @function toast Displays a toast with a message
@@ -396,15 +422,15 @@ accountApp
                 	/** @function containsBalanceType
 					 * Retourne si les offres de fid contiennent le type de balance en paramètre */
                     $scope.containsBalanceType = function (balanceType) {
-                    	var ret = false;
+                        var ret = false;
 
-                    	if ($scope.data && $scope.data.Balances && $scope.data.Balances.length > 0) {
-                    		ret = Enumerable.from($scope.data.Balances).any(function (balance) {
-                    			return balance.BalanceType == balanceType;
-                    		});
-                    	}
+                        if ($scope.data && $scope.data.Balances && $scope.data.Balances.length > 0) {
+                            ret = Enumerable.from($scope.data.Balances).any(function (balance) {
+                                return balance.BalanceType == balanceType;
+                            });
+                        }
 
-                    	return ret;
+                        return ret;
                     };
 
                     /** @function displayData
@@ -418,14 +444,14 @@ accountApp
 
                         APIService.get.loyaltyObject($scope.barcode, function (data) {
                             $log.info('loyalty object:', data);
-                            
+
                             // Si l'API retourne false, la carte est inconnue
                             if (data === false) {
                                 $scope.isReady = true;
-                            	customAlert($translate.instant("Carte inconnue !"), "", function () {
-                            		$scope.reset();
-                            		$scope.backToLogin();
-                            	});
+                                customAlert($translate.instant("Carte inconnue !"), "", function () {
+                                    $scope.reset();
+                                    $scope.backToLogin();
+                                });
 
                                 // Si l'API ne retourne pas de Barcode, ce QR est une offre
                             } else if (data.Barcodes && data.Barcodes.length === 0 && data.LoyaltyObjectId === 0) {
@@ -433,7 +459,7 @@ accountApp
                                     $scope.showVoucherView = true;
                                     $scope.voucher = data.Offers[0];
                                     if ($scope.voucher.OfferParam) {
-                                    	$scope.voucher.OfferParam = JSON.parse($scope.voucher.OfferParam);
+                                        $scope.voucher.OfferParam = JSON.parse($scope.voucher.OfferParam);
                                     }
                                 }
                                 $scope.isReady = true;
@@ -443,46 +469,46 @@ accountApp
 
                                 // Si cette url accepte le login anonyme, on identifie le client en tant que client anonyme
                                 if (data.AllowAnonymous && $scope.appconfiguration.loyaltyAppType != LoyaltyAppType.CustomerRegisterWithLegalDocument) {
-                                	if (data.AnonymousCustomer) {
-                                	    $scope.data = data;
-                                	    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
-                                		$scope.data.Offers = APIService.get.formattedOffers(data);
-                                		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
-                                		$scope.hideData = false;
-                                		$scope.isReady = true;
-                                	} else {
+                                    if (data.AnonymousCustomer) {
+                                        $scope.data = data;
+                                        $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
+                                        $scope.data.Offers = APIService.get.formattedOffers(data);
+                                        $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                        $scope.hideData = false;
+                                        $scope.isReady = true;
+                                    } else {
                                         APIService.actions.registerAnonymous({ Barcode: $scope.client.barcode }).then(function (resRegister) {
                                             var data = resRegister.data;
-                                		    $scope.data = data;
-                                		    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
-                                			$scope.data.Offers = APIService.get.formattedOffers(data);
-                                			$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
-                                			$scope.hideData = false;
+                                            $scope.data = data;
+                                            $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
+                                            $scope.data.Offers = APIService.get.formattedOffers(data);
+                                            $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                            $scope.hideData = false;
                                             $scope.isReady = true;
-                                		}).catch(function (error) {
-                                			$log.error('registerAnonymous error', error);
-                                		});
-                                	}
+                                        }).catch(function (error) {
+                                            $log.error('registerAnonymous error', error);
+                                        });
+                                    }
                                 } else if ($scope.appconfiguration.loyaltyAppType == LoyaltyAppType.CustomerRegisterWithLegalDocument) { //Si mode Legal document
                                     //$scope.reset();
                                     $scope.isReady = true;
                                     $scope.goRegisterWithLegalDocument();
-                                	
+
                                 } else if (data.CustomerPartial && $scope.appconfiguration.loyaltyAppType == LoyaltyAppType.PartialCustomerRegisterOnly) { //Si la création partielle est autorisée
                                     //$scope.reset();
                                     $scope.isReady = true;
-                                	$scope.goPartialRegister();
-                                	
+                                    $scope.goPartialRegister();
+
                                 } else if ((data.Barcodes && data.Barcodes.length > 0) || data.AllowCustomerToCreateLoyaltyBarcode) { // Sinon, on envoie le client vers le formulaire d'enregistrement
                                     //$scope.reset();
                                     $scope.isReady = true;
                                     $scope.goRegister();
                                 } else {
                                     $scope.isReady = true;
-                                	customAlert($translate.instant("Carte inconnue !"), "", function () {
-                                		$scope.reset();
-                                		$scope.backToLogin();
-                                	});
+                                    customAlert($translate.instant("Carte inconnue !"), "", function () {
+                                        $scope.reset();
+                                        $scope.backToLogin();
+                                    });
                                 }
 
                                 // Sinon, le client a bien été identifié, on affiche la vue
@@ -513,18 +539,18 @@ accountApp
 
 
                                 }
-                            	else if ($scope.appconfiguration.clientView) {
-                            	    $scope.data = data;
-                            	    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
-                            		$scope.data.Offers = APIService.get.formattedOffers(data);
-                            		$scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
-                            		$scope.hideData = false;
-                            	} else {//on autorise pas l'affichage de la vue client, retour au login
-                            		customAlert($translate.instant("La carte est enregistrée"), "", function () {
-                            			$scope.reset();
-                            			$scope.backToLogin();
-                            		});
-                            	}
+                                else if ($scope.appconfiguration.clientView) {
+                                    $scope.data = data;
+                                    $scope.data.Balances = APIService.get.formattedBalancesAmount(data);
+                                    $scope.data.Offers = APIService.get.formattedOffers(data);
+                                    $scope.selectedAction = data.CustomActions ? data.CustomActions[0].Id : null;
+                                    $scope.hideData = false;
+                                } else {//on autorise pas l'affichage de la vue client, retour au login
+                                    customAlert($translate.instant("La carte est enregistrée"), "", function () {
+                                        $scope.reset();
+                                        $scope.backToLogin();
+                                    });
+                                }
                             }
                         });
                     }
@@ -558,17 +584,17 @@ accountApp
                     /** @function goRegister
                      *  Affiche la vue du formulaire d'enregistrement */
                     $scope.goRegister = function () {
-                    	$scope.$evalAsync();
+                        $scope.$evalAsync();
                         $scope.register = true;
                     };
 
                 	/** @function goPartialRegister
                      *  Affiche la vue du formulaire d'enregistrement partiel */
                     $scope.goPartialRegister = function () {
-                    	$scope.$evalAsync();
-                    	$scope.partialRegister = true;
+                        $scope.$evalAsync();
+                        $scope.partialRegister = true;
                     };
-                    
+
                     /** @function goRegisterWithLegalDocument
                     *  Affiche la vue du formulaire d'enregistrement avec document légal*/
                     $scope.goRegisterWithLegalDocument = function () {
@@ -580,10 +606,10 @@ accountApp
                     $scope.backToLogin = function () {
                         $scope.reset();
                         $timeout(function () {
-                        	$scope.register = false;
-                        	$scope.partialRegister = false;
-                        	$scope.registerWithLegalDocument = false;
-                        	$scope.legalDocumentSignature = false;
+                            $scope.register = false;
+                            $scope.partialRegister = false;
+                            $scope.registerWithLegalDocument = false;
+                            $scope.legalDocumentSignature = false;
                         }, 0);
                         window.scrollTo(0, 0);
                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -674,7 +700,7 @@ accountApp
                                 //    $('#orderAmountInput').val('');
                                 //    displayData();
                                 //}
-                            	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
+                                customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                     if (isConfirm) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -686,7 +712,7 @@ accountApp
                                     }
                                 });
                             } else {
-                            	$scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
+                                $scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
                                 $scope.reset();
                                 $timeout(function () {
                                     !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -767,7 +793,7 @@ accountApp
                                     //    displayData();
                                     //}
 
-                                	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
+                                    customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -820,7 +846,7 @@ accountApp
                                 //    displayData();
                                 //}
 
-                            	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
+                                customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                     if (isConfirm) {
                                         $scope.reset();
                                         $timeout(function () {
@@ -844,7 +870,7 @@ accountApp
                     };
 
                     $scope.useVoucherOffer = function (offer) {
-                    	APIService.actions.useVoucherOffer(offer.OfferClassId, offer.Barcode).then(function (data) {
+                        APIService.actions.useVoucherOffer(offer.OfferClassId, offer.Barcode).then(function (data) {
                             if (data) {
                                 if ($scope.customization.hasPopup) {
                                     //var quit = navigator.notification ? navigator.notification.confirm("L'action a bien été effectuée sur cette carte.\n\nOK pour quitter la fiche client\nCancel pour rester sur la fiche client", null, document.title, function() {
@@ -861,7 +887,7 @@ accountApp
                                     //    displayData();
                                     //}
 
-                                	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
+                                    customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -874,7 +900,7 @@ accountApp
                                     });
 
                                 } else {
-                                	$scope.toast($translate.instant("L'offre a bien été utilisée"));
+                                    $scope.toast($translate.instant("L'offre a bien été utilisée"));
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -882,7 +908,7 @@ accountApp
                                 }
                                 return true;
                             } else {
-                            	$window.alert($translate.instant("Une erreur ")+$translate.instant(" est survenue !"));
+                                $window.alert($translate.instant("Une erreur ") + $translate.instant(" est survenue !"));
                             }
                         }).catch(function (error) {
                             $log.error(error);
@@ -928,7 +954,7 @@ accountApp
                                     //    displayData();
                                     //}
 
-                                	customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
+                                    customConfirm($translate.instant("L'action a bien été effectuée sur cette carte"), $translate.instant("Voulez-vous quitter la fiche client ?"), function (isConfirm) {
                                         if (isConfirm) {
                                             $scope.reset();
                                             $timeout(function () {
@@ -941,7 +967,7 @@ accountApp
                                     });
 
                                 } else {
-                                	$scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
+                                    $scope.toast($translate.instant("L'action a bien été effectuée sur cette carte"));
                                     $scope.reset();
                                     $timeout(function () {
                                         !$scope.isBrowser ? $rootScope.scan() : 0;
@@ -984,7 +1010,7 @@ accountApp
                             displayData();
                         }).catch(function (error) {
                             if (error.status === 500)
-                            	customAlert($translate.instant("Cette carte est déjà enregistrée !"));
+                                customAlert($translate.instant("Cette carte est déjà enregistrée !"));
                             else customAlert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
                         });
                     };
@@ -1005,15 +1031,15 @@ accountApp
                         var customersubaccounts = [];
                         if ($scope.client.subaccounts != undefined && $scope.client.subaccounts.length > 0) {
 
-                            $scope.client.subaccounts.forEach( function (subaccount) {
-                            var customersubaccount = {
-                                FirstName: subaccount.firstname,
-                                LastName: subaccount.lastname,
-                                Gender: subaccount.gender,
-                                DateOfBirthDay: subaccount.birthdate ? subaccount.birthdate.getMonth() + 1 : "",
-                                DateOfBirthMonth: subaccount.birthdate ? subaccount.birthdate.getDay() : "",
-                                DateOfBirthYear: subaccount.birthdate ? subaccount.birthdate.getFullYear() : "",
-                            };
+                            $scope.client.subaccounts.forEach(function (subaccount) {
+                                var customersubaccount = {
+                                    FirstName: subaccount.firstname,
+                                    LastName: subaccount.lastname,
+                                    Gender: subaccount.gender,
+                                    DateOfBirthDay: subaccount.birthdate ? subaccount.birthdate.getMonth() + 1 : "",
+                                    DateOfBirthMonth: subaccount.birthdate ? subaccount.birthdate.getDay() : "",
+                                    DateOfBirthYear: subaccount.birthdate ? subaccount.birthdate.getFullYear() : "",
+                                };
                                 customersubaccounts.push(customersubaccount);
                             });
                         }
@@ -1035,8 +1061,8 @@ accountApp
                             SubAccounts: customersubaccounts
                         };
 
-                        
-                        
+
+
                         APIService.actions.register(obj).then(function () {
                             $scope.barcode = $scope.client.barcode;
                             $scope.form.password = $scope.client.password;
@@ -1051,29 +1077,29 @@ accountApp
                         });
                     };
                     $scope.submitPartialRegister = function () {
-                    	var obj = {
-                    		Barcode: $scope.client.barcode,
-                    		FirstName: $scope.client.firstname,
-                    		LastName: $scope.client.lastname,
-                    		Email: $scope.client.email,
-                    	};
+                        var obj = {
+                            Barcode: $scope.client.barcode,
+                            FirstName: $scope.client.firstname,
+                            LastName: $scope.client.lastname,
+                            Email: $scope.client.email,
+                        };
 
-                    	APIService.actions.registerAnonymous(obj).then(function () {
-                    	    $scope.partialRegister = false;
-                    	    $scope.registerWithLegalDocument = false;
-                    		$scope.barcode = $scope.client.barcode;
-                    		$scope.reset();
-                    		displayData();
-                    	}).catch(function (error) {
-                    		if (error.status === 500)
-                    			customAlert($translate.instant("Cette carte est déjà enregistrée !"));
-                    		else customAlert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
-                    	});
+                        APIService.actions.registerAnonymous(obj).then(function () {
+                            $scope.partialRegister = false;
+                            $scope.registerWithLegalDocument = false;
+                            $scope.barcode = $scope.client.barcode;
+                            $scope.reset();
+                            displayData();
+                        }).catch(function (error) {
+                            if (error.status === 500)
+                                customAlert($translate.instant("Cette carte est déjà enregistrée !"));
+                            else customAlert($translate.instant("Une erreur ") + error.status + $translate.instant(" est survenue !"));
+                        });
                     };
 
                     $scope.clickAction = function (actionId, isTiles) {
-                    	$scope.data.customAction = actionId;
-                    	$scope.useAction(true);
+                        $scope.data.customAction = actionId;
+                        $scope.useAction(true);
                     }
 
                     $scope.useAction = function (isTiles) {
@@ -1152,7 +1178,7 @@ accountApp
                         customConfirm($translate.instant("Voulez-vous utiliser cette offre ?"), "", function (isConfirm) {
                             if (isConfirm) {
                                 $scope.useOffer(offer);
-                            } 
+                            }
                         });
                     };
 
@@ -1275,7 +1301,7 @@ accountApp
         };
     })
 
-/** ngEnter directive for handling enter keypress on inputs (from: http://eric.sau.pe/angularjs-detect-enter-key-ngenter/) */
+    /** ngEnter directive for handling enter keypress on inputs (from: http://eric.sau.pe/angularjs-detect-enter-key-ngenter/) */
     .directive('ngEnter', function () {
         return function (scope, element, attrs) {
             element.bind("keydown keypress", function (event) {
@@ -1306,7 +1332,7 @@ accountApp
         };
     }])
 
-/** compareTo directive for validating that an input value is equal to another **/
+    /** compareTo directive for validating that an input value is equal to another **/
     .directive('compareTo', function () {
         return {
             require: "ngModel",
@@ -1325,11 +1351,11 @@ accountApp
             }
         };
     }
-);
+    );
 
 
 var LoyaltyAppType = {
-	Default : 0,
-	PartialCustomerRegisterOnly: 1,
-	CustomerRegisterWithLegalDocument: 2
+    Default: 0,
+    PartialCustomerRegisterOnly: 1,
+    CustomerRegisterWithLegalDocument: 2
 };

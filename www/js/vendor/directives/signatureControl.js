@@ -1,4 +1,4 @@
-﻿starterApp.directive('signatureControl', function ($translate, $http, $rootScope, $window) {
+starterApp.directive('signatureControl', function ($translate, $http, $rootScope, $window) {
 	return {
 		templateUrl: 'js/vendor/directives/views/_signatureControl.html',
 		restrict: 'E',

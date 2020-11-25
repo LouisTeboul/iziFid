@@ -3,3 +3,6 @@
 .idea
 node_modules/
 www/js/vendor/directives/account-compiled.js*
+bin/
+obj/
+*.user

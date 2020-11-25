@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * blob:;media-src * blob:;img-src * 'self' blob: data:; style-src * 'self' 'unsafe-inline'; script-src * 'self' 'unsafe-inline' 'unsafe-eval'" />-->
-    <meta http-equiv="Content-Security-Policy" content="default-src gap: file://* *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; img-src 'self' data: *;style-src 'self' 'unsafe-inline' *">
+    <meta http-equiv="Content-Security-Policy" content="default-src * blob:;media-src * blob:;img-src * 'self' blob: data:; style-src * 'self' 'unsafe-inline'; script-src * 'self' 'unsafe-inline' 'unsafe-eval'" />
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src gap: file://* *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; img-src 'self' data: *;style-src 'self' 'unsafe-inline' *"> -->
     <title>IZIPASS</title>
 
     <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
@@ -62,6 +62,8 @@
     <script src="lib/jquery-easing/jquery.easing.min.js"></script>
     <script src="lib/sweetalert/sweetalert.min.js"></script>
     <script src="lib/linq.js"></script>
+    <script src="lib/html5-qrcode.min.js"></script>
+    <script src="lib/fingerprint2.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -69,8 +71,8 @@
     <script src="lib/angular-translate/angular-translate.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
-    <script src="cordova_plugins.js"></script>
+    <!--<script src="cordova.js"></script>
+    <script src="cordova_plugins.js"></script>-->
 
 
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -89,30 +91,33 @@
     <script src="js/vendor/services/api.js"></script>
     <script src="js/vendor/directives/account.js"></script>
     <script src="js/vendor/directives/account-translation.js"></script>
-    
+
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
     <script src="js/vendor/directives/signatureControl.js"></script>
+    <script src="js/dialogs/dialogsProvider.js"></script>
+    <script src="js/dialogs/QRCodeDialogCtrl.js"></script>
+    <script src="js/dialogs/loginDialogCtrl.js"></script>
 
     <script>
-    Waves.init();
+        Waves.init();
         window.onerror = function (e) {
             alert(e);
         };
 
-    setTimeout(function () {
-        $('.expand').addClass('expanded');
-        ionic.material.motion.pushDown({
-            selector: '.push-down'
-        });
-    }, 500);
+        setTimeout(function () {
+            $('.expand').addClass('expanded');
+            ionic.material.motion.pushDown({
+                selector: '.push-down'
+            });
+        }, 500);
 
-    setTimeout(function () {
-        $('.bar-header .button-icon').css('margin-top', '12px');
-    }, 1000);
+        setTimeout(function () {
+            $('.bar-header .button-icon').css('margin-top', '12px');
+        }, 1000);
     </script>
 
 </body>

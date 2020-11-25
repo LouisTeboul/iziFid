@@ -108,7 +108,7 @@ angular.module('APIServiceApp', []).factory('APIService', ['$http', '$log', '$ti
 			},
 
 			serverUrl: function (uuid) {
-				if (!vars.clientUrl) vars.clientUrl = 'http://ffpizza.izipass.pro';
+				if (!vars.clientUrl) vars.clientUrl = 'https://ffpizza.izipass.pro';
 				$http.get(methods.get.callableUrl("GetServerUrl?Hardware_Id=" + uuid)).success(function (data) {
 					$log.info('getServerUrl', data);
 					if (!data.Server_Url) alert("Cet appareil n'est pas relié à la fidélité");
