@@ -1,1 +1,0 @@
-{"version":3,"sources":["index.js"],"names":[],"mappings":";;AAAA,OAAO,CAAC,oBAAoB,CAAC,CAAC;AAC9B,MAAM,CAAC,OAAO,GAAG,UAAU,CAAC","file":"index-compiled.js","sourcesContent":["require('./dist/angularfire');\nmodule.exports = 'firebase';\n"]}
