@@ -1,14 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.izipass.izipass" version="3.0.0.14" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Fidelite IziPass</name>
+    <name>IziFid</name>
     <description>
-        Gestion Fidélité
+        Application Fidélité
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         IZIPASS
     </author>
     <content src="index.html" />
     <access origin="*" />
+	<preference name="phonegap-version" value="cli-7.1.0" />
+    <preference name="cordova-version" value="cli-7.1.0" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
