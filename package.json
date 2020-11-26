@@ -13,15 +13,32 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-android": "^9.0.0",
-    "cordova-plugin-whitelist": "^1.3.4"
+    "@ahovakimyan/cordova-plugin-wkwebviewxhrfix": "git+https://github.com/AraHovakimyan/cordova-plugin-wkwebviewxhrfix.git",
+    "cordova-ios": "^6.1.1",
+    "cordova-plugin-camera": "^4.0.3",
+    "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-dialogs": "^1.3.4",
+    "cordova-plugin-vibration": "^2.1.6",
+    "cordova-plugin-whitelist": "~1.3.0",
+    "phonegap-plugin-barcodescanner": "^7.0.4"
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {}
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-dialogs": {},
+      "cordova-plugin-vibration": {},
+      "phonegap-plugin-barcodescanner": {
+        "CAMERA_USAGE_DESCRIPTION": "Scan du code barre"
+      },
+      "cordova-plugin-wkwebviewxhrfix": {},
+      "cordova-plugin-camera": {
+        "CAMERA_USAGE_DESCRIPTION": "Scan du code barre"
+      }
     },
     "platforms": [
-      "android"
+      "iOS",
+      "ios"
     ]
   }
 }
